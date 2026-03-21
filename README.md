@@ -1,1 +1,329 @@
-# dedu
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ጣይቱ ብጡል አካዳሚ - English Result</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        :root {
+            --primary: #00BFFF; --gold: #FFD700; --dark: #003366;
+            --glass: rgba(255, 255, 255, 0.15); 
+            --border-thick: 4px solid #00BFFF;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif; margin: 0;
+            background-color: #222; background-size: cover;
+            background-attachment: fixed; background-position: center;
+            color: white;
+        }
+
+        .main-header {
+            text-align: center; padding: 20px; 
+            background: rgba(0, 51, 102, 0.6);
+            border-bottom: var(--border-thick);
+            backdrop-filter: blur(8px);
+        }
+        .school-title { font-size: 2.2rem; color: var(--primary); margin: 0; text-shadow: 2px 2px 5px #000; }
+
+        .nav-header { position: fixed; top: 10px; right: 10px; z-index: 1000; }
+        .nav-btn {
+            background: var(--gold); color: var(--dark); border: none;
+            padding: 8px 18px; border-radius: 20px; cursor: pointer; font-weight: bold;
+        }
+
+        .container { max-width: 1350px; margin: 20px auto; padding: 10px; }
+
+        .card {
+            background: var(--glass); backdrop-filter: blur(12px);
+            border: var(--border-thick); border-radius: 30px; 
+            padding: 20px; margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        }
+
+        /* Spacing for User Page */
+        .user-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; margin-top: 20px; }
+        @media (max-width: 768px) { .user-grid { grid-template-columns: 1fr; gap: 20px; } }
+
+        /* File Upload Boxes */
+        .admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; }
+        .admin-item { background: rgba(0,0,0,0.3); padding: 15px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); text-align: center; }
+        
+        .upload-box {
+            background: rgba(0,0,0,0.5); border: 1px dashed var(--primary);
+            border-radius: 10px; padding: 10px; margin-top: 8px; cursor: pointer;
+            position: relative; overflow: hidden;
+        }
+        .upload-box input { position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+        .status-txt { font-size: 12px; font-weight: bold; }
+
+        /* Inbox */
+        .inbox-container { height: 180px; overflow-y: auto; font-size: 13px; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 10px; border: 1px solid #444; text-align: left; }
+        .msg-item { border-bottom: 1px solid #555; padding: 10px 0; color: white; }
+        .msg-item b { color: var(--gold); }
+
+        .btn-sm { height: 40px; padding: 0 25px; border-radius: 12px; background: var(--dark); color: white; border: none; cursor: pointer; font-weight: bold; }
+        .btn-action { height: 40px; padding: 0 15px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; color: white; }
+
+        table { width: 100%; border-collapse: collapse; background: rgba(0, 0, 0, 0.3); margin-top: 15px; }
+        th, td { border: 1px solid rgba(255,255,255,0.2); padding: 6px; text-align: center; font-size: 12px; }
+        th { background: rgba(0, 51, 102, 0.8); color: var(--gold); }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="nav-header no-print">
+        <button class="nav-btn" onclick="showPage('userPage')">ተማሪ</button>
+        <button class="nav-btn" onclick="showPage('adminPage')">አድሚን</button>
+    </div>
+
+    <div class="main-header no-print">
+        <h1 class="school-title">ጣይቱ ብጡል አካዳሚ</h1>
+        <div style="color: var(--gold); font-weight: bold;">መ/ር ደለለኝ አጥላው // English</div>
+    </div>
+
+    <div class="container">
+        <div id="userPage">
+            <div class="card no-print">
+                <h4 style="margin-top:0;">የውጤት መፈለጊያ</h4>
+                <div style="display:flex; gap:10px; margin-bottom:10px;">
+                    <input type="text" id="uName" placeholder="የተማሪ ሙሉ ስም..." style="flex:2; height:40px; border-radius:10px; padding:0 10px; border:1px solid var(--primary); background:#000; color:#fff;">
+                    <select id="uGrade" style="flex:1; border-radius:10px; background:#000; color:#fff; padding: 0 5px;">
+                        <option value="">ክፍል...</option>
+                        <option>1A</option><option>1B</option><option>2A</option><option>2B</option><option>3A</option><option>4A</option><option>5A</option><option>6A</option>
+                    </select>
+                    <button class="btn-sm" onclick="search()">አሳይ</button>
+                </div>
+
+                <div class="user-grid">
+                    <div>
+                        <small>ለወላጅ አስተያየት መጻፊያ:</small>
+                        <textarea id="pMsg" placeholder="አስተያየትዎን እዚህ ይጻፉ..." style="width:100%; height:100px; margin-top:8px; border-radius:15px; padding:12px; background:rgba(0,0,0,0.5); color:white; border:1px solid var(--primary); font-family:inherit;"></textarea>
+                        <button class="btn-sm" style="width:100%; margin-top:10px; background:#28a745;" onclick="sendMsg()">አስተያየት ላክ</button>
+                    </div>
+                    <div style="border:2px dashed var(--gold); border-radius:20px; padding:20px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; background:rgba(255,255,255,0.05);">
+                        <div id="resBoxLarge" style="color:var(--gold); font-weight:bold; font-size:1.2rem;">ውጤት አልተፈለገም</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card no-print">
+                <h4>ፎቶ ጋለሪ</h4>
+                <div id="userGal" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(150px,1fr)); gap:10px;"></div>
+            </div>
+        </div>
+
+        <div id="adminPage" class="hidden">
+            <div id="loginBox" class="card no-print" style="text-align:center;">
+                <input type="password" id="pass" placeholder="Password" style="width:180px; height:40px; text-align:center; border-radius:10px; border:1px solid #444; background:#000; color:#fff;">
+                <button class="btn-sm" onclick="login()">ግባ</button>
+            </div>
+
+            <div id="adminDash" class="hidden">
+                <div class="card no-print">
+                    <div class="admin-grid">
+                        <div class="admin-item">
+                            <label>የጀርባ ምስል</label>
+                            <div class="upload-box">
+                                <span class="status-txt" id="bgLabel">ምስል ምረጥ</span>
+                                <input type="file" onchange="setBg(event)">
+                            </div>
+                        </div>
+                        <div class="admin-item">
+                            <label>Excel የውጤት ፋይል</label>
+                            <div class="upload-box">
+                                <span class="status-txt" id="xlLabel" style="color:#ff4d4d;">መረጃ አልተጫነም</span>
+                                <input type="file" id="xlIn" accept=".xlsx, .xls">
+                            </div>
+                        </div>
+                        <div class="admin-item">
+                            <label>ጋለሪ ፎቶ</label>
+                            <div class="upload-box">
+                                <span class="status-txt">ፎቶዎችን ምረጥ</span>
+                                <input type="file" multiple onchange="upGal(event)">
+                            </div>
+                        </div>
+                        <div class="admin-item">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                                <label>የወላጆች Inbox</label>
+                                <button class="btn-sm" style="height:25px; padding:0 10px; font-size:10px;" onclick="printInbox()">Print Report</button>
+                            </div>
+                            <div id="msgInbox" class="inbox-container">መልእክት የለም...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div style="overflow-x:auto;">
+                        <h3 style="text-align:center; color:var(--gold); margin-bottom:15px;">የውጤት ትንተና - English</h3>
+                        <table id="statTable">
+                            <thead>
+                                <tr>
+                                    <th rowspan="2">ክፍል</th><th colspan="3">ጠቅላላ ተማሪ</th><th colspan="3">ከ50% በታች</th><th colspan="3">አፈፃፀም %</th><th colspan="3">50%-74%</th><th colspan="3">አፈፃፀም %</th><th colspan="3">75%-84%</th><th colspan="3">አፈፃፀም %</th><th colspan="3">85%-100%</th><th colspan="3">አፈፃፀም %</th>
+                                </tr>
+                                <tr>
+                                    <th>ወ</th><th>ሴ</th><th>ድ</th><th>ወ</th><th>ሴ</th><th>ድ</th><th>ወ</th><th>ሴ</th><th>ድ</th><th>ወ</th><th>ሴ</th><th>ድ</th><th>ወ</th><th>ሴ</th><th>ድ</th><th>ወ</th><th>ሴ</th><th>ድ</th><th>ወ</th><th>ሴ</th><th>ድ</th><th>ወ</th><th>ሴ</th><th>ድ</th><th>ወ</th><th>ሴ</th><th>ድ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="stBody"></tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="no-print" style="margin-top:25px; display:flex; justify-content:space-between; align-items:center;">
+                        <p><b>መ/ር ደለለኝ አጥላው</b><br>ፊርማ፡ ________________</p>
+                        <div style="display:flex; gap:10px;">
+                            <button class="btn-action" style="background:#28a745;" onclick="saveReport()">Save Excel</button>
+                            <button class="btn-action" style="background:#ff8c00;" onclick="shareExcel()">Share Excel</button>
+                            <button class="btn-action" style="background:#007bff;" onclick="window.print()">Print Analysis</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let sts = JSON.parse(localStorage.getItem('db_s')) || [];
+        let msgs = JSON.parse(localStorage.getItem('db_m')) || [];
+        let gals = JSON.parse(localStorage.getItem('db_g')) || [];
+        
+        function updateUI() {
+            let bg = localStorage.getItem('db_b');
+            if(bg) document.body.style.backgroundImage = `url(${bg})`;
+            if(sts.length > 0) {
+                let lbl = document.getElementById('xlLabel');
+                lbl.innerText = "መረጃ ተጭኗል (" + sts.length + ")";
+                lbl.style.color = "#00ff00";
+            }
+        }
+        updateUI();
+
+        function showPage(p) {
+            document.getElementById('userPage').classList.toggle('hidden', p!=='userPage');
+            document.getElementById('adminPage').classList.toggle('hidden', p!=='adminPage');
+            if(p==='userPage') renderGal();
+            if(p==='adminPage') renderInbox();
+        }
+
+        function login() {
+            if(document.getElementById('pass').value === "Eshet21d") {
+                document.getElementById('loginBox').classList.add('hidden');
+                document.getElementById('adminDash').classList.remove('hidden');
+                runAnalysis(); renderInbox();
+            } else { alert("የተሳሳተ የይለፍ ቃል!"); }
+        }
+
+        document.getElementById('xlIn').addEventListener('change', function(e) {
+            let r = new FileReader();
+            r.onload = (ex) => {
+                let wb = XLSX.read(new Uint8Array(ex.target.result), {type:'array'});
+                let rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+                sts = rows.map(i => ({
+                    n: i.Name || i.ስም, s: String(i.Sex||"").toUpperCase(), g: String(i.Grade||""),
+                    t: (Number(i.Notebook||0)+Number(i.Quiz1||0)+Number(i.Quiz2||0)+Number(i.Mid||0)+Number(i.Final||0)),
+                    nt: i.Note || ""
+                }));
+                localStorage.setItem('db_s', JSON.stringify(sts));
+                updateUI(); runAnalysis(); alert("ዳታው በትክክል ተጭኗል!");
+            };
+            r.readAsArrayBuffer(e.target.files[0]);
+        });
+
+        function runAnalysis() {
+            const gs = ["1A", "1B", "2A", "2B", "3A", "4A", "5A", "6A"];
+            const rs = [{n:0,x:49.9},{n:50,x:74.9},{n:75,x:84.9},{n:85,x:100}];
+            let h = "";
+            gs.forEach(g => {
+                let d = sts.filter(s => s.g.toUpperCase().includes(g));
+                let mW = d.filter(s => s.s.startsWith('M')||s.s.startsWith('ወ')).length;
+                let mS = d.filter(s => s.s.startsWith('F')||s.s.startsWith('ሴ')).length;
+                let mD = mW + mS;
+                h += `<tr><td><b>${g}</b></td><td>${mW}</td><td>${mS}</td><td>${mD}</td>`;
+                rs.forEach(r => {
+                    let w = d.filter(s => (s.s.startsWith('M')||s.s.startsWith('ወ')) && s.t>=r.n && s.t<=r.x).length;
+                    let s = d.filter(s => (s.s.startsWith('F')||s.s.startsWith('ሴ')) && s.t>=r.n && s.t<=r.x).length;
+                    let t = w+s;
+                    h += `<td>${w}</td><td>${s}</td><td>${t}</td><td>${mW?((w/mW)*100).toFixed(0):0}%</td><td>${mS?((s/mS)*100).toFixed(0):0}%</td><td>${mD?((t/mD)*100).toFixed(0):0}%</td>`;
+                });
+                h += `</tr>`;
+            });
+            document.getElementById('stBody').innerHTML = h;
+        }
+
+        function search() {
+            let n = document.getElementById('uName').value.trim().toLowerCase();
+            let g = document.getElementById('uGrade').value;
+            let f = sts.find(s => s.n.toLowerCase() === n && s.g.toUpperCase().includes(g));
+            document.getElementById('resBoxLarge').innerHTML = f ? `ተማሪ፡ ${f.n}<br>ውጤት፡ ${f.t}% <br> መምህሩ፡ ${f.nt || "በርታ!"}` : "ተማሪው አልተገኘም!";
+        }
+
+        function sendMsg() {
+            let n = document.getElementById('uName').value.trim();
+            let g = document.getElementById('uGrade').value;
+            let m = document.getElementById('pMsg').value.trim();
+            if(!n || !g || !m) { alert("እባክዎ መጀመሪያ የተማሪ ስም፣ ክፍል እና አስተያየትዎን ያስገቡ!"); return; }
+            let dt = new Date().toLocaleString('am-ET');
+            let newMsg = { n, g, dt, m };
+            msgs.push(newMsg);
+            localStorage.setItem('db_m', JSON.stringify(msgs));
+            document.getElementById('pMsg').value = ""; 
+            alert("አስተያየትዎ ተልኳል!");
+            renderInbox(); 
+        }
+
+        function renderInbox() {
+            let box = document.getElementById('msgInbox');
+            if(!box) return;
+            if(msgs.length === 0) { box.innerHTML = "መልእክት የለም..."; return; }
+            box.innerHTML = msgs.map(m => `
+                <div class="msg-item">
+                    <b>ስም:</b> ${m.n} (${m.g}) <br>
+                    <b>ቀን:</b> ${m.dt} <br>
+                    <b>መልእክት:</b> ${m.m}
+                </div>
+            `).reverse().join('');
+        }
+
+        function setBg(e) {
+            let r = new FileReader();
+            r.onload = (ev) => { 
+                localStorage.setItem('db_b', ev.target.result); 
+                document.getElementById('bgLabel').innerText = "ምስል ተቀይሯል";
+                updateUI(); 
+            };
+            r.readAsDataURL(e.target.files[0]);
+        }
+
+        function upGal(e) {
+            for(let f of e.target.files) {
+                let r = new FileReader();
+                r.onload = (ev) => { gals.push(ev.target.result); localStorage.setItem('db_g', JSON.stringify(gals)); renderGal(); };
+                r.readAsDataURL(f);
+            }
+            alert("ፎቶዎች ተጭነዋል!");
+        }
+
+        function renderGal() { document.getElementById('userGal').innerHTML = gals.map(s => `<img src="${s}" style="width:100%; border-radius:10px; border:1px solid rgba(255,255,255,0.3);">`).join(''); }
+        function saveReport() { XLSX.writeFile(XLSX.utils.table_to_book(document.getElementById("statTable")), "English_Analysis.xlsx"); }
+        function shareExcel() { alert("ፋይሉን ለማጋራት መጀመሪያ 'Save Excel' በመጫን ሴቭ ያድርጉት። ከዚያም ለፈለጉት አካል ይላኩ።"); }
+
+        function printInbox() {
+            if(msgs.length === 0) { alert("ምንም መልእክት የለም!"); return; }
+            let content = msgs.map(m => `
+                <div style="border-bottom:1px solid #000; padding:10px;">
+                    <b>ተማሪ:</b> ${m.n} (${m.g}) <br>
+                    <b>ቀን:</b> ${m.dt} <br>
+                    <b>አስተያየት:</b> ${m.m}
+                </div>`).reverse().join('');
+            let win = window.open('', '', 'height=700,width=900');
+            win.document.write('<html><head><title>Inbox Report</title></head><body>');
+            win.document.write('<h2>ጣይቱ ብጡል አካዳሚ - የወላጆች አስተያየት ሪፖርት</h2>' + content);
+            win.document.write('</body></html>');
+            win.document.close();
+            win.print();
+        }
+    </script>
+</body>
+</html>
