@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <title>የጥያቄና መልስ ውድድር ውጤት መያዣ</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; direction: ltr; margin: 20px; background-color: #f4f7f6; }
+        .container { max-width: 1000px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #2c3e50; }
+        .header-info { display: flex; justify-content: space-between; margin-bottom: 20px; background: #ecf0f1; padding: 15px; border-radius: 5px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 14px; }
+        th, td { border: 1px solid #bdc3c7; padding: 8px; text-align: center; }
+        th { background-color: #34495e; color: white; }
+        input[type="text"], select { width: 90%; padding: 5px; border: 1px solid #ddd; }
+        .checkbox-cell { cursor: pointer; font-weight: bold; font-size: 18px; width: 40px; }
+        .correct { color: green; }
+        .wrong { color: red; }
+        .btn-group { display: flex; gap: 10px; justify-content: center; margin-top: 20px; }
+        button { padding: 10px 20px; cursor: pointer; border: none; border-radius: 4px; color: white; font-weight: bold; }
+        .btn-save { background-color: #27ae60; }
+        .btn-print { background-color: #2980b9; }
+        .btn-send { background-color: #8e44ad; }
+        @media print { .btn-group { display: none; } }
+    </style>
+</head>
+<body>
+
+<div class="container" id="printableArea">
+    <h2>የጥያቄና መልስ ውድድር ውጤት መያዣ ቅፅ</h2>
+    
+    <div class="header-info">
+        <div>
+            ቀን፡ <input type="date" id="currentDate"> | 
+            ሰዓት፡ <span id="currentTime"></span>
+        </div>
+        <div>
+            ክፍል፡ 
+            <select>
+                <option>1ኛሀ</option><option>1ኛለ</option><option>2ኛሀ</option>
+                <option>2ኛለ</option><option>3ኛሀ</option><option>4ኛሀ</option>
+                <option>5ኛሀ</option><option>6ኛሀ</option>
+            </select>
+            | ሴሚስተር፡ 2ኛ
+        </div>
+    </div>
+
+    <table id="scoreTable">
+        <thead>
+            <tr>
+                <th>ተ.ቁ</th>
+                <th>የተወዳዳሪ ስም</th>
+                <th>አማርኛ</th>
+                <th>ኢንግሊዝኛ</th>
+                <th>ሒሳብ</th>
+                <th>አ/ሳይንስ</th>
+                <th>ግብረገብ</th>
+                <th>የተመለሰ (✓)</th>
+                <th>ያልተመለሰ (X)</th>
+                <th>ድምር</th>
+                <th>ደረጃ</th>
+            </tr>
+        </thead>
+        <tbody>
+            <script>
+                const subjects = ['Amh', 'Eng', 'Math', 'Sci', 'Eth'];
+                for(let i=1; i<=6; i++) {
+                    document.write(`
+                        <tr id="row-${i}">
+                            <td>${i}</td>
+                            <td><input type="text" placeholder="ስም..."></td>
+                            ${subjects.map(s => `
+                                <td>
+                                    <span class="checkbox-cell" onclick="toggle(this, '${i}')">-</span>
+                                </td>
+                            `).join('')}
+                            <td id="correct-${i}">0</td>
+                            <td id="wrong-${i}">0</td>
+                            <td id="total-${i}">0/5</td>
+                            <td id="rank-${i}">-</td>
+                        </tr>
+                    `);
+                }
+            </script>
+        </tbody>
+    </table>
+
+    <div class="footer-section">
+        <p><strong>የውድድሩ ዳኞች፡</strong></p>
+        1. <select id="judge1"></select> 
+        2. <select id="judge2"></select> 
+        3. <select id="judge3"></select>
+    </div>
+
+    <div class="btn-group">
+        <button class="btn-save" onclick="alert('ውጤቱ በስኬት ተቀምጧል!')">💾 ሴቭ (Store)</button>
+        <button class="btn-print" onclick="window.print()">🖨️ ፕሪንት (Print)</button>
+        <button class="btn-send" onclick="location.href='mailto:admin@school.com'">✉️ ላክ (Send)</button>
+    </div>
+</div>
+
+<script>
+    const judges = ["መ/ር ዳዊት የማነ", "መ/ር ደለለኝ አጥላው", "መ/ርት መሰረት ፋንታ", "መ/ር ባየልኝ አይተንፍሱ", "መ/ር አሰጋኸኝ በሻህ", "መ/ር ተፈሪ ታደሰ", "መ/ር እሸቱ አለሙ", "መ/ር ተፈራ ፈቀደው", "መ/ርት መሰረት ግዛቸው", "ር/መ/ር አማረ አሰፋ"];
+    
+    // ዳኞችን መሙላት
+    const judgeSelects = [document.getElementById('judge1'), document.getElementById('judge2'), document.getElementById('judge3')];
+    judgeSelects.forEach(sel => {
+        judges.forEach(j => {
+            let opt = document.createElement('option');
+            opt.text = j;
+            sel.add(opt);
+        });
+    });
+
+    // ሰዓት እና ቀን
+    document.getElementById('currentDate').valueAsDate = new Date();
+    document.getElementById('currentTime').innerText = new Date().toLocaleTimeString();
+
+    function toggle(el, rowId) {
+        if (el.innerText === "-") {
+            el.innerText = "✓";
+            el.className = "checkbox-cell correct";
+        } else if (el.innerText === "✓") {
+            el.innerText = "X";
+            el.className = "checkbox-cell wrong";
+        } else {
+            el.innerText = "-";
+            el.className = "checkbox-cell";
+        }
+        calculateRow(rowId);
+    }
+
+    function calculateRow(id) {
+        const row = document.getElementById(`row-${id}`);
+        const cells = row.querySelectorAll('.checkbox-cell');
+        let correct = 0;
+        let wrong = 0;
+
+        cells.forEach(c => {
+            if (c.innerText === "✓") correct++;
+            if (c.innerText === "X") wrong++;
+        });
+
+        document.getElementById(`correct-${id}`).innerText = correct;
+        document.getElementById(`wrong-${id}`).innerText = wrong;
+        document.getElementById(`total-${id}`).innerText = `${correct}/5`;
+    }
+</script>
+
+</body>
+</html>
