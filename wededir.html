@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <title>የውድድር ውጤት መያዣ</title>
+    <style>
+        :root {
+            --primary: #1a2a6c;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --bg: #f0f2f5;
+        }
+
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            background-color: var(--bg); 
+            margin: 0; 
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Login Box Styling */
+        #login-page {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+            width: 350px;
+            display: block; /* መጀመሪያ እንዲታይ */
+        }
+
+        /* Main App Styling (Hidden) */
+        #main-app {
+            display: none; /* በትክክል ሳይገቡ አይታይም */
+            width: 95%;
+            max-width: 1200px;
+            background: white;
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin: 20px auto;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        /* Table Styling */
+        table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 20px; border: 1px solid #ddd; border-radius: 12px; overflow: hidden; }
+        th, td { border: 1px solid #eee; padding: 10px; text-align: center; }
+        th { background: #2c3e50; color: white; font-size: 12px; }
+
+        .check-box { 
+            cursor: pointer; 
+            font-weight: bold; 
+            font-size: 22px; 
+            height: 50px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            background: #fff; 
+            border: 1px solid #f0f0f0;
+            border-radius: 8px;
+        }
+        .correct { color: var(--success); background: #e8f5e9 !important; }
+        .wrong { color: var(--danger); background: #ffebee !important; }
+
+        .top-info { display: flex; justify-content: space-between; margin-bottom: 20px; background: #f8f9fa; padding: 15px; border-radius: 12px; }
+        
+        @media print { 
+            #login-page, .btn-group, #logout-btn { display: none !important; } 
+            #main-app { display: block !important; box-shadow: none; border: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="login-page">
+    <h2 style="color: var(--primary);">እንኳን ደህና መጡ</h2>
+    <p style="font-size: 14px; color: #666;">እባክዎ መለያዎን ያስገቡ</p>
+    <input type="text" id="user" class="login-input" placeholder="ስም (Username)">
+    <input type="password" id="pass" class="login-input" placeholder="ሚስጥራዊ ቁጥር (Password)">
+    <p id="error" style="color: red; font-size: 13px; display: none;">ያልተፈቀደ ሙከራ! እባክዎ በትክክል ያስገቡ።</p>
+    <button class="login-btn" onclick="login()">ግባ</button>
+</div>
+
+<div id="main-app">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2 style="color: var(--primary);">የጥያቄና መልስ ውድድር ውጤት መያዣ</h2>
+        <button id="logout-btn" onclick="location.reload()" style="background:#fdecea; color:#d9534f; border:1px solid #d9534f; padding:8px 15px; border-radius:8px; cursor:pointer;">ውጣ (Logout)</button>
+    </div>
+
+    <div class="top-info">
+        <div>ቀን፡ <input type="date" id="dateIn" style="padding:5px; border-radius:5px;"></div>
+        <div>ክፍል፡ 
+            <select id="grade" style="padding:5px;">
+                <option>1ኛሀ</option><option>1ኛለ</option><option>2ኛሀ</option><option>2ኛለ</option>
+                <option>3ኛሀ</option><option>4ኛሀ</option><option>5ኛሀ</option><option>6ኛሀ</option>
+            </select>
+        </div>
+        <div>ሴሚስተር፡ 
+            <select id="sem" style="padding:5px;">
+                <option>1ኛ ሴሚስተር</option>
+                <option selected>2ኛ ሴሚስተር</option>
+            </select>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th rowspan="2">ተ.ቁ</th>
+                <th rowspan="2" style="width: 200px;">የተወዳዳሪ ስም</th>
+                <th colspan="2">አማርኛ</th><th colspan="2">እንግሊዝኛ</th><th colspan="2">ሒሳብ</th><th colspan="2">አ/ሳይንስ</th><th colspan="2">ግብረገብ</th>
+                <th rowspan="2">✓</th><th rowspan="2">X</th><th rowspan="2">ድምር</th><th rowspan="2">ደረጃ</th>
+            </tr>
+            <tr>
+                <th>1ኛ</th><th>2ኛ</th><th>1ኛ</th><th>2ኛ</th><th>1ኛ</th><th>2ኛ</th><th>1ኛ</th><th>2ኛ</th><th>1ኛ</th><th>2ኛ</th>
+            </tr>
+        </thead>
+        <tbody id="rowsBody"></tbody>
+    </table>
+
+    <div style="text-align: center; margin-top: 20px;" class="btn-group">
+        <button onclick="saveToHistory()" style="background:var(--success); color:white; padding:12px 25px; border:none; border-radius:10px; cursor:pointer; font-weight:bold; margin-right:10px;">💾 ውጤቱን መዝግብ (Save)</button>
+        <button onclick="window.print()" style="background:var(--primary); color:white; padding:12px 25px; border:none; border-radius:10px; cursor:pointer; font-weight:bold;">🖨️ ውጤቱን አትም (Print)</button>
+    </div>
+
+    <div id="history" style="margin-top:40px; border-top: 2px dashed #ccc; padding-top: 20px; display: none;">
+        <h3 style="color:var(--primary);">የተመዘገቡ ውጤቶች ታሪክ</h3>
+        <table style="background:#fafafa;">
+            <thead><tr><th>ክፍል</th><th>ተማሪ</th><th>ውጤት</th><th>ደረጃ</th></tr></thead>
+            <tbody id="historyBody"></tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // የመግቢያ ተግባር
+    function login() {
+        const u = document.getElementById('user').value;
+        const p = document.getElementById('pass').value;
+
+        // በትክክል ከተሞላ
+        if (u === "Delu" && p === "1221") {
+            document.getElementById('login-page').style.display = "none";
+            document.getElementById('main-app').style.display = "block";
+            document.body.style.alignItems = "start"; // ገጹ ወደ ላይ እንዲወጣ
+            createRows();
+        } else {
+            document.getElementById('error').style.display = "block";
+        }
+    }
+
+    // ሰንጠረዡን መፍጠር
+    function createRows() {
+        const body = document.getElementById('rowsBody');
+        body.innerHTML = "";
+        for (let i = 1; i <= 6; i++) {
+            body.innerHTML += `
+                <tr id="r-${i}">
+                    <td>${i}</td>
+                    <td><input type="text" placeholder="ስም..." style="width:90%; padding:8px; border:1px solid #ddd; border-radius:5px;" oninput="rankAll()"></td>
+                    ${Array(10).fill().map(() => `<td><div class="check-box" onclick="toggle(this, ${i})">-</div></td>`).join('')}
+                    <td id="c-${i}" style="color:green; font-weight:bold;">0</td>
+                    <td id="w-${i}" style="color:red; font-weight:bold;">0</td>
+                    <td id="t-${i}" style="font-weight:bold;">0/10</td>
+                    <td id="rnk-${i}" style="color:blue; font-weight:bold;">-</td>
+                </tr>`;
+        }
+        document.getElementById('dateIn').valueAsDate = new Date();
+    }
+
+    // የራይጥ እና ኤክስ ተግባር
+    function toggle(el, id) {
+        if (el.innerText === "-") { el.innerText = "✓"; el.className = "check-box correct"; }
+        else if (el.innerText === "✓") { el.innerText = "X"; el.className = "check-box wrong"; }
+        else { el.innerText = "-"; el.className = "check-box"; }
+        
+        let row = document.getElementById(`r-${id}`);
+        let correctCount = row.querySelectorAll('.correct').length;
+        let wrongCount = row.querySelectorAll('.wrong').length;
+        
+        document.getElementById(`c-${id}`).innerText = correctCount;
+        document.getElementById(`w-${id}`).innerText = wrongCount;
+        document.getElementById(`t-${id}`).innerText = correctCount + "/10";
+        rankAll();
+    }
+
+    // ደረጃን መስጠት
+    function rankAll() {
+        let list = [];
+        for (let i = 1; i <= 6; i++) {
+            let s = parseInt(document.getElementById(`c-${i}`).innerText);
+            let n = document.getElementById(`r-${i}`).querySelector('input').value;
+            list.push({ id: i, score: s, name: n });
+        }
+        let sorted = [...list].sort((a,b) => b.score - a.score);
+        list.forEach(item => {
+            if(item.name !== "" || item.score > 0) {
+                let r = sorted.findIndex(x => x.score === item.score) + 1;
+                document.getElementById(`rnk-${item.id}`).innerText = r + "ኛ";
+            }
+        });
+    }
+
+    // ታሪክ ውስጥ ማስቀመጥ
+    function saveToHistory() {
+        const histBody = document.getElementById('historyBody');
+        const gr = document.getElementById('grade').value;
+        let added = false;
+        for (let i = 1; i <= 6; i++) {
+            let name = document.getElementById(`r-${i}`).querySelector('input').value;
+            let score = document.getElementById(`t-${i}`).innerText;
+            let rank = document.getElementById(`rnk-${i}`).innerText;
+            if (name.trim() !== "") {
+                histBody.innerHTML += `<tr><td>${gr}</td><td>${name}</td><td>${score}</td><td>${rank}</td></tr>`;
+                added = true;
+            }
+        }
+        if(added) {
+            document.getElementById('history').style.display = "block";
+            alert("ውጤቱ በተሳካ ሁኔታ ተመዝግቧል!");
+        }
+    }
+</script>
+
+</body>
+</html>
