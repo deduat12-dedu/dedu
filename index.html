@@ -5,43 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>የጥያቄና መልስ ውጤት መያዣ</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; direction: rtl; text-align: right; padding: 20px; background-color: #f4f4f9; }
-        .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #2c3e50; }
-        .info-section { display: flex; justify-content: space-between; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f4f7f6; padding: 20px; direction: ltr; }
+        .container { max-width: 950px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        
+        .controls-section { display: flex; justify-content: space-between; align-items: center; background: #ecf0f1; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .timer-box { font-size: 24px; font-weight: bold; color: #e74c3c; background: #fff; padding: 10px 20px; border-radius: 5px; border: 2px solid #bdc3c7; min-width: 120px; text-align: center; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #dfe6e9; padding: 12px; text-align: center; }
         th { background-color: #34495e; color: white; }
-        input[type="number"], input[type="text"] { width: 90%; padding: 5px; border: 1px solid #ccc; border-radius: 4px; }
-        .btn-group { margin-top: 20px; text-align: center; }
-        button { padding: 10px 20px; margin: 5px; cursor: pointer; border: none; border-radius: 4px; font-size: 16px; }
-        .save-btn { background-color: #27ae60; color: white; }
-        .print-btn { background-color: #2980b9; color: white; }
-        @media print { .btn-group, select { display: none; } body { background: white; } }
+        
+        input[type="text"], input[type="number"], input[type="date"], select {
+            padding: 8px; border: 1px solid #ccc; border-radius: 4px; width: 90%;
+        }
+
+        .btn { padding: 10px 20px; cursor: pointer; border: none; border-radius: 5px; font-weight: bold; transition: 0.3s; }
+        .start-btn { background-color: #27ae60; color: white; }
+        .stop-btn { background-color: #e67e22; color: white; }
+        .print-btn { background-color: #3498db; color: white; }
+        .btn:hover { opacity: 0.8; }
+
+        @media print { .no-print { display: none; } body { background: white; } .container { box-shadow: none; } }
     </style>
 </head>
-<body dir="ltr" style="text-align: left;">
+<body>
 
 <div class="container">
     <h2>የጥያቄና መልስ ውጤት መያዣ</h2>
-    
-    <div class="info-section">
+
+    <div class="controls-section">
         <div>
-            <strong>ቀን፡</strong> 22/3/2026 <br>
-            <strong>ሰዓት፡</strong> 5:18 PM
+            <strong>ቀን ይምረጡ፡</strong> <br>
+            <input type="date" id="compDate" value="2026-03-22">
         </div>
+        
         <div>
-            <strong>ክፍል፡</strong> 
+            <strong>ክፍል፡</strong> <br>
             <select>
-                <option>1ኛ ሀ</option><option>1ኛ ለ</option>
-                <option>2ኛ ሀ</option><option>2ኛ ለ</option>
-                <option>3ኛ ሀ</option><option>4ኛ ሀ</option>
-                <option>5ኛ ሀ</option><option>6ኛ ሀ</option>
+                <option>1ኛ ሀ</option><option>1ኛ ለ</option><option>2ኛ ሀ</option>
+                <option>2ኛ ለ</option><option>3ኛ ሀ</option><option>4ኛ ሀ</option>
             </select>
         </div>
+
+        <div class="no-print">
+            <strong>ውድድር መቆጣጠሪያ፡</strong> <br>
+            <button class="btn start-btn" onclick="startTimer()">▶ ጀምር</button>
+            <button class="btn stop-btn" onclick="stopTimer()">⏹ አቁም</button>
+        </div>
+
         <div>
-            <strong>ሴሚስተር፡</strong> 
-            <select><option>1ኛ</option><option>2ኛ</option></select>
+            <strong>ቆጣሪ ሰዓት፡</strong>
+            <div id="displayTimer" class="timer-box">00:00:00</div>
         </div>
     </div>
 
@@ -54,64 +69,86 @@
                 <th>እንግሊዝኛ</th>
                 <th>ሒሳብ</th>
                 <th>አ/ሳይንስ</th>
-                <th>ግብረገብ</th>
                 <th>ድምር</th>
             </tr>
         </thead>
-        <tbody id="scoreTable">
-            <!-- 6 ተማሪዎች -->
-            <script>
-                for(let i=1; i<=6; i++) {
-                    document.write(`
-                        <tr>
-                            <td>${i}</td>
-                            <td><input type="text" placeholder="ስም"></td>
-                            <td><input type="number" class="score" oninput="calculate()"></td>
-                            <td><input type="number" class="score" oninput="calculate()"></td>
-                            <td><input type="number" class="score" oninput="calculate()"></td>
-                            <td><input type="number" class="score" oninput="calculate()"></td>
-                            <td><input type="number" class="score" oninput="calculate()"></td>
-                            <td class="total">0</td>
-                        </tr>
-                    `);
-                }
-            </script>
+        <tbody id="studentRows">
+            <!-- ተማሪዎች እዚህ ጋር በJS ይፈጠራሉ -->
         </tbody>
     </table>
 
-    <div style="margin-top: 30px;">
-        <p><strong>1ኛ ዳኛ፡</strong> 
-            <select id="judge1">
-                <option>--- ምረጥ ---</option>
-                <option>መ/ር ዳዊት የማነ</option><option>መ/ር ደለለኝ አጥላው</option>
-                <option>መ/ርት መሰረት ፋንታ</option><option>መ/ር ባየልኝ አይተንፍሱ</option>
-            </select>
-        </p>
-        <p><strong>2ኛ ዳኛ፡</strong> 
-            <select id="judge2">
-                <option>--- ምረጥ ---</option>
-                <option>መ/ር ዳዊት የማነ</option><option>መ/ር ደለለኝ አጥላው</option>
-                <option>መ/ርት መሰረት ፋንታ</option>
-            </select>
-        </p>
-        <p><strong>ሰብሳቢ፡</strong> መ/ር ደለለኝ አጥላው | <strong>ፀሀፊ፡</strong> መ/ርት መሰረት ፋንታ</p>
-        <p><strong>ፊርማ፡</strong> _________________</p>
+    <div style="margin-top: 25px; display: flex; justify-content: space-between;">
+        <div style="width: 45%;">
+            <p><strong>1ኛ ዳኛ፡</strong> 
+                <select>
+                    <option>--- ምረጥ ---</option>
+                    <option>መ/ር ዳዊት የማነ</option><option>መ/ር ደለለኝ አጥላው</option>
+                    <option>መ/ርት መሰረት ፋንታ</option><option>መ/ር ባየልኝ አይተንፍሱ</option>
+                </select>
+            </p>
+            <p><strong>ሰብሳቢ፡</strong> መ/ር ደለለኝ አጥላው</p>
+        </div>
+        <div style="width: 45%;">
+            <p><strong>2ኛ ዳኛ፡</strong> <select><option>--- ምረጥ ---</option><option>መ/ርት መሰረት ግዛቸው</option></select></p>
+            <p><strong>ፀሀፊ፡</strong> መ/ርት መሰረት ፋንታ</p>
+            <p><strong>ፊርማ፡</strong> _________________</p>
+        </div>
     </div>
 
-    <div class="btn-group">
-        <button class="save-btn" onclick="alert('ውጤቱ ተመዝግቧል!')">💾 ውጤቱን መዝግብ</button>
-        <button class="print-btn" onclick="window.print()">🖨️ ውጤቱን አትም</button>
+    <div class="no-print" style="text-align: center; margin-top: 30px;">
+        <button class="btn print-btn" onclick="window.print()">🖨️ ውጤቱን አትም (Print)</button>
     </div>
 </div>
 
 <script>
-    function calculate() {
-        let rows = document.querySelectorAll("#scoreTable tr");
+    let timerInterval;
+    let seconds = 0;
+    let timerRunning = false;
+
+    // የተማሪ ሰንጠረዥ መፍጠሪያ
+    const tbody = document.getElementById('studentRows');
+    for (let i = 1; i <= 6; i++) {
+        tbody.innerHTML += `
+            <tr>
+                <td>${i}</td>
+                <td><input type="text" placeholder="ስም ሲጻፍ ሰዓት ይጀምራል" onkeypress="autoStartTimer()"></td>
+                <td><input type="number" class="score" oninput="calcSum()"></td>
+                <td><input type="number" class="score" oninput="calcSum()"></td>
+                <td><input type="number" class="score" oninput="calcSum()"></td>
+                <td><input type="number" class="score" oninput="calcSum()"></td>
+                <td class="total" style="font-weight:bold;">0</td>
+            </tr>`;
+    }
+
+    function autoStartTimer() {
+        if (!timerRunning) startTimer();
+    }
+
+    function startTimer() {
+        if (timerRunning) return;
+        timerRunning = true;
+        timerInterval = setInterval(() => {
+            seconds++;
+            let hrs = Math.floor(seconds / 3600);
+            let mins = Math.floor((seconds % 3600) / 60);
+            let secs = seconds % 60;
+            document.getElementById('displayTimer').innerText = 
+                `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }, 1000);
+    }
+
+    function stopTimer() {
+        clearInterval(timerInterval);
+        timerRunning = false;
+    }
+
+    function calcSum() {
+        let rows = document.querySelectorAll("#studentRows tr");
         rows.forEach(row => {
             let scores = row.querySelectorAll(".score");
-            let total = 0;
-            scores.forEach(s => total += Number(s.value) || 0);
-            row.querySelector(".total").innerText = total;
+            let sum = 0;
+            scores.forEach(s => sum += Number(s.value) || 0);
+            row.querySelector(".total").innerText = sum;
         });
     }
 </script>
