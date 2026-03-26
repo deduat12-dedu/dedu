@@ -193,7 +193,7 @@
     function changeLang() {
         const h2 = document.getElementById('txt-main-title');
         const exam = document.getElementById('txt-exam');
-        const subHeaders = document.getElementById('sub-headers').getElementsByTagName('th');
+        const subHeaders = document.getElementById('sub-headers').children;
         
         if (currentLang === "EN") {
             h2.innerText = "የፈተና ይዘት ማውጫ (TOS)";
@@ -208,12 +208,9 @@
             document.getElementById('f-teacher').innerText = "የክፍሉ መምህር";
             document.getElementById('f-dept').innerText = "የክፍል ኃላፊ";
             document.getElementById('f-princ').innerText = "ርዕሰ መምህር";
-            document.getElementById('f-name1').innerText = "ስም:";
-            document.getElementById('f-name2').innerText = "ስም:";
-            document.getElementById('f-name3').innerText = "ስም:";
             
             const amWords = ["ዕውቀት", "መረዳት", "መተግበር", "መተንተን", "ማቀናጀት", "መገምገም"];
-            for(let i=0; i<subHeaders.length; i++) { subHeaders[i].innerText = amWords[i]; }
+            for(let i=0; i<subHeaders.length; i++) subHeaders[i].innerText = amWords[i];
             currentLang = "AM";
         } else {
             h2.innerText = "TABLE OF SPECIFICATION (TOS)";
@@ -228,12 +225,9 @@
             document.getElementById('f-teacher').innerText = "Subject Teacher";
             document.getElementById('f-dept').innerText = "Dept. Head";
             document.getElementById('f-princ').innerText = "Principal";
-            document.getElementById('f-name1').innerText = "Name:";
-            document.getElementById('f-name2').innerText = "Name:";
-            document.getElementById('f-name3').innerText = "Name:";
 
             const enWords = ["Knowledge", "Comprehension", "Application", "Analysis", "Synthesis", "Evaluation"];
-            for(let i=0; i<subHeaders.length; i++) { subHeaders[i].innerText = enWords[i]; }
+            for(let i=0; i<subHeaders.length; i++) subHeaders[i].innerText = enWords[i];
             currentLang = "EN";
         }
     }
@@ -253,10 +247,10 @@
         
         rows.forEach(r => {
             let rowSum = 0;
-            tPer += Number(r.cells[2].innerText) || 0;
-            tItm += Number(r.cells[3].innerText) || 0;
+            tPer += parseFloat(r.cells[2].innerText) || 0;
+            tItm += parseFloat(r.cells[3].innerText) || 0;
             for(let i=4; i<=9; i++) {
-                let val = Number(r.cells[i].innerText) || 0;
+                let val = parseFloat(r.cells[i].innerText) || 0;
                 rowSum += val;
                 colSums[i-4] += val;
             }
@@ -266,22 +260,14 @@
 
         document.getElementById('t-per').innerText = tPer;
         document.getElementById('t-itm').innerText = tItm;
-        for(let j=1; j<=6; j++) {
-            document.getElementById('t-col' + j).innerText = colSums[j-1];
-        }
+        for(let j=1; j<=6; j++) document.getElementById('t-col' + j).innerText = colSums[j-1];
         document.getElementById('t-grand').innerText = grand;
     }
 
     function showImg(input, id) { if (input.files && input.files[0]) { let r = new FileReader(); r.onload = e => { let m = document.getElementById(id); m.src = e.target.result; m.style.display = 'block'; input.parentElement.querySelector('span').style.display = 'none'; }; r.readAsDataURL(input.files[0]); } }
+    function pdf() { html2pdf().from(document.getElementById('main-content')).set({ margin: 5, filename: 'TOS.pdf', jsPDF: { orientation: isLandscape ? 'landscape' : 'portrait' } }).save(); }
     
-    function pdf() { 
-        const element = document.getElementById('main-content');
-        html2pdf().from(element).set({
-            margin: 5,
-            filename: 'TOS_Report.pdf',
-            jsPDF: { orientation: isLandscape ? 'landscape' : 'portrait' }
-        }).save();
-    }
+    window.onload = calc;
 </script>
 </body>
 </html>
