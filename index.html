@@ -1,247 +1,137 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Multi-Language TOS Builder</title>
+    <title>TOS Builder - Final</title>
+    <!-- PDF Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        :root { --primary: #1a3a5f; --accent: #e74c3c; }
-        
-        body { 
-            font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; padding: 20px;
-            background: linear-gradient(-45deg, #4facfe, #00f2fe, #764ba2, #667eea);
-            background-size: 400% 400%; animation: gradMove 15s ease infinite; min-height: 100vh;
-        }
-
-        @keyframes gradMove { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
-
-        .container { 
-            max-width: 1200px; margin: 0 auto; background: rgba(255, 255, 255, 0.92); 
-            backdrop-filter: blur(12px); padding: 35px; border-radius: 20px; 
-            box-shadow: 0 20px 60px rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.4);
-        }
-
-        /* Controls Area */
-        .controls { 
-            display: flex; justify-content: space-between; margin-bottom: 25px; 
-            background: var(--primary); padding: 15px 20px; border-radius: 12px; color: white;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        .btn { padding: 10px 18px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; color: white; display: flex; align-items: center; gap: 8px; }
-        .btn-lang { background: #8e44ad; }
-        .btn-add { background: #27ae60; }
-        .btn-pdf { background: var(--accent); }
-        .btn-print { background: #f1c40f; color: black; }
-        .btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
-
-        /* Header Section */
-        .top-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid var(--primary); padding-bottom: 15px; margin-bottom: 20px; }
-        .logo-box { width: 115px; height: 115px; border: 2.5px dashed var(--primary); border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; background: rgba(255,255,255,0.5); }
-        .logo-box img { max-width: 100%; max-height: 100%; display: none; object-fit: contain; }
+        body { font-family: sans-serif; background: #f0f2f5; padding: 20px; }
+        .glass { background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width: 1100px; margin: auto; }
+        .btns { background: #1a3a5f; padding: 10px; border-radius: 10px; margin-bottom: 20px; display: flex; gap: 10px; }
+        button { padding: 8px 15px; cursor: pointer; border: none; border-radius: 5px; font-weight: bold; }
+        .btn-pdf { background: #e74c3c; color: white; }
+        .btn-lang { background: #8e44ad; color: white; }
+        table { width: 100%; border-collapse: collapse; background: white; margin-top: 15px; }
+        th, td { border: 2px solid #1a3a5f; padding: 8px; text-align: center; font-size: 13px; }
+        th { background: #1a3a5f; color: white; }
+        .v-text { writing-mode: vertical-rl; transform: rotate(180deg); height: 100px; }
+        .logo-box { width: 100px; height: 100px; border: 2px dashed #1a3a5f; display: flex; align-items: center; justify-content: center; position: relative; cursor: pointer; }
+        .logo-box img { max-width: 100%; max-height: 100%; }
         .logo-box input { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
-
-        /* Table Design */
-        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; background: white; }
-        th, td { border: 2.5px solid var(--primary); padding: 8px; text-align: center; font-size: 13.5px; }
-        th { background: var(--primary); color: white; }
-        .v-text { writing-mode: vertical-rl; transform: rotate(180deg); height: 115px; font-weight: bold; }
-        .input-cell { min-width: 40px; outline: none; }
-        .input-cell:focus { background: #fff9c4; }
-
-        /* Signatures */
-        .signature-area { display: flex; justify-content: space-between; margin-top: 40px; }
-        .sig-box { width: 30%; text-align: center; }
-        .sig-line { border-top: 2.5px solid var(--primary); margin-top: 35px; margin-bottom: 8px; }
-        .sig-name { font-weight: bold; font-size: 15px; border-bottom: 1px solid #ddd; padding-bottom: 2px; }
-        .editable-date { display: block; margin-top: 5px; font-style: italic; font-size: 13px; color: #555; outline: none; }
-
-        @media print { 
-            .controls, input[type="file"] { display: none !important; } 
-            body { background: white; padding: 0; }
-            .container { border: none; box-shadow: none; background: white; width: 100%; max-width: 100%; padding: 0; }
-            .logo-box { border: none; }
-        }
+        .sigs { display: flex; justify-content: space-between; margin-top: 40px; }
+        .sig-box { width: 30%; text-align: center; border-top: 2px solid #1a3a5f; padding-top: 5px; }
     </style>
 </head>
 <body>
 
-<div class="container" id="main-content">
-    <div class="controls">
-        <div style="display: flex; gap: 12px;">
-            <button class="btn btn-lang" onclick="toggleLang()">🌍 <span id="lang-btn-text">አማርኛ</span></button>
-            <button class="btn btn-add" onclick="addRow()">➕ Add Row</button>
-            <button class="btn btn-pdf" onclick="saveAsPDF()">📄 Save as PDF</button>
-        </div>
-        <div style="display: flex; gap: 8px;">
-            <select id="pageOrientation" style="padding: 8px; border-radius: 8px; border: none; font-weight: bold;">
-                <option value="landscape" selected>Landscape (አግድም)</option>
-                <option value="portrait">Portrait (ቁም)</option>
-            </select>
-            <button class="btn btn-print" onclick="window.print()">🖨️ Print</button>
-        </div>
-    </div>
+<div class="btns">
+    <button class="btn-lang" onclick="changeLang()">🌍 Change Language (አማርኛ)</button>
+    <button style="background: #27ae60; color: white;" onclick="addRow()">➕ Add Row</button>
+    <button class="btn-pdf" onclick="pdf()">📄 Save as PDF</button>
+</div>
 
-    <div class="top-header">
+<div class="glass" id="area">
+    <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #1a3a5f; padding-bottom: 10px;">
         <div class="logo-box">
-            <span id="logo-text" style="font-size: 11px; text-align: center; padding: 5px;">Upload Logo<br>(ሎጎ ይጫኑ)</span>
-            <input type="file" accept="image/*" onchange="previewLogo(this)">
-            <img id="logoImg" src="">
+            <span id="l-up">Logo</span>
+            <input type="file" onchange="showL(this)">
+            <img id="imgL" src="" style="display:none">
         </div>
-        <div style="text-align: center; flex-grow: 1;">
-            <h2 id="main-title" contenteditable="true">Table of Specification (TOS) Builder</h2>
-            <p id="sub-title" contenteditable="true">2018 E.C. Second Semester Mid-Examination</p>
+        <div style="text-align: center;">
+            <h2 id="h-title" contenteditable="true">Table of Specification (TOS)</h2>
+            <p id="h-sub" contenteditable="true">2018 E.C. Mid-Exam</p>
         </div>
-        <div style="width: 115px;"></div>
+        <div style="width: 100px;"></div>
     </div>
 
-    <table id="tosTable">
+    <table id="table">
         <thead>
             <tr>
-                <th rowspan="2" id="t-no" style="width: 30px;">No</th>
-                <th rowspan="2" id="t-content" style="width: 260px;">Contents</th>
-                <th rowspan="2" class="v-text" id="t-period">Period</th>
-                <th rowspan="2" class="v-text" id="t-items">No. Items</th>
-                <th colspan="6" id="t-objectives">Instructional Objectives</th>
-                <th rowspan="2" class="v-text" id="t-total">Total</th>
-                <th rowspan="2" class="v-text" id="t-percent">Percent</th>
+                <th rowspan="2" id="h-no">No</th>
+                <th rowspan="2" id="h-con">Contents</th>
+                <th rowspan="2" class="v-text" id="h-per">Period</th>
+                <th rowspan="2" class="v-text" id="h-itm">Items</th>
+                <th colspan="6" id="h-obj">Instructional Objectives</th>
+                <th rowspan="2" class="v-text" id="h-tot">Total</th>
             </tr>
             <tr>
-                <th class="v-text" id="o-1">Knowledge</th>
-                <th class="v-text" id="o-2">Comprehension</th>
-                <th class="v-text" id="o-3">Application</th>
-                <th class="v-text" id="o-4">Analysis</th>
-                <th class="v-text" id="o-5">Synthesis</th>
-                <th class="v-text" id="o-6">Evaluation</th>
+                <th class="v-text" id="o1">Knowledge</th><th class="v-text" id="o2">Comprehension</th>
+                <th class="v-text" id="o3">Application</th><th class="v-text" id="o4">Analysis</th>
+                <th class="v-text" id="o5">Synthesis</th><th class="v-text" id="o6">Evaluation</th>
             </tr>
         </thead>
-        <tbody id="tableBody">
+        <tbody id="tbody">
             <tr>
                 <td>1</td>
-                <td contenteditable="true" style="text-align:left">Enter Topic Here...</td>
-                <td contenteditable="true" class="input-cell in">0</td>
-                <td contenteditable="true" class="input-cell in">0</td>
-                <td contenteditable="true" class="input-cell in">0</td><td contenteditable="true" class="input-cell in">0</td>
-                <td contenteditable="true" class="input-cell in">0</td><td contenteditable="true" class="input-cell in">0</td>
-                <td contenteditable="true" class="input-cell in">0</td><td contenteditable="true" class="input-cell in">0</td>
-                <td style="background:#f4f7f9; font-weight: bold;">0</td>
-                <td style="background:#f4f7f9; font-weight: bold;">0%</td>
+                <td contenteditable="true" style="text-align:left">Unit 1</td>
+                <td contenteditable="true" oninput="calc()">0</td><td contenteditable="true" oninput="calc()">0</td>
+                <td contenteditable="true" oninput="calc()">0</td><td contenteditable="true" oninput="calc()">0</td>
+                <td contenteditable="true" oninput="calc()">0</td><td contenteditable="true" oninput="calc()">0</td>
+                <td contenteditable="true" oninput="calc()">0</td><td contenteditable="true" oninput="calc()">0</td>
+                <td style="background:#eee; font-weight:bold">0</td>
             </tr>
         </tbody>
-        <tfoot>
-            <tr style="background:var(--primary); color:white; font-weight:bold;">
-                <td colspan="2" id="t-grand-label">GRAND TOTAL</td>
-                <td id="s-p">0</td><td id="s-i">0</td>
-                <td id="s-1">0</td><td id="s-2">0</td><td id="s-3">0</td>
-                <td id="s-4">0</td><td id="s-5">0</td><td id="s-6">0</td>
-                <td id="s-g">0</td><td>100%</td>
-            </tr>
-        </tfoot>
     </table>
 
-    <div class="signature-area">
-        <div class="sig-box">
-            <span style="font-weight:bold; color:var(--primary)" id="l-teach">Teacher</span><br>
-            <span class="sig-name" contenteditable="true">Delelegn Atlaw</span>
-            <div class="sig-line"></div>
-            <span class="editable-date" id="d1" contenteditable="true">Date: ___/___/2018 E.C</span>
-        </div>
-        <div class="sig-box">
-            <span style="font-weight:bold; color:var(--primary)" id="l-dept">Dept. Head</span><br>
-            <span class="sig-name" contenteditable="true">________________</span>
-            <div class="sig-line"></div>
-            <span class="editable-date" id="d2" contenteditable="true">Date: ___/___/2018 E.C</span>
-        </div>
-        <div class="sig-box">
-            <span style="font-weight:bold; color:var(--primary)" id="l-prin">Principal</span><br>
-            <span class="sig-name" contenteditable="true">Amare Asefa</span>
-            <div class="sig-line"></div>
-            <span class="editable-date" id="d3" contenteditable="true">Date: ___/___/2018 E.C</span>
-        </div>
+    <div class="sigs">
+        <div class="sig-box"><b id="s1">Teacher</b><br><span contenteditable="true">Delelegn Atlaw</span></div>
+        <div class="sig-box"><b id="s2">Dept. Head</b><br><span contenteditable="true">________________</span></div>
+        <div class="sig-box"><b id="s3">Principal</b><br><span contenteditable="true">Amare Asefa</span></div>
     </div>
 </div>
 
 <script>
-    let currentLang = 'EN';
-    const dict = {
-        'EN': { btn: 'አማርኛ', no: 'No', content: 'Contents', period: 'Period', items: 'No. Items', obj: 'Instructional Objectives', tot: 'Total', per: 'Percent', k: 'Knowledge', c: 'Comprehension', a: 'Application', an: 'Analysis', s: 'Synthesis', e: 'Evaluation', grand: 'GRAND TOTAL', teach: 'Teacher', dept: 'Dept. Head', prin: 'Principal', date: 'Date: ___/___/2018 E.C' },
-        'AM': { btn: 'English', no: 'ተ.ቁ', content: 'ይዘቶች', period: 'ክፍለ-ጊዜ', items: 'ጥያቄ ብዛት', obj: 'የትምህርት ዓላማዎች', tot: 'ድምር', per: 'ፐርሰንት', k: 'ዕውቀት', c: 'ግንዛቤ', a: 'ተግባር', an: 'ትንተና', s: 'ውህደት', e: 'ምዘና', grand: 'ጠቅላላ ድምር', teach: 'መምህር', dept: 'የክፍል ኃላፊ', prin: 'ርዕሰ መምህር', date: 'ቀን: ___/___/2018 ዓ.ም' }
-    };
-
-    function toggleLang() {
-        currentLang = (currentLang === 'EN') ? 'AM' : 'EN';
-        const d = dict[currentLang];
-        document.getElementById('lang-btn-text').innerText = d.btn;
-        document.getElementById('t-no').innerText = d.no;
-        document.getElementById('t-content').innerText = d.content;
-        document.getElementById('t-period').innerText = d.period;
-        document.getElementById('t-items').innerText = d.items;
-        document.getElementById('t-objectives').innerText = d.obj;
-        document.getElementById('t-total').innerText = d.tot;
-        document.getElementById('t-percent').innerText = d.per;
-        document.getElementById('o-1').innerText = d.k; document.getElementById('o-2').innerText = d.c;
-        document.getElementById('o-3').innerText = d.a; document.getElementById('o-4').innerText = d.an;
-        document.getElementById('o-5').innerText = d.s; document.getElementById('o-6').innerText = d.e;
-        document.getElementById('t-grand-label').innerText = d.grand;
-        document.getElementById('l-teach').innerText = d.teach;
-        document.getElementById('l-dept').innerText = d.dept;
-        document.getElementById('l-prin').innerText = d.prin;
-        document.getElementById('d1').innerText = d.date; document.getElementById('d2').innerText = d.date; document.getElementById('d3').innerText = d.date;
+    let isAm = false;
+    function changeLang() {
+        isAm = !isAm;
+        document.getElementById('h-no').innerText = isAm ? "ተ.ቁ" : "No";
+        document.getElementById('h-con').innerText = isAm ? "ይዘቶች" : "Contents";
+        document.getElementById('h-per').innerText = isAm ? "ክፍለ-ጊዜ" : "Period";
+        document.getElementById('h-itm').innerText = isAm ? "ጥያቄ ብዛት" : "Items";
+        document.getElementById('h-obj').innerText = isAm ? "የትምህርት ዓላማዎች" : "Instructional Objectives";
+        document.getElementById('h-tot').innerText = isAm ? "ድምር" : "Total";
+        document.getElementById('s1').innerText = isAm ? "መምህር" : "Teacher";
+        document.getElementById('s2').innerText = isAm ? "የክፍል ኃላፊ" : "Dept. Head";
+        document.getElementById('s3').innerText = isAm ? "ርዕሰ መምህር" : "Principal";
+        document.getElementById('o1').innerText = isAm ? "ዕውቀት" : "Knowledge";
+        document.getElementById('o2').innerText = isAm ? "ግንዛቤ" : "Comprehension";
+        document.getElementById('o3').innerText = isAm ? "ተግባር" : "Application";
+        document.getElementById('o4').innerText = isAm ? "ትንተና" : "Analysis";
+        document.getElementById('o5').innerText = isAm ? "ውህደት" : "Synthesis";
+        document.getElementById('o6').innerText = isAm ? "ምዘና" : "Evaluation";
     }
 
-    function previewLogo(input) {
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = e => { 
-                const img = document.getElementById('logoImg');
-                img.src = e.target.result; img.style.display = 'block';
-                document.getElementById('logo-text').style.display = 'none';
-            };
-            reader.readAsDataURL(input.files[0]);
+    function showL(i) {
+        if (i.files && i.files[0]) {
+            let r = new FileReader();
+            r.onload = e => { document.getElementById('imgL').src = e.target.result; document.getElementById('imgL').style.display='block'; document.getElementById('l-up').style.display='none'; };
+            r.readAsDataURL(i.files[0]);
         }
     }
 
     function calc() {
-        const rows = document.querySelectorAll('#tableBody tr');
-        let tP = 0, tI = 0, tO = [0,0,0,0,0,0], gS = 0;
-        rows.forEach(r => { tP += +r.cells[2].innerText || 0; tI += +r.cells[3].innerText || 0; });
-        rows.forEach(r => {
-            let rI = +r.cells[3].innerText || 0, rSum = 0;
-            for(let i=0; i<6; i++) { let v = +r.cells[4+i].innerText || 0; rSum += v; tO[i] += v; }
-            r.cells[10].innerText = rSum; r.cells[11].innerText = tI > 0 ? Math.round((rI/tI)*100)+'%' : '0%'; gS += rSum;
+        let rs = document.querySelectorAll('#tbody tr');
+        rs.forEach(r => {
+            let sum = 0;
+            for(let i=4; i<=9; i++) sum += Number(r.cells[i].innerText) || 0;
+            r.cells[10].innerText = sum;
         });
-        document.getElementById('s-p').innerText = tP; document.getElementById('s-i').innerText = tI;
-        for(let i=0; i<6; i++) document.getElementById('s-'+(i+1)).innerText = tO[i];
-        document.getElementById('s-g').innerText = gS;
     }
 
     function addRow() {
-        const tb = document.getElementById('tableBody');
-        const r = tb.insertRow();
-        r.innerHTML = `<td>${tb.rows.length}</td><td contenteditable="true" style="text-align:left">New Content</td>
-            <td contenteditable="true" class="input-cell in">0</td><td contenteditable="true" class="input-cell in">0</td>
-            ${'<td contenteditable="true" class="input-cell in">0</td>'.repeat(6)}
-            <td style="background:#f4f7f9; font-weight: bold;">0</td><td style="background:#f4f7f9; font-weight: bold;">0%</td>`;
-        listen();
+        let b = document.getElementById('tbody');
+        let r = b.insertRow();
+        r.innerHTML = `<td>${b.rows.length}</td><td contenteditable="true" style="text-align:left">New Unit</td>
+            <td contenteditable="true" oninput="calc()">0</td><td contenteditable="true" oninput="calc()">0</td>
+            ${'<td contenteditable="true" oninput="calc()">0</td>'.repeat(6)}
+            <td style="background:#eee; font-weight:bold">0</td>`;
     }
 
-    function listen() { document.querySelectorAll('.in').forEach(c => c.oninput = calc); }
-
-    function saveAsPDF() {
-        const element = document.getElementById('main-content');
-        const orientation = document.getElementById('pageOrientation').value;
-        document.querySelector('.controls').style.display = 'none';
-        const opt = { 
-            margin: 5, filename: 'TOS_Report_2018.pdf', image: { type: 'jpeg', quality: 1 }, 
-            html2canvas: { scale: 2, useCORS: true }, 
-            jsPDF: { unit: 'mm', format: 'a4', orientation: orientation } 
-        };
-        html2pdf().set(opt).from(element).save().then(() => {
-            document.querySelector('.controls').style.display = 'flex';
-        });
+    function pdf() {
+        const e = document.getElementById('area');
+        html2pdf().from(e).set({ margin: 10, filename: 'TOS.pdf', jsPDF: { orientation: 'landscape' } }).save();
     }
-    listen();
 </script>
 </body>
 </html>
