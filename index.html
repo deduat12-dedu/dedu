@@ -49,9 +49,11 @@
         .name-box { border: 2px solid #000; padding: 10px; margin: 10px auto; width: 85%; background: white; min-height: 20px; text-align: left; }
         .sig-line { border-top: 2.5px solid #000; margin-top: 5px; margin-bottom: 5px; width: 85%; margin-left: auto; margin-right: auto; }
 
+        .dev-credit { text-align: center; margin-top: 40px; font-size: 14px; font-weight: bold; border-top: 1px dashed #000; padding-top: 10px; }
+
         @media print { 
             .btns-top { display: none; } 
-            .glass-container { background: white; box-shadow: none; border: none; width: 100%; max-width: 100%; padding: 0; margin: 0; transform: scale(0.95); transform-origin: top left; }
+            .glass-container { background: white; box-shadow: none; border: none; width: 100%; max-width: 100%; padding: 0; margin: 0; transform: scale(0.98); transform-origin: top left; }
             body { background: white; padding: 0; }
         }
     </style>
@@ -90,7 +92,7 @@
                 <th rowspan="2" class="v-text" id="h-per">Period</th><th rowspan="2" class="v-text" id="h-itm">Items</th>
                 <th colspan="6" id="h-obj">Learning Objectives</th><th rowspan="2" class="v-text" id="h-tot">Total</th>
             </tr>
-            <tr>
+            <tr id="sub-headers">
                 <th class="v-text">Knowledge</th><th class="v-text">Comprehension</th><th class="v-text">Application</th><th class="v-text">Analysis</th><th class="v-text">Synthesis</th><th class="v-text">Evaluation</th>
             </tr>
         </thead>
@@ -130,12 +132,15 @@
             <span contenteditable="true" style="font-size: 13px;" id="f-date3">Date: ___/___/2018</span>
         </div>
     </div>
+
+    <div class="dev-credit">Developer: Delelegn Atlaw</div>
 </div>
 
 <script>
     let amActive = false;
     let isLandscape = true;
     let lastKey = "";
+    let currentLang = "EN";
 
     const amTable = {
         'h':['ሀ','ሁ','ሂ','ሃ','ሄ','ህ','ሆ'],'l':['ለ','ሉ','ሊ','ላ','ሌ','ል','ሎ'],'m':['መ','ሙ','ሚ','ማ','ሜ','ም','ሞ'],'r':['ረ','ሩ','ሪ','ራ','ሬ','ር','ሮ'],'s':['ሰ','ሱ','ሲ','ሳ','ሴ','ስ','ሶ'],'q':['ቀ','ቁ','ቂ','ቃ','ቄ','ቅ','ቆ'],'b':['በ','ቡ','ቢ','ባ','ቤ','ብ','ቦ'],'t':['ተ','ቱ','ቲ','ታ','ቴ','ት','ቶ'],'n':['ነ','ኑ','ኒ','ና','ኔ','ን','ኖ'],'k':['ከ','ኩ','ኪ','ካ','ኬ','ክ','ኮ'],'w':['ወ','ዉ','ዊ','ዋ','ዌ','ው','ዎ'],'z':['ዘ','ዙ','ዚ','ዛ','ዜ','ዝ','ዞ'],'y':['የ','ዩ','ዪ','ያ','ዬ','ይ','ዮ'],'d':['ደ','ዱ','ዲ','ዳ','ዴ','ድ','ዶ'],'j':['ጀ','ጁ','ጂ','ጃ','ጄ','ጅ','ጆ'],'g':['ገ','ጉ','ጊ','ጋ','ጌ','ግ','ጎ'],'p':['ፐ','ፑ','ፒ','ፓ','ፔ','ፕ','ፖ'],'v':['ቨ','ቩ','ቪ','ቫ','ቬ','ቭ','ቮ']
@@ -173,8 +178,9 @@
 
     function changeLang() {
         const h2 = document.getElementById('txt-main-title');
-        const isAM = h2.innerText.includes("TABLE");
-        if (isAM) {
+        const subs = document.getElementById('sub-headers').children;
+        
+        if (currentLang === "EN") {
             h2.innerText = "የፈተና ይዘት ማውጫ (TOS)";
             document.getElementById('txt-exam').innerText = "2018 ዓ.ም - የግማሽ ሴሚስተር ፈተና";
             document.getElementById('h-no').innerText = "ተ.ቁ";
@@ -185,47 +191,4 @@
             document.getElementById('h-tot').innerText = "ድምር";
             document.getElementById('h-grand').innerText = "አጠቃላይ ድምር";
             document.getElementById('f-teacher').innerText = "የክፍሉ መምህር";
-            document.getElementById('f-name1').innerText = "ስም:";
-            document.getElementById('f-date1').innerText = "ቀን: ___/___/2018";
-        } else {
-            h2.innerText = "TABLE OF SPECIFICATION (TOS)";
-            document.getElementById('txt-exam').innerText = "2018 E.C. - MID EXAMINATION";
-            document.getElementById('h-no').innerText = "No";
-            document.getElementById('h-unit').innerText = "Contents / Units";
-            document.getElementById('h-per').innerText = "Period";
-            document.getElementById('h-itm').innerText = "Items";
-            document.getElementById('h-obj').innerText = "Learning Objectives";
-            document.getElementById('h-tot').innerText = "Total";
-            document.getElementById('h-grand').innerText = "GRAND TOTAL";
-            document.getElementById('f-teacher').innerText = "Subject Teacher";
-            document.getElementById('f-name1').innerText = "Name:";
-            document.getElementById('f-date1').innerText = "Date: ___/___/2018";
-        }
-    }
-
-    function addRow() {
-        let b = document.getElementById('tbody');
-        let r = b.insertRow();
-        r.innerHTML = `<td>${b.rows.length}</td><td contenteditable="true"></td><td contenteditable="true" oninput="calc()">0</td><td contenteditable="true" oninput="calc()">0</td>${'<td contenteditable="true" oninput="calc()">0</td>'.repeat(6)}<td>0</td>`;
-    }
-    function removeRow() { let b = document.getElementById('tbody'); if(b.rows.length > 1) b.deleteRow(-1); calc(); }
-    
-    function calc() {
-        let rows = document.querySelectorAll('#tbody tr'), grand = 0, tPer = 0, tItm = 0;
-        rows.forEach(r => {
-            let rs = 0;
-            tPer += Number(r.cells[2].innerText) || 0;
-            tItm += Number(r.cells[3].innerText) || 0;
-            for(let i=4; i<=9; i++) rs += Number(r.cells[i].innerText) || 0;
-            r.cells[10].innerText = rs; grand += rs;
-        });
-        document.getElementById('t-per').innerText = tPer;
-        document.getElementById('t-itm').innerText = tItm;
-        document.getElementById('t-grand').innerText = grand;
-    }
-
-    function showImg(input, id) { if (input.files && input.files[0]) { let r = new FileReader(); r.onload = e => { let m = document.getElementById(id); m.src = e.target.result; m.style.display = 'block'; input.parentElement.querySelector('span').style.display = 'none'; }; r.readAsDataURL(input.files[0]); } }
-    function pdf() { html2pdf().from(document.getElementById('main-content')).set({ margin: 5, filename: 'TOS.pdf', jsPDF: { orientation: isLandscape ? 'landscape' : 'portrait' } }).save(); }
-</script>
-</body>
-</html>
+            document
