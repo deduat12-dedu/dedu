@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TOS Professional - Clean Edition</title>
+    <title>Professional TOS - Final Clean Edition</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         body { 
             margin: 0; padding: 15px; 
-            font-family: 'Nyala', 'Abyssinica SIL', 'Noto Sans Ethiopic', sans-serif;
+            font-family: 'Nyala', 'Abyssinica SIL', sans-serif;
             background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
@@ -32,12 +32,9 @@
             backdrop-filter: blur(10px); position: sticky; top: 10px; z-index: 1000;
         }
         button { padding: 10px 15px; cursor: pointer; border: none; border-radius: 8px; font-weight: bold; color: white; transition: 0.3s; }
-        .btn-kb { background: #00bcd4; }
-        .btn-add { background: #2ecc71; }
-        .btn-rem { background: #e67e22; }
-        .btn-pdf { background: #e74c3c; }
-        .btn-lang { background: #9b59b6; }
-        .btn-print { background: #f1c40f; color: black; }
+        .btn-kb { background: #00bcd4; } .btn-lang { background: #9b59b6; }
+        .btn-add { background: #2ecc71; } .btn-rem { background: #e67e22; }
+        .btn-pdf { background: #e74c3c; } .btn-print { background: #f1c40f; color: black; }
 
         table { width: 100%; border-collapse: collapse; background: rgba(255, 255, 255, 0.9); min-width: 950px; }
         th, td { border: 2.5px solid #000; padding: 10px; text-align: center; font-weight: bold; color: #000; }
@@ -45,9 +42,10 @@
         .total-row { background: rgba(0, 0, 0, 0.15); }
         [contenteditable="true"]:focus { background: rgba(255, 255, 0, 0.3); outline: 2px solid blue; }
 
+        /* ፊርማዎች አካባቢ - መስመሮቹ ጠፍተዋል */
         .sigs-footer { display: flex; justify-content: space-between; margin-top: 50px; gap: 30px; }
         .sig-box { flex: 1; text-align: center; }
-        .sig-line { border-top: 2.5px solid #000; margin-top: 10px; margin-bottom: 8px; width: 85%; margin-left: auto; margin-right: auto; }
+        .sig-line { border-top: 2.5px solid #000; margin-top: 5px; margin-bottom: 8px; width: 85%; margin-left: auto; margin-right: auto; }
 
         @media print { .btns-top { display: none; } .glass-container { background: white; box-shadow: none; border: none; } }
     </style>
@@ -92,21 +90,21 @@
         </thead>
         <tbody id="tbody">
             <tr>
-                <td>1</td><td contenteditable="true" class="amharic-input" style="text-align:left"></td>
+                <td>1</td><td contenteditable="true" style="text-align:left"></td>
                 <td contenteditable="true" oninput="calc()">0</td><td contenteditable="true" oninput="calc()">0</td>
                 <td contenteditable="true" oninput="calc()">0</td><td contenteditable="true" oninput="calc()">0</td>
                 <td contenteditable="true" oninput="calc()">0</td><td contenteditable="true" oninput="calc()">0</td>
                 <td contenteditable="true" oninput="calc()">0</td><td contenteditable="true" oninput="calc()">0</td>
-                <td>0</td>
+                <td style="background:rgba(0,0,0,0.05)">0</td>
             </tr>
         </tbody>
         <tfoot>
             <tr class="total-row">
-                <td colspan="2" id="h-grand" style="text-align: right; padding-right:15px;">GRAND TOTAL (ጠቅላላ ድምር)</td>
+                <td colspan="2" id="h-grand" style="text-align: right; padding-right:15px;">GRAND TOTAL</td>
                 <td id="t-per">0</td><td id="t-itm">0</td>
                 <td id="t-o1">0</td><td id="t-o2">0</td><td id="t-o3">0</td>
                 <td id="t-o4">0</td><td id="t-o5">0</td><td id="t-o6">0</td>
-                <td id="t-grand" style="background:#ccc;">0</td>
+                <td id="t-grand" style="background:#bbb;">0</td>
             </tr>
         </tfoot>
     </table>
@@ -134,40 +132,35 @@
 </div>
 
 <script>
-    let amInputActive = false;
-    let currentLang = 'EN';
+    let amActive = false;
+    let lang = 'EN';
 
-    const amMap = { 'h':'ሀ','l':'ለ','m':'መ','r':'ረ','s':'ሰ','sh':'ሸ','q':'ቀ','b':'በ','t':'ተ','ch':'ቸ','n':'ነ','gn':'ኘ','k':'ከ','w':'ወ','z':'ዘ','y':'የ','d':'ደ','j':'ጀ','g':'ገ','p':'ፐ' };
-
+    // 1. የአማርኛ መጻፊያ (Phonetic Logic)
+    const amMap = {"s":"ሰ","l":"ለ","m":"መ","r":"ረ","h":"ሀ","q":"ቀ","b":"በ","t":"ተ","n":"ነ","k":"ከ","w":"ወ","z":"ዘ","y":"የ","d":"ደ","g":"ገ","p":"ፐ","j":"ጀ"};
     document.addEventListener('keypress', function(e) {
-        if (!amInputActive) return;
-        if (e.target.classList.contains('amharic-input') || e.target.getAttribute('contenteditable') === 'true') {
-            let key = e.key.toLowerCase();
-            if (amMap[key]) {
-                e.preventDefault();
-                document.execCommand('insertText', false, amMap[key]);
-            }
+        if (!amActive) return;
+        if (e.target.isContentEditable) {
+            let k = e.key.toLowerCase();
+            if (amMap[k]) { e.preventDefault(); document.execCommand('insertText', false, amMap[k]); }
         }
     });
 
     function toggleKB() {
-        amInputActive = !amInputActive;
-        const btn = document.getElementById('kbBtn');
-        btn.innerText = amInputActive ? "⌨️ Amharic Type: ON" : "⌨️ Amharic Type: OFF";
-        btn.style.background = amInputActive ? "#ff5722" : "#00bcd4";
+        amActive = !amActive;
+        const b = document.getElementById('kbBtn');
+        b.innerText = amActive ? "⌨️ Amharic Type: ON" : "⌨️ Amharic Type: OFF";
+        b.style.background = amActive ? "#ff5722" : "#00bcd4";
     }
 
+    // 2. የቋንቋ መቀየሪያ (ሁሉንም ቃላት በአንድ ጊዜ)
     function changeLang() {
-        currentLang = (currentLang === 'EN') ? 'AM' : 'EN';
-        const isAM = (currentLang === 'AM');
-
+        lang = (lang === 'EN') ? 'AM' : 'EN';
+        const isAM = (lang === 'AM');
+        
         document.getElementById('addBtn').innerText = isAM ? "➕ Unit ጨምር" : "➕ Add Unit";
         document.getElementById('remBtn').innerText = isAM ? "➖ Unit ቀንስ" : "➖ Remove Unit";
-        document.getElementById('printBtn').innerText = isAM ? "🖨️ አትም (Print)" : "🖨️ Print";
         document.getElementById('pdfBtn').innerText = isAM ? "📄 PDF አውጣ" : "📄 Export PDF";
-        
         document.getElementById('txt-main-title').innerText = isAM ? "የፈተና ይዘት ማውጫ (TOS)" : "TABLE OF SPECIFICATION (TOS)";
-        document.getElementById('txt-sub-title').innerText = isAM ? "2018 ዓ.ም - የግማሽ ዓመት ፈተና" : "2018 E.C. - MID EXAMINATION";
         document.getElementById('h-no').innerText = isAM ? "ተ.ቁ" : "No";
         document.getElementById('h-con').innerText = isAM ? "ይዘቶች / ክፍሎች" : "Contents / Units";
         document.getElementById('h-per').innerText = isAM ? "ክፍለ-ጊዜ" : "Period";
@@ -175,7 +168,7 @@
         document.getElementById('h-obj').innerText = isAM ? "የትምህርት ዓላማዎች" : "Learning Objectives";
         document.getElementById('h-tot').innerText = isAM ? "ድምር" : "Total";
         document.getElementById('h-grand').innerText = isAM ? "ጠቅላላ ድምር" : "GRAND TOTAL";
-        
+
         const objs = isAM ? ["ዕውቀት", "ግንዛቤ", "ተግባር", "ትንተና", "ውህደት", "ምዘና"] : ["Knowledge", "Comprehension", "Application", "Analysis", "Synthesis", "Evaluation"];
         for(let i=1; i<=6; i++) document.getElementById('o'+i).innerText = objs[i-1];
 
@@ -190,61 +183,31 @@
         document.getElementById('txt-d3').innerText = isAM ? "ቀን: ___/___/2018" : "Date: ___/___/2018";
     }
 
+    // 3. Calculation & Tables
     function addRow() {
         let b = document.getElementById('tbody');
         let r = b.insertRow();
-        r.innerHTML = `<td>${b.rows.length}</td><td contenteditable="true" class="amharic-input" style="text-align:left"></td>
+        r.innerHTML = `<td>${b.rows.length}</td><td contenteditable="true" style="text-align:left"></td>
             <td contenteditable="true" oninput="calc()">0</td><td contenteditable="true" oninput="calc()">0</td>
             ${'<td contenteditable="true" oninput="calc()">0</td>'.repeat(6)}
-            <td>0</td>`;
+            <td style="background:rgba(0,0,0,0.05)">0</td>`;
         calc();
     }
-
-    function removeRow() {
-        let b = document.getElementById('tbody');
-        if(b.rows.length > 1) b.deleteRow(-1);
-        calc();
-    }
-
+    function removeRow() { let b = document.getElementById('tbody'); if(b.rows.length > 1) b.deleteRow(-1); calc(); }
     function calc() {
-        let rows = document.querySelectorAll('#tbody tr');
-        let colTotals = Array(9).fill(0);
+        let rows = document.querySelectorAll('#tbody tr'), colT = Array(9).fill(0);
         rows.forEach(r => {
-            let rowSum = 0;
-            for(let i=4; i<=9; i++) {
-                let v = Number(r.cells[i].innerText) || 0;
-                rowSum += v; colTotals[i-2] += v;
-            }
-            r.cells[10].innerText = rowSum;
-            colTotals[8] += rowSum;
-            colTotals[0] += Number(r.cells[2].innerText) || 0;
-            colTotals[1] += Number(r.cells[3].innerText) || 0;
+            let rs = 0;
+            for(let i=4; i<=9; i++) { let v = Number(r.cells[i].innerText)||0; rs+=v; colT[i-2]+=v; }
+            r.cells[10].innerText = rs; colT[8]+=rs;
+            colT[0]+=Number(r.cells[2].innerText)||0; colT[1]+=Number(r.cells[3].innerText)||0;
         });
-        document.getElementById('t-per').innerText = colTotals[0];
-        document.getElementById('t-itm').innerText = colTotals[1];
-        for(let i=1; i<=6; i++) document.getElementById('t-o'+i).innerText = colTotals[i+1];
-        document.getElementById('t-grand').innerText = colTotals[8];
+        document.getElementById('t-per').innerText = colT[0]; document.getElementById('t-itm').innerText = colT[1];
+        for(let i=1; i<=6; i++) document.getElementById('t-o'+i).innerText = colT[i+1];
+        document.getElementById('t-grand').innerText = colT[8];
     }
-
-    function showImg(input, id) {
-        if (input.files && input.files[0]) {
-            let reader = new FileReader();
-            reader.onload = e => { 
-                let img = document.getElementById(id); 
-                img.src = e.target.result; img.style.display = 'block'; 
-                input.parentElement.querySelector('span').style.display = 'none'; 
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    function pdf() {
-        const element = document.getElementById('main-content');
-        html2pdf().from(element).set({
-            margin: 5, filename: 'TOS_Report.pdf',
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
-        }).save();
-    }
+    function showImg(i, id) { if (i.files && i.files[0]) { let r = new FileReader(); r.onload = e => { let m = document.getElementById(id); m.src = e.target.result; m.style.display = 'block'; i.parentElement.querySelector('span').style.display = 'none'; }; r.readAsDataURL(i.files[0]); } }
+    function pdf() { html2pdf().from(document.getElementById('main-content')).set({ margin: 5, filename: 'TOS_Final.pdf', jsPDF: { format: 'a4', orientation: 'landscape' } }).save(); }
 </script>
 </body>
 </html>
