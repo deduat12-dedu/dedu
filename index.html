@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional TOS - Perfect Amharic Typing</title>
+    <title>Tayitu Btul Academy - TOS Generator</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         body { 
@@ -49,7 +49,11 @@
         .name-box { border: 2px solid #000; padding: 10px; margin: 10px auto; width: 85%; background: white; min-height: 20px; text-align: left; }
         .sig-line { border-top: 2.5px solid #000; margin-top: 5px; margin-bottom: 5px; width: 85%; margin-left: auto; margin-right: auto; }
 
-        @media print { .btns-top { display: none; } .glass-container { background: white; box-shadow: none; border: none; } }
+        @media print { 
+            .btns-top { display: none; } 
+            .glass-container { background: white; box-shadow: none; border: none; width: 100%; max-width: 100%; padding: 0; margin: 0; transform: scale(0.95); transform-origin: top left; }
+            body { background: white; padding: 0; }
+        }
     </style>
 </head>
 <body>
@@ -70,8 +74,9 @@
             <span>LOGO</span><input type="file" style="position:absolute; opacity:0; width:100%; height:100%;" onchange="showImg(this, 'l-img')"><img id="l-img" style="width:100%; height:100%; object-fit:cover; display:none; border-radius:50%;">
         </div>
         <div style="text-align: center;">
-            <h2 id="txt-main-title" contenteditable="true" style="margin:0;">TABLE OF SPECIFICATION (TOS)</h2>
-            <h4 contenteditable="true" style="margin:5px 0;">2018 E.C. - MID EXAMINATION</h4>
+            <h1 style="margin:0; font-size: 28px;">TAYITU BTUL ACADEMY</h1>
+            <h2 id="txt-main-title" contenteditable="true" style="margin:5px 0;">TABLE OF SPECIFICATION (TOS)</h2>
+            <h4 id="txt-exam" contenteditable="true" style="margin:5px 0;">2018 E.C. - MID EXAMINATION</h4>
         </div>
         <div style="width: 85px; height: 85px; border: 3px solid #000; border-radius: 8px; display: flex; align-items: center; justify-content: center; position: relative; background: #fff;">
             <span>LOGO</span><input type="file" style="position:absolute; opacity:0; width:100%; height:100%;" onchange="showImg(this, 'r-img')"><img id="r-img" style="width:100%; height:100%; object-fit:cover; display:none;">
@@ -81,9 +86,9 @@
     <table id="tos-table">
         <thead>
             <tr>
-                <th rowspan="2">No</th><th rowspan="2" style="width: 280px;">Contents / Units</th>
-                <th rowspan="2" class="v-text">Period</th><th rowspan="2" class="v-text">Items</th>
-                <th colspan="6">Learning Objectives</th><th rowspan="2" class="v-text">Total</th>
+                <th rowspan="2" id="h-no">No</th><th rowspan="2" style="width: 280px;" id="h-unit">Contents / Units</th>
+                <th rowspan="2" class="v-text" id="h-per">Period</th><th rowspan="2" class="v-text" id="h-itm">Items</th>
+                <th colspan="6" id="h-obj">Learning Objectives</th><th rowspan="2" class="v-text" id="h-tot">Total</th>
             </tr>
             <tr>
                 <th class="v-text">Knowledge</th><th class="v-text">Comprehension</th><th class="v-text">Application</th><th class="v-text">Analysis</th><th class="v-text">Synthesis</th><th class="v-text">Evaluation</th>
@@ -96,7 +101,7 @@
         </tbody>
         <tfoot>
             <tr class="total-row">
-                <td colspan="2" style="text-align: right; padding-right:15px;">GRAND TOTAL</td>
+                <td colspan="2" style="text-align: right; padding-right:15px;" id="h-grand">GRAND TOTAL</td>
                 <td id="t-per">0</td><td id="t-itm">0</td><td></td><td></td><td></td><td></td><td></td><td></td><td id="t-grand">0</td>
             </tr>
         </tfoot>
@@ -104,25 +109,25 @@
 
     <div class="sigs-footer">
         <div class="sig-box">
-            <b>Subject Teacher</b>
-            <div style="font-size: 13px; margin-top:10px;">Name:</div>
-            <div class="name-box" contenteditable="true"></div>
+            <b id="f-teacher">Subject Teacher</b>
+            <div style="font-size: 13px; margin-top:10px;" id="f-name1">Name:</div>
+            <div class="name-box" contenteditable="true">Delelegn Atlaw</div>
             <div class="sig-line"></div>
-            <span contenteditable="true" style="font-size: 13px;">Date: ___/___/2018</span>
+            <span contenteditable="true" style="font-size: 13px;" id="f-date1">Date: ___/___/2018</span>
         </div>
         <div class="sig-box">
-            <b>Dept. Head</b>
-            <div style="font-size: 13px; margin-top:10px;">Name:</div>
+            <b id="f-dept">Dept. Head</b>
+            <div style="font-size: 13px; margin-top:10px;" id="f-name2">Name:</div>
             <div class="name-box" contenteditable="true"></div>
             <div class="sig-line"></div>
-            <span contenteditable="true" style="font-size: 13px;">Date: ___/___/2018</span>
+            <span contenteditable="true" style="font-size: 13px;" id="f-date2">Date: ___/___/2018</span>
         </div>
         <div class="sig-box">
-            <b>Principal</b>
-            <div style="font-size: 13px; margin-top:10px;">Name:</div>
+            <b id="f-princ">Principal</b>
+            <div style="font-size: 13px; margin-top:10px;" id="f-name3">Name:</div>
             <div class="name-box" contenteditable="true"></div>
             <div class="sig-line"></div>
-            <span contenteditable="true" style="font-size: 13px;">Date: ___/___/2018</span>
+            <span contenteditable="true" style="font-size: 13px;" id="f-date3">Date: ___/___/2018</span>
         </div>
     </div>
 </div>
@@ -140,23 +145,17 @@
     document.addEventListener('keypress', function(e) {
         if (!amActive || !e.target.isContentEditable) return;
         let key = e.key.toLowerCase();
-
-        // አናባቢ ከሆነና ከዚህ በፊት ፊደል ተጽፎ ከሆነ
         if (vowels[key] !== undefined && lastKey && amTable[lastKey]) {
             e.preventDefault();
-            // የመጨረሻውን ፊደል አጥፍቶ በአዲሱ መተካት
             document.execCommand('deleteBackward', false, null);
             document.execCommand('insertText', false, amTable[lastKey][vowels[key]]);
-            lastKey = ""; // አንድ ጊዜ ከተጣመረ በኋላ ይቆልፋል
+            lastKey = ""; 
         } 
-        // አዲስ ተነባቢ ፊደል ከሆነ
         else if (amTable[key]) {
             e.preventDefault();
             document.execCommand('insertText', false, amTable[key][0]);
             lastKey = key;
-        } else {
-            lastKey = "";
-        }
+        } else { lastKey = ""; }
     });
 
     function toggleKB() {
@@ -175,7 +174,33 @@
     function changeLang() {
         const h2 = document.getElementById('txt-main-title');
         const isAM = h2.innerText.includes("TABLE");
-        h2.innerText = isAM ? "የፈተና ይዘት ማውጫ (TOS)" : "TABLE OF SPECIFICATION (TOS)";
+        if (isAM) {
+            h2.innerText = "የፈተና ይዘት ማውጫ (TOS)";
+            document.getElementById('txt-exam').innerText = "2018 ዓ.ም - የግማሽ ሴሚስተር ፈተና";
+            document.getElementById('h-no').innerText = "ተ.ቁ";
+            document.getElementById('h-unit').innerText = "ይዘቶች / ምዕራፎች";
+            document.getElementById('h-per').innerText = "ክፍለ ጊዜ";
+            document.getElementById('h-itm').innerText = "ብዛት";
+            document.getElementById('h-obj').innerText = "የመማር ግቦች";
+            document.getElementById('h-tot').innerText = "ድምር";
+            document.getElementById('h-grand').innerText = "አጠቃላይ ድምር";
+            document.getElementById('f-teacher').innerText = "የክፍሉ መምህር";
+            document.getElementById('f-name1').innerText = "ስም:";
+            document.getElementById('f-date1').innerText = "ቀን: ___/___/2018";
+        } else {
+            h2.innerText = "TABLE OF SPECIFICATION (TOS)";
+            document.getElementById('txt-exam').innerText = "2018 E.C. - MID EXAMINATION";
+            document.getElementById('h-no').innerText = "No";
+            document.getElementById('h-unit').innerText = "Contents / Units";
+            document.getElementById('h-per').innerText = "Period";
+            document.getElementById('h-itm').innerText = "Items";
+            document.getElementById('h-obj').innerText = "Learning Objectives";
+            document.getElementById('h-tot').innerText = "Total";
+            document.getElementById('h-grand').innerText = "GRAND TOTAL";
+            document.getElementById('f-teacher').innerText = "Subject Teacher";
+            document.getElementById('f-name1').innerText = "Name:";
+            document.getElementById('f-date1').innerText = "Date: ___/___/2018";
+        }
     }
 
     function addRow() {
@@ -186,12 +211,16 @@
     function removeRow() { let b = document.getElementById('tbody'); if(b.rows.length > 1) b.deleteRow(-1); calc(); }
     
     function calc() {
-        let rows = document.querySelectorAll('#tbody tr'), grand = 0;
+        let rows = document.querySelectorAll('#tbody tr'), grand = 0, tPer = 0, tItm = 0;
         rows.forEach(r => {
             let rs = 0;
+            tPer += Number(r.cells[2].innerText) || 0;
+            tItm += Number(r.cells[3].innerText) || 0;
             for(let i=4; i<=9; i++) rs += Number(r.cells[i].innerText) || 0;
             r.cells[10].innerText = rs; grand += rs;
         });
+        document.getElementById('t-per').innerText = tPer;
+        document.getElementById('t-itm').innerText = tItm;
         document.getElementById('t-grand').innerText = grand;
     }
 
