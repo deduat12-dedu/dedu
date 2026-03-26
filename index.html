@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional TOS - Amharic Typing Edition</title>
+    <title>TOS Professional - Full Amharic Support</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         body { 
             margin: 0; padding: 15px; 
-            font-family: 'Nyala', 'Abyssinica SIL', sans-serif;
+            font-family: 'Nyala', 'Abyssinica SIL', 'Noto Sans Ethiopic', sans-serif;
             background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
@@ -25,7 +25,6 @@
             border: 1px solid rgba(255, 255, 255, 0.3);
             overflow-x: auto;
         }
-        .portrait-mode { max-width: 850px; }
 
         .btns-top { 
             background: rgba(0, 0, 0, 0.7); padding: 12px; border-radius: 12px; 
@@ -37,9 +36,10 @@
         .btn-add { background: #2ecc71; }
         .btn-rem { background: #e67e22; }
         .btn-pdf { background: #e74c3c; }
+        .btn-lang { background: #9b59b6; }
         .btn-print { background: #f1c40f; color: black; }
 
-        table { width: 100%; border-collapse: collapse; background: rgba(255, 255, 255, 0.9); min-width: 900px; }
+        table { width: 100%; border-collapse: collapse; background: rgba(255, 255, 255, 0.9); min-width: 950px; }
         th, td { border: 2.5px solid #000; padding: 10px; text-align: center; font-weight: bold; color: #000; }
         .v-text { writing-mode: vertical-rl; transform: rotate(180deg); height: 110px; }
         .total-row { background: rgba(0, 0, 0, 0.15); }
@@ -56,42 +56,43 @@
 
 <div class="btns-top">
     <button class="btn-kb" id="kbBtn" onclick="toggleKB()">⌨️ Amharic Type: OFF</button>
-    <button class="btn-add" onclick="addRow()">➕ Unit ጨምር</button>
-    <button class="btn-rem" onclick="removeRow()">➖ Unit ቀንስ</button>
-    <button class="btn-print" onclick="window.print()">🖨️ Print</button>
-    <button class="btn-pdf" onclick="pdf()">📄 Export PDF</button>
+    <button class="btn-lang" id="langBtn" onclick="changeLang()">🌍 አማርኛ/EN</button>
+    <button class="btn-add" id="addBtn" onclick="addRow()">➕ Unit ጨምር</button>
+    <button class="btn-rem" id="remBtn" onclick="removeRow()">➖ Unit ቀንስ</button>
+    <button class="btn-print" id="printBtn" onclick="window.print()">🖨️ Print</button>
+    <button class="btn-pdf" id="pdfBtn" onclick="pdf()">📄 Export PDF</button>
 </div>
 
 <div class="glass-container" id="main-content">
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-bottom: 3.5px solid #000; padding-bottom: 15px;">
         <div style="width: 85px; height: 85px; border: 3px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; background: #fff;">
-            <span>LOGO</span><input type="file" style="position:absolute; opacity:0;" onchange="showImg(this, 'l-img')"><img id="l-img" style="width:100%; height:100%; object-fit:cover; display:none; border-radius:50%;">
+            <span id="txt-l-logo">LOGO</span><input type="file" style="position:absolute; opacity:0;" onchange="showImg(this, 'l-img')"><img id="l-img" style="width:100%; height:100%; object-fit:cover; display:none; border-radius:50%;">
         </div>
         <div style="text-align: center;">
-            <h2 contenteditable="true" style="margin:0;">TABLE OF SPECIFICATION (TOS)</h2>
-            <h4 contenteditable="true" style="margin:5px 0;">2018 E.C. - MID EXAMINATION</h4>
+            <h2 id="txt-main-title" contenteditable="true" style="margin:0;">TABLE OF SPECIFICATION (TOS)</h2>
+            <h4 id="txt-sub-title" contenteditable="true" style="margin:5px 0;">2018 E.C. - MID EXAMINATION</h4>
         </div>
         <div style="width: 85px; height: 85px; border: 3px solid #000; border-radius: 8px; display: flex; align-items: center; justify-content: center; position: relative; background: #fff;">
-            <span>LOGO</span><input type="file" style="position:absolute; opacity:0;" onchange="showImg(this, 'r-img')"><img id="r-img" style="width:100%; height:100%; object-fit:cover; display:none;">
+            <span id="txt-r-logo">LOGO</span><input type="file" style="position:absolute; opacity:0;" onchange="showImg(this, 'r-img')"><img id="r-img" style="width:100%; height:100%; object-fit:cover; display:none;">
         </div>
     </div>
 
     <table id="tos-table">
         <thead>
             <tr>
-                <th rowspan="2">No</th><th rowspan="2" style="width: 280px;">Contents / Units</th>
-                <th rowspan="2" class="v-text">Period</th><th rowspan="2" class="v-text">Items</th>
-                <th colspan="6">Learning Objectives</th><th rowspan="2" class="v-text">Total</th>
+                <th rowspan="2" id="h-no">No</th><th rowspan="2" style="width: 280px;" id="h-con">Contents / Units</th>
+                <th rowspan="2" class="v-text" id="h-per">Period</th><th rowspan="2" class="v-text" id="h-itm">Items</th>
+                <th colspan="6" id="h-obj">Learning Objectives</th><th rowspan="2" class="v-text" id="h-tot">Total</th>
             </tr>
             <tr>
-                <th class="v-text">Knowledge</th><th class="v-text">Comprehension</th>
-                <th class="v-text">Application</th><th class="v-text">Analysis</th>
-                <th class="v-text">Synthesis</th><th class="v-text">Evaluation</th>
+                <th class="v-text" id="o1">Knowledge</th><th class="v-text" id="o2">Comprehension</th>
+                <th class="v-text" id="o3">Application</th><th class="v-text" id="o4">Analysis</th>
+                <th class="v-text" id="o5">Synthesis</th><th class="v-text" id="o6">Evaluation</th>
             </tr>
         </thead>
         <tbody id="tbody">
             <tr>
-                <td>1</td><td contenteditable="true" onkeydown="handleAmharic(event)" style="text-align:left"></td>
+                <td>1</td><td contenteditable="true" class="amharic-input" style="text-align:left"></td>
                 <td contenteditable="true" oninput="calc()">0</td><td contenteditable="true" oninput="calc()">0</td>
                 <td contenteditable="true" oninput="calc()">0</td><td contenteditable="true" oninput="calc()">0</td>
                 <td contenteditable="true" oninput="calc()">0</td><td contenteditable="true" oninput="calc()">0</td>
@@ -101,7 +102,7 @@
         </tbody>
         <tfoot>
             <tr class="total-row">
-                <td colspan="2" style="text-align: right; padding-right:15px;">GRAND TOTAL (ጠቅላላ ድምር)</td>
+                <td colspan="2" id="h-grand" style="text-align: right; padding-right:15px;">GRAND TOTAL (ጠቅላላ ድምር)</td>
                 <td id="t-per">0</td><td id="t-itm">0</td>
                 <td id="t-o1">0</td><td id="t-o2">0</td><td id="t-o3">0</td>
                 <td id="t-o4">0</td><td id="t-o5">0</td><td id="t-o6">0</td>
@@ -111,34 +112,80 @@
     </table>
 
     <div class="sigs-footer">
-        <div class="sig-box"><div class="sig-line"></div><b>Subject Teacher</b><br><span contenteditable="true">Name: _________</span></div>
-        <div class="sig-box"><div class="sig-line"></div><b>Dept. Head</b><br><span contenteditable="true">Name: _________</span></div>
-        <div class="sig-box"><div class="sig-line"></div><b>Principal</b><br><span contenteditable="true">Name: _________</span></div>
+        <div class="sig-box"><div class="sig-line"></div><b id="s1">Subject Teacher</b><br><span id="txt-n1" contenteditable="true">Name: _________</span></div>
+        <div class="sig-box"><div class="sig-line"></div><b id="s2">Dept. Head</b><br><span id="txt-n2" contenteditable="true">Name: _________</span></div>
+        <div class="sig-box"><div class="sig-line"></div><b id="s3">Principal</b><br><span id="txt-n3" contenteditable="true">Name: _________</span></div>
     </div>
 </div>
 
 <script>
-    let amInput = false;
+    let amInputActive = false;
+    let currentLang = 'EN';
+
+    // 1. የአማርኛ መጻፊያ ሎጅክ (Phonetic Mapping)
+    const amMap = {
+        'h':'ሀ','l':'ለ','m':'መ','r':'ረ','s':'ሰ','sh':'ሸ','q':'ቀ','b':'በ','t':'ተ','ch':'ቸ','n':'ነ','gn':'ኘ','k':'ከ','w':'ወ','z':'ዘ','y':'የ','d':'ደ','j':'ጀ','g':'ገ','p':'ፐ'
+    };
+
+    document.addEventListener('keypress', function(e) {
+        if (!amInputActive) return;
+        if (e.target.classList.contains('amharic-input') || e.target.getAttribute('contenteditable') === 'true') {
+            let key = e.key.toLowerCase();
+            if (amMap[key]) {
+                e.preventDefault();
+                document.execCommand('insertText', false, amMap[key]);
+            }
+        }
+    });
+
     function toggleKB() {
-        amInput = !amInput;
-        document.getElementById('kbBtn').innerText = amInput ? "⌨️ Amharic Type: ON" : "⌨️ Amharic Type: OFF";
-        document.getElementById('kbBtn').style.background = amInput ? "#ff5722" : "#00bcd4";
+        amInputActive = !amInputActive;
+        const btn = document.getElementById('kbBtn');
+        btn.innerText = amInputActive ? "⌨️ Amharic Type: ON" : "⌨️ Amharic Type: OFF";
+        btn.style.background = amInputActive ? "#ff5722" : "#00bcd4";
     }
 
-    // Basic Amharic Typing Logic
-    const translit = {"s":"ሰ","l":"ለ","h":"ሀ","m":"መ","r":"ረ","q":"ቀ","b":"በ","t":"ተ","n":"ነ","k":"ከ","w":"ወ","z":"ዘ","y":"የ","d":"ደ","g":"ገ"};
-    function handleAmharic(e) {
-        if (!amInput) return;
-        if (translit[e.key.toLowerCase()]) {
-            e.preventDefault();
-            document.execCommand('insertText', false, translit[e.key.toLowerCase()]);
-        }
+    // 2. የቋንቋ መቀየሪያ (ሁሉንም ቃላት ይቀይራል)
+    function changeLang() {
+        currentLang = (currentLang === 'EN') ? 'AM' : 'EN';
+        const isAM = (currentLang === 'AM');
+
+        // Buttons
+        document.getElementById('addBtn').innerText = isAM ? "➕ Unit ጨምር" : "➕ Add Unit";
+        document.getElementById('remBtn').innerText = isAM ? "➖ Unit ቀንስ" : "➖ Remove Unit";
+        document.getElementById('printBtn').innerText = isAM ? "🖨️ አትም (Print)" : "🖨️ Print";
+        document.getElementById('pdfBtn').innerText = isAM ? "📄 PDF አውጣ" : "📄 Export PDF";
+        
+        // Headers & Labels
+        document.getElementById('txt-main-title').innerText = isAM ? "የፈተና ይዘት ማውጫ (TOS)" : "TABLE OF SPECIFICATION (TOS)";
+        document.getElementById('txt-sub-title').innerText = isAM ? "2018 ዓ.ም - የግማሽ ዓመት ፈተና" : "2018 E.C. - MID EXAMINATION";
+        document.getElementById('h-no').innerText = isAM ? "ተ.ቁ" : "No";
+        document.getElementById('h-con').innerText = isAM ? "ይዘቶች / ክፍሎች" : "Contents / Units";
+        document.getElementById('h-per').innerText = isAM ? "ክፍለ-ጊዜ" : "Period";
+        document.getElementById('h-itm').innerText = isAM ? "ጥያቄ" : "Items";
+        document.getElementById('h-obj').innerText = isAM ? "የትምህርት ዓላማዎች" : "Learning Objectives";
+        document.getElementById('h-tot').innerText = isAM ? "ድምር" : "Total";
+        document.getElementById('h-grand').innerText = isAM ? "ጠቅላላ ድምር" : "GRAND TOTAL";
+        
+        // Objectives
+        const objs = isAM ? ["ዕውቀት", "ግንዛቤ", "ተግባር", "ትንተና", "ውህደት", "ምዘና"] : ["Knowledge", "Comprehension", "Application", "Analysis", "Synthesis", "Evaluation"];
+        for(let i=1; i<=6; i++) document.getElementById('o'+i).innerText = objs[i-1];
+
+        // Signatures
+        document.getElementById('s1').innerText = isAM ? "የክፍሉ መምህር" : "Subject Teacher";
+        document.getElementById('s2').innerText = isAM ? "የክፍል ኃላፊ" : "Dept. Head";
+        document.getElementById('s3').innerText = isAM ? "ርዕሰ መምህር" : "Principal";
+        document.getElementById('txt-n1').innerText = isAM ? "ስም: _________" : "Name: _________";
+        document.getElementById('txt-n2').innerText = isAM ? "ስም: _________" : "Name: _________";
+        document.getElementById('txt-n3').innerText = isAM ? "ስም: _________" : "Name: _________";
+        document.getElementById('txt-l-logo').innerText = isAM ? "ሎጎ" : "LOGO";
+        document.getElementById('txt-r-logo').innerText = isAM ? "ሎጎ" : "LOGO";
     }
 
     function addRow() {
         let b = document.getElementById('tbody');
         let r = b.insertRow();
-        r.innerHTML = `<td>${b.rows.length}</td><td contenteditable="true" onkeydown="handleAmharic(event)" style="text-align:left"></td>
+        r.innerHTML = `<td>${b.rows.length}</td><td contenteditable="true" class="amharic-input" style="text-align:left"></td>
             <td contenteditable="true" oninput="calc()">0</td><td contenteditable="true" oninput="calc()">0</td>
             ${'<td contenteditable="true" oninput="calc()">0</td>'.repeat(6)}
             <td>0</td>`;
@@ -174,13 +221,18 @@
     function showImg(input, id) {
         if (input.files && input.files[0]) {
             let reader = new FileReader();
-            reader.onload = e => { let img = document.getElementById(id); img.src = e.target.result; img.style.display = 'block'; input.parentElement.querySelector('span').style.display = 'none'; };
+            reader.onload = e => { 
+                let img = document.getElementById(id); 
+                img.src = e.target.result; img.style.display = 'block'; 
+                input.parentElement.querySelector('span').style.display = 'none'; 
+            };
             reader.readAsDataURL(input.files[0]);
         }
     }
 
     function pdf() {
-        html2pdf().from(document.getElementById('main-content')).set({
+        const element = document.getElementById('main-content');
+        html2pdf().from(element).set({
             margin: 5, filename: 'TOS_Final.pdf',
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
         }).save();
