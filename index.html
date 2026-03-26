@@ -1,209 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Smart TOS - Multi-Language</title>
-    <style>
-        body { font-family: 'Segoe UI', 'Kality', Arial, sans-serif; margin: 20px; background-color: #f0f2f5; }
-        .container { max-width: 1200px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        
-        .header-info { text-align: center; margin-bottom: 20px; }
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-        th, td { border: 2px solid #1a3a5f; padding: 8px; text-align: center; font-size: 13px; word-wrap: break-word; }
-        th { background-color: #eef2f7; color: #1a3a5f; }
-        
-        .content-col { text-align: left; width: 25%; }
-        .vertical-text { writing-mode: vertical-rl; transform: rotate(180deg); height: 120px; padding: 5px; }
-        .readonly-cell { background-color: #f8f9fa; font-weight: bold; }
-
-        /* Controls Section */
-        .controls { 
-            display: flex; justify-content: space-between; align-items: center; 
-            margin-bottom: 20px; padding: 15px; background: #e9ecef; border-radius: 8px; 
+.signature-section {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            padding-top: 20px;
         }
-        .btn-group { display: flex; gap: 10px; }
-        .btn { padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
-        .btn-add { background: #28a745; color: white; }
-        .btn-print { background: #1a3a5f; color: white; }
-        .btn-lang { background: #ffc107; color: #000; }
+
+        .sig-box {
+            width: 30%;
+            text-align: center;
+        }
+
+        .label {
+            font-weight: bold;
+            color: #1a3a5f;
+            font-size: 14px;
+        }
+
+        .name-text {
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #222;
+        }
+
+        .sig-line {
+            margin: 10px auto;
+            width: 80%;
+            border-bottom: 2px solid #1a3a5f;
+        }
+
+        .date {
+            font-size: 12px;
+            color: #666;
+        }
 
         @media print {
-            .controls { display: none; }
-            body { margin: 0; background: white; }
-            .container { box-shadow: none; max-width: 100%; }
+            .signature-section { margin-top: 80px; }
         }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <!-- Controls -->
-    <div class="controls">
-        <div class="btn-group">
-            <button class="btn btn-lang" onclick="toggleLanguage()">Switch to Amharic / ወደ አማርኛ ቀይር</button>
-            <button class="btn btn-add" id="addBtn" onclick="addRow()">+ Add Row / ረድፍ ጨምር</button>
-        </div>
-        
-        <div class="btn-group">
-            <label>Orientation:</label>
-            <select id="pageOrientation" onchange="updateOrientation()">
-                <option value="portrait">Portrait (ቁም)</option>
-                <option value="landscape" selected>Landscape (አግድም)</option>
-            </select>
-            <button class="btn btn-print" id="printBtn" onclick="printTOS()">Print / አትም</button>
-        </div>
-    </div>
-
-    <div class="header-info">
-        <h2 id="mainTitle" contenteditable="true">2018 E.C Mid Examination Table of Specification</h2>
-    </div>
-
-    <table id="tosTable">
-        <thead>
-            <tr>
-                <th rowspan="2" style="width: 40px;" id="thNo">No</th>
-                <th rowspan="2" id="thContent">Contents</th>
-                <th rowspan="2" class="vertical-text" id="thPeriod">Period</th>
-                <th rowspan="2" class="vertical-text" id="thItems">No. Items</th>
-                <th colspan="6" id="thObjectives">Instructional Objectives</th>
-                <th rowspan="2" class="vertical-text" id="thTotal">Total</th>
-                <th rowspan="2" class="vertical-text" id="thPercent">Percent</th>
-            </tr>
-            <tr>
-                <th class="vertical-text" id="obj1">Knowledge</th>
-                <th class="vertical-text" id="obj2">Comprehension</th>
-                <th class="vertical-text" id="obj3">Application</th>
-                <th class="vertical-text" id="obj4">Analysis</th>
-                <th class="vertical-text" id="obj5">Synthesis</th>
-                <th class="vertical-text" id="obj6">Evaluation</th>
-            </tr>
-        </thead>
-        <tbody id="tableBody">
-            <tr>
-                <td>1</td>
-                <td class="content-col" contenteditable="true">Unit 5</td>
-                <td contenteditable="true" class="input-cell">0</td>
-                <td contenteditable="true" class="input-cell">0</td>
-                <td contenteditable="true" class="input-cell obj">0</td>
-                <td contenteditable="true" class="input-cell obj">0</td>
-                <td contenteditable="true" class="input-cell obj">0</td>
-                <td contenteditable="true" class="input-cell obj">0</td>
-                <td contenteditable="true" class="input-cell obj">0</td>
-                <td contenteditable="true" class="input-cell obj">0</td>
-                <td class="readonly-cell">0</td>
-                <td class="readonly-cell">0%</td>
-            </tr>
-        </tbody>
-        <tfoot>
-            <tr style="font-weight: bold; background: #eef2f7;">
-                <td colspan="2" id="footerTotal">Total</td>
-                <td id="t-period">0</td>
-                <td id="t-items">0</td>
-                <td id="t-1">0</td><td id="t-2">0</td><td id="t-3">0</td>
-                <td id="t-4">0</td><td id="t-5">0</td><td id="t-6">0</td>
-                <td id="t-grand">0</td>
-                <td>100%</td>
-            </tr>
-        </tfoot>
-    </table>
-</div>
-
-<script>
-    let currentLang = 'en';
-    const translations = {
-        en: {
-            title: "2018 E.C Mid Examination Table of Specification",
-            no: "No", content: "Contents", period: "Period", items: "No. Items",
-            objs: "Instructional Objectives", total: "Total", percent: "Percent",
-            kno: "Knowledge", com: "Comprehension", app: "Application", 
-            ana: "Analysis", syn: "Synthesis", eva: "Evaluation", footer: "Total"
-        },
-        am: {
-            title: "የ2018 ዓ.ም የግማሽ ዓመት የፈተና ይዘት ዝግጅት (TOS)",
-            no: "ተ.ቁ", content: "ይዘቶች", period: "ክፍለ ጊዜ", items: "የጥያቄ ብዛት",
-            objs: "የትምህርቱ ዓላማዎች", total: "ድምር", percent: "ፐርሰንት",
-            kno: "ዕውቀት", com: "መረዳት", app: "ተግባራዊነት", 
-            ana: "ትንተና", syn: "ውህደት", eva: "ምዘና", footer: "ጠቅላላ ድምር"
-        }
-    };
-
-    function toggleLanguage() {
-        currentLang = currentLang === 'en' ? 'am' : 'en';
-        const t = translations[currentLang];
-        
-        document.getElementById('mainTitle').innerText = t.title;
-        document.getElementById('thNo').innerText = t.no;
-        document.getElementById('thContent').innerText = t.content;
-        document.getElementById('thPeriod').innerText = t.period;
-        document.getElementById('thItems').innerText = t.items;
-        document.getElementById('thObjectives').innerText = t.objs;
-        document.getElementById('thTotal').innerText = t.total;
-        document.getElementById('thPercent').innerText = t.percent;
-        document.getElementById('obj1').innerText = t.kno;
-        document.getElementById('obj2').innerText = t.com;
-        document.getElementById('obj3').innerText = t.app;
-        document.getElementById('obj4').innerText = t.ana;
-        document.getElementById('obj5').innerText = t.syn;
-        document.getElementById('obj6').innerText = t.eva;
-        document.getElementById('footerTotal').innerText = t.footer;
-    }
-
-    function calculate() {
-        let rows = document.querySelectorAll('#tableBody tr');
-        let grandTotalItems = 0, grandTotalPeriod = 0, grandObj = [0,0,0,0,0,0], finalSum = 0;
-
-        rows.forEach(row => {
-            grandTotalItems += parseFloat(row.cells[3].innerText) || 0;
-            grandTotalPeriod += parseFloat(row.cells[2].innerText) || 0;
-        });
-
-        rows.forEach(row => {
-            let rowItems = parseFloat(row.cells[3].innerText) || 0;
-            let rowSum = 0;
-            for(let i=0; i<6; i++) {
-                let val = parseFloat(row.cells[4+i].innerText) || 0;
-                rowSum += val;
-                grandObj[i] += val;
-            }
-            row.cells[10].innerText = rowSum;
-            row.cells[11].innerText = grandTotalItems > 0 ? Math.round((rowItems/grandTotalItems)*100) + '%' : '0%';
-            finalSum += rowSum;
-        });
-
-        document.getElementById('t-period').innerText = grandTotalPeriod;
-        document.getElementById('t-items').innerText = grandTotalItems;
-        for(let i=0; i<6; i++) document.getElementById(`t-${i+1}`).innerText = grandObj[i];
-        document.getElementById('t-grand').innerText = finalSum;
-    }
-
-    function addRow() {
-        const tbody = document.getElementById('tableBody');
-        const row = tbody.insertRow();
-        row.innerHTML = `<td>${tbody.rows.length}</td><td class="content-col" contenteditable="true">Unit</td>
-            <td contenteditable="true" class="input-cell">0</td><td contenteditable="true" class="input-cell">0</td>
-            <td contenteditable="true" class="input-cell">0</td><td contenteditable="true" class="input-cell">0</td>
-            <td contenteditable="true" class="input-cell">0</td><td contenteditable="true" class="input-cell">0</td>
-            <td contenteditable="true" class="input-cell">0</td><td contenteditable="true" class="input-cell">0</td>
-            <td class="readonly-cell">0</td><td class="readonly-cell">0%</td>`;
-        attachListeners();
-    }
-
-    function attachListeners() {
-        document.querySelectorAll('.input-cell').forEach(cell => {
-            cell.oninput = calculate;
-        });
-    }
-
-    function printTOS() {
-        const orient = document.getElementById('pageOrientation').value;
-        const style = document.createElement('style');
-        style.innerHTML = `@page { size: ${orient}; margin: 10mm; }`;
-        document.head.appendChild(style);
-        window.print();
-    }
-
-    attachListeners();
-</script>
-
-</body>
-</html>
