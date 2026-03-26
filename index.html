@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TOS Professional - Full Amharic Support</title>
+    <title>TOS Professional - Clean Edition</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         body { 
@@ -47,7 +47,7 @@
 
         .sigs-footer { display: flex; justify-content: space-between; margin-top: 50px; gap: 30px; }
         .sig-box { flex: 1; text-align: center; }
-        .sig-line { border-top: 2.5px solid #000; margin-top: 45px; margin-bottom: 8px; width: 85%; margin-left: auto; margin-right: auto; }
+        .sig-line { border-top: 2.5px solid #000; margin-top: 10px; margin-bottom: 8px; width: 85%; margin-left: auto; margin-right: auto; }
 
         @media print { .btns-top { display: none; } .glass-container { background: white; box-shadow: none; border: none; } }
     </style>
@@ -112,9 +112,24 @@
     </table>
 
     <div class="sigs-footer">
-        <div class="sig-box"><div class="sig-line"></div><b id="s1">Subject Teacher</b><br><span id="txt-n1" contenteditable="true">Name: _________</span></div>
-        <div class="sig-box"><div class="sig-line"></div><b id="s2">Dept. Head</b><br><span id="txt-n2" contenteditable="true">Name: _________</span></div>
-        <div class="sig-box"><div class="sig-line"></div><b id="s3">Principal</b><br><span id="txt-n3" contenteditable="true">Name: _________</span></div>
+        <div class="sig-box">
+            <div class="sig-line"></div>
+            <b id="s1">Subject Teacher</b><br>
+            <span id="txt-n1" contenteditable="true">Name: _________</span><br>
+            <span id="txt-d1" contenteditable="true">Date: ___/___/2018</span>
+        </div>
+        <div class="sig-box">
+            <div class="sig-line"></div>
+            <b id="s2">Dept. Head</b><br>
+            <span id="txt-n2" contenteditable="true">Name: _________</span><br>
+            <span id="txt-d2" contenteditable="true">Date: ___/___/2018</span>
+        </div>
+        <div class="sig-box">
+            <div class="sig-line"></div>
+            <b id="s3">Principal</b><br>
+            <span id="txt-n3" contenteditable="true">Name: _________</span><br>
+            <span id="txt-d3" contenteditable="true">Date: ___/___/2018</span>
+        </div>
     </div>
 </div>
 
@@ -122,10 +137,7 @@
     let amInputActive = false;
     let currentLang = 'EN';
 
-    // 1. የአማርኛ መጻፊያ ሎጅክ (Phonetic Mapping)
-    const amMap = {
-        'h':'ሀ','l':'ለ','m':'መ','r':'ረ','s':'ሰ','sh':'ሸ','q':'ቀ','b':'በ','t':'ተ','ch':'ቸ','n':'ነ','gn':'ኘ','k':'ከ','w':'ወ','z':'ዘ','y':'የ','d':'ደ','j':'ጀ','g':'ገ','p':'ፐ'
-    };
+    const amMap = { 'h':'ሀ','l':'ለ','m':'መ','r':'ረ','s':'ሰ','sh':'ሸ','q':'ቀ','b':'በ','t':'ተ','ch':'ቸ','n':'ነ','gn':'ኘ','k':'ከ','w':'ወ','z':'ዘ','y':'የ','d':'ደ','j':'ጀ','g':'ገ','p':'ፐ' };
 
     document.addEventListener('keypress', function(e) {
         if (!amInputActive) return;
@@ -145,18 +157,15 @@
         btn.style.background = amInputActive ? "#ff5722" : "#00bcd4";
     }
 
-    // 2. የቋንቋ መቀየሪያ (ሁሉንም ቃላት ይቀይራል)
     function changeLang() {
         currentLang = (currentLang === 'EN') ? 'AM' : 'EN';
         const isAM = (currentLang === 'AM');
 
-        // Buttons
         document.getElementById('addBtn').innerText = isAM ? "➕ Unit ጨምር" : "➕ Add Unit";
         document.getElementById('remBtn').innerText = isAM ? "➖ Unit ቀንስ" : "➖ Remove Unit";
         document.getElementById('printBtn').innerText = isAM ? "🖨️ አትም (Print)" : "🖨️ Print";
         document.getElementById('pdfBtn').innerText = isAM ? "📄 PDF አውጣ" : "📄 Export PDF";
         
-        // Headers & Labels
         document.getElementById('txt-main-title').innerText = isAM ? "የፈተና ይዘት ማውጫ (TOS)" : "TABLE OF SPECIFICATION (TOS)";
         document.getElementById('txt-sub-title').innerText = isAM ? "2018 ዓ.ም - የግማሽ ዓመት ፈተና" : "2018 E.C. - MID EXAMINATION";
         document.getElementById('h-no').innerText = isAM ? "ተ.ቁ" : "No";
@@ -167,19 +176,18 @@
         document.getElementById('h-tot').innerText = isAM ? "ድምር" : "Total";
         document.getElementById('h-grand').innerText = isAM ? "ጠቅላላ ድምር" : "GRAND TOTAL";
         
-        // Objectives
         const objs = isAM ? ["ዕውቀት", "ግንዛቤ", "ተግባር", "ትንተና", "ውህደት", "ምዘና"] : ["Knowledge", "Comprehension", "Application", "Analysis", "Synthesis", "Evaluation"];
         for(let i=1; i<=6; i++) document.getElementById('o'+i).innerText = objs[i-1];
 
-        // Signatures
         document.getElementById('s1').innerText = isAM ? "የክፍሉ መምህር" : "Subject Teacher";
         document.getElementById('s2').innerText = isAM ? "የክፍል ኃላፊ" : "Dept. Head";
         document.getElementById('s3').innerText = isAM ? "ርዕሰ መምህር" : "Principal";
         document.getElementById('txt-n1').innerText = isAM ? "ስም: _________" : "Name: _________";
         document.getElementById('txt-n2').innerText = isAM ? "ስም: _________" : "Name: _________";
         document.getElementById('txt-n3').innerText = isAM ? "ስም: _________" : "Name: _________";
-        document.getElementById('txt-l-logo').innerText = isAM ? "ሎጎ" : "LOGO";
-        document.getElementById('txt-r-logo').innerText = isAM ? "ሎጎ" : "LOGO";
+        document.getElementById('txt-d1').innerText = isAM ? "ቀን: ___/___/2018" : "Date: ___/___/2018";
+        document.getElementById('txt-d2').innerText = isAM ? "ቀን: ___/___/2018" : "Date: ___/___/2018";
+        document.getElementById('txt-d3').innerText = isAM ? "ቀን: ___/___/2018" : "Date: ___/___/2018";
     }
 
     function addRow() {
@@ -233,7 +241,7 @@
     function pdf() {
         const element = document.getElementById('main-content');
         html2pdf().from(element).set({
-            margin: 5, filename: 'TOS_Final.pdf',
+            margin: 5, filename: 'TOS_Report.pdf',
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
         }).save();
     }
