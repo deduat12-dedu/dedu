@@ -3,37 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <title>Premium TOS Builder - Transparent Edition</title>
-    <!-- ለ PDF መቀየሪያ የሚያስፈልግ ላይብረሪ -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        /* ዘመናዊ የጀርባ ቀለም (Animated Gradient) */
+        /* የሚንቀሳቀስ ማራኪ የጀርባ ቀለም */
         body { 
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
             margin: 0; padding: 40px 20px;
             background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
             background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
+            animation: gradientMove 15s ease infinite;
             min-height: 100vh;
         }
 
-        @keyframes gradient {
+        @keyframes gradientMove {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
 
-        /* ግልጽነት ያለው መያዣ (Glassmorphism Container) */
+        /* ግልጽነት ያለው መያዣ (Glassmorphism) */
         .container { 
             max-width: 1200px; margin: 0 auto; 
-            background: rgba(255, 255, 255, 0.85); /* Transparent Background */
-            backdrop-filter: blur(10px); /* የበረዶ መልክ እንዲሰጠው */
-            padding: 50px; border-radius: 25px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
-            border: 1px solid rgba(255,255,255,0.3);
-            position: relative;
+            background: rgba(255, 255, 255, 0.88); 
+            backdrop-filter: blur(15px);
+            padding: 40px; border-radius: 20px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3); 
+            border: 1px solid rgba(255,255,255,0.4);
         }
 
-        /* ርዕስ እና ሎጎ */
+        /* ራስጌ እና ሎጎ */
         .top-header {
             display: flex; align-items: center; justify-content: space-between;
             margin-bottom: 30px; border-bottom: 4px solid #1a3a5f; padding-bottom: 20px;
@@ -42,43 +40,43 @@
         .logo-box {
             width: 120px; height: 120px; border: 3px dashed #1a3a5f;
             display: flex; align-items: center; justify-content: center;
-            border-radius: 15px; background: rgba(255,255,255,0.5); overflow: hidden;
-            cursor: pointer; position: relative;
+            border-radius: 12px; background: rgba(255,255,255,0.6); 
+            cursor: pointer; position: relative; overflow: hidden;
         }
         .logo-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        .logo-box input { position: absolute; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+        .logo-box input { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
 
-        .header-text h2 { margin: 0; color: #1a3a5f; font-size: 28px; letter-spacing: 1px; }
-        .header-text p { font-size: 18px; font-weight: bold; color: #444; margin-top: 5px; }
+        .header-text { text-align: center; flex-grow: 1; }
+        .header-text h2 { margin: 0; color: #1a3a5f; font-size: 26px; }
+        .header-text p { font-size: 18px; font-weight: bold; color: #444; }
 
         /* ሰንጠረዥ */
         table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #fff; }
-        th, td { border: 2.5px solid #1a3a5f; padding: 12px 6px; text-align: center; font-size: 14px; }
-        th { background: #1a3a5f; color: white; text-transform: uppercase; }
-        .vertical-text { writing-mode: vertical-rl; transform: rotate(180deg); height: 130px; }
+        th, td { border: 2.5px solid #1a3a5f; padding: 10px; text-align: center; font-size: 14px; }
+        th { background: #1a3a5f; color: white; }
+        .vertical-text { writing-mode: vertical-rl; transform: rotate(180deg); height: 120px; }
         .readonly-cell { background: #f0f4f8; font-weight: bold; }
 
         /* መቆጣጠሪያዎች */
         .controls { 
-            display: flex; justify-content: space-between; margin-bottom: 25px; 
-            background: #1a3a5f; padding: 15px 25px; border-radius: 15px; color: white;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: flex; justify-content: space-between; margin-bottom: 20px; 
+            background: #1a3a5f; padding: 15px; border-radius: 12px; color: white;
         }
-        .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
         .btn-add { background: #27ae60; color: white; }
         .btn-pdf { background: #e74c3c; color: white; }
         .btn-print { background: #f1c40f; color: #000; }
-        .btn:hover { transform: scale(1.05); filter: brightness(1.1); }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
 
         /* ፊርማዎች */
-        .signature-area { display: flex; justify-content: space-between; margin-top: 60px; }
+        .signature-area { display: flex; justify-content: space-between; margin-top: 50px; }
         .sig-box { width: 30%; text-align: center; }
         .sig-line { border-top: 2.5px solid #1a3a5f; margin-top: 40px; }
         .sig-name { font-weight: bold; font-size: 16px; margin-top: 8px; display: block; }
         .editable-date { display: block; margin-top: 10px; font-style: italic; color: #555; outline: none; }
 
         @media print {
-            .controls, .logo-box input { display: none !important; }
+            .controls { display: none !important; }
             body { background: white; padding: 0; }
             .container { box-shadow: none; border: none; width: 100%; background: white; padding: 0; }
         }
@@ -87,7 +85,6 @@
 <body>
 
 <div class="container" id="tos-content">
-    <!-- መቆጣጠሪያዎች -->
     <div class="controls">
         <div style="display: flex; gap: 15px;">
             <button class="btn btn-add" onclick="addRow()">➕ Add Row</button>
@@ -102,26 +99,24 @@
         </div>
     </div>
 
-    <!-- ራስጌ -->
     <div class="top-header">
         <div class="logo-box">
-            <span id="upload-text" style="font-size: 12px; text-align: center; padding: 5px;">Click to<br>Upload Logo</span>
+            <span id="upload-label" style="font-size: 11px; text-align: center;">Upload Logo<br>(ሎጎ ይጫኑ)</span>
             <input type="file" accept="image/*" onchange="previewLogo(this)">
             <img id="logoImg" src="" style="display:none;">
         </div>
-        <div class="header-text" style="text-align: center; flex-grow: 1;">
+        <div class="header-text">
             <h2 contenteditable="true">Table of Specification (TOS) Builder</h2>
             <p contenteditable="true">2018 E.C. Second Semester Mid-Examination</p>
         </div>
         <div style="width: 120px;"></div>
     </div>
 
-    <!-- ሰንጠረዥ -->
     <table id="tosTable">
         <thead>
             <tr>
                 <th rowspan="2" style="width: 40px;">No</th>
-                <th rowspan="2" style="width: 250px;">Contents (ይዘቶች)</th>
+                <th rowspan="2" style="width: 250px;">Contents</th>
                 <th rowspan="2" class="vertical-text">Period</th>
                 <th rowspan="2" class="vertical-text">Items</th>
                 <th colspan="6">Instructional Objectives</th>
@@ -140,7 +135,7 @@
         <tbody id="tableBody">
             <tr>
                 <td>1</td>
-                <td contenteditable="true" style="text-align: left; padding-left: 10px;">Enter Topic Name...</td>
+                <td contenteditable="true" style="text-align: left; padding-left: 10px;">Topic 1</td>
                 <td contenteditable="true" class="input-cell">0</td>
                 <td contenteditable="true" class="input-cell">0</td>
                 <td contenteditable="true" class="input-cell">0</td><td contenteditable="true" class="input-cell">0</td>
@@ -161,7 +156,6 @@
         </tfoot>
     </table>
 
-    <!-- ፊርማ -->
     <div class="signature-area">
         <div class="sig-box">
             <span style="font-weight: bold; color: #1a3a5f;">Teacher</span>
@@ -192,7 +186,7 @@
                 const img = document.getElementById('logoImg');
                 img.src = e.target.result;
                 img.style.display = 'block';
-                document.getElementById('upload-text').style.display = 'none';
+                document.getElementById('upload-label').style.display = 'none';
             };
             reader.readAsDataURL(input.files[0]);
         }
@@ -236,21 +230,20 @@
         document.querySelectorAll('.input-cell').forEach(c => c.oninput = calculate);
     }
 
-    // PDF የማስቀመጫ ፋንክሽን
     function saveAsPDF() {
         const element = document.getElementById('tos-content');
         const orientation = document.getElementById('pageOrientation').value;
         const opt = {
             margin: 5,
             filename: 'TOS_Report_2018.pdf',
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, useCORS: true },
+            image: { type: 'jpeg', quality: 1 },
+            html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
             jsPDF: { unit: 'mm', format: 'a4', orientation: orientation }
         };
-        // ፒዲኤፍ ሲወጣ ቁልፎቹ እንዳይታዩ ለጊዜው መደበቅ
-        document.querySelector('.controls').style.visibility = 'hidden';
+        // ቁልፎቹን ለጊዜው መደበቅ
+        document.querySelector('.controls').style.display = 'none';
         html2pdf().set(opt).from(element).save().then(() => {
-            document.querySelector('.controls').style.visibility = 'visible';
+            document.querySelector('.controls').style.display = 'flex';
         });
     }
 
@@ -263,6 +256,5 @@
 
     attachListeners();
 </script>
-
 </body>
 </html>
