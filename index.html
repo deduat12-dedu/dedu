@@ -1,120 +1,190 @@
 <!DOCTYPE html>
-<html lang="am">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>የጥያቄና መልስ ውጤት መያዣ</title>
+    <title>Table of Specification - Editable</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; direction: rtl; text-align: right; padding: 20px; background-color: #f4f4f9; }
-        .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #2c3e50; }
-        .info-section { display: flex; justify-content: space-between; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
-        th { background-color: #34495e; color: white; }
-        input[type="number"], input[type="text"] { width: 90%; padding: 5px; border: 1px solid #ccc; border-radius: 4px; }
-        .btn-group { margin-top: 20px; text-align: center; }
-        button { padding: 10px 20px; margin: 5px; cursor: pointer; border: none; border-radius: 4px; font-size: 16px; }
-        .save-btn { background-color: #27ae60; color: white; }
-        .print-btn { background-color: #2980b9; color: white; }
-        @media print { .btn-group, select { display: none; } body { background: white; } }
+        body { font-family: Arial, sans-serif; margin: 40px; color: #333; }
+        .header-info { text-align: center; margin-bottom: 20px; }
+        .header-info h2 { text-decoration: underline; margin-bottom: 5px; }
+        
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { border: 1px solid black; padding: 8px; text-align: center; font-size: 13px; }
+        
+        .content-col { text-align: left; width: 30%; }
+        .vertical-text { 
+            writing-mode: vertical-rl; 
+            transform: rotate(180deg); 
+            white-space: nowrap; 
+            padding: 10px 5px;
+            height: 100px;
+        }
+        
+        .signature-section { display: flex; justify-content: space-between; margin-top: 50px; font-size: 14px; }
+        .sig-box { width: 30%; line-height: 2; }
+        .sig-line { border-bottom: 1px solid black; display: inline-block; width: 150px; }
+        
+        /* Interactive styles for editing */
+        [contenteditable="true"]:hover { background-color: #fafafa; outline: 1px dashed #ccc; }
+        [contenteditable="true"]:focus { background-color: #fff; outline: 2px solid #007bff; }
+
+        /* Print Button Styles */
+        .print-container { text-align: center; margin-top: 40px; }
+        .btn-print {
+            padding: 10px 25px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .btn-print:hover { background-color: #0056b3; }
+
+        /* Hide the button and UI elements when printing */
+        @media print {
+            .print-container { display: none; }
+            body { margin: 20px; }
+            [contenteditable="true"]:hover { outline: none; }
+        }
     </style>
 </head>
-<body dir="ltr" style="text-align: left;">
+<body>
 
-<div class="container">
-    <h2>የጥያቄና መልስ ውጤት መያዣ</h2>
-    
-    <div class="info-section">
-        <div>
-            <strong>ቀን፡</strong> 22/3/2026 <br>
-            <strong>ሰዓት፡</strong> 5:18 PM
-        </div>
-        <div>
-            <strong>ክፍል፡</strong> 
-            <select>
-                <option>1ኛ ሀ</option><option>1ኛ ለ</option>
-                <option>2ኛ ሀ</option><option>2ኛ ለ</option>
-                <option>3ኛ ሀ</option><option>4ኛ ሀ</option>
-                <option>5ኛ ሀ</option><option>6ኛ ሀ</option>
-            </select>
-        </div>
-        <div>
-            <strong>ሴሚስተር፡</strong> 
-            <select><option>1ኛ</option><option>2ኛ</option></select>
-        </div>
+    <div class="header-info">
+        <h2 contenteditable="true">2018 E.C Tayitu Bitul Academy Second Semester Grade Three English Mid Examination Table of Specification</h2>
     </div>
 
     <table>
         <thead>
             <tr>
-                <th>ተ.ቁ</th>
-                <th>ተማሪ ስም</th>
-                <th>አማርኛ</th>
-                <th>እንግሊዝኛ</th>
-                <th>ሒሳብ</th>
-                <th>አ/ሳይንስ</th>
-                <th>ግብረገብ</th>
-                <th>ድምር</th>
+                <th rowspan="2">No</th>
+                <th rowspan="2">Contents</th>
+                <th rowspan="2" class="vertical-text">Period</th>
+                <th rowspan="2" class="vertical-text">Number of items</th>
+                <th colspan="6">Instructional Objectives</th>
+                <th rowspan="2" class="vertical-text">Total</th>
+                <th rowspan="2" class="vertical-text">Percent</th>
+            </tr>
+            <tr>
+                <th class="vertical-text">Knowledge</th>
+                <th class="vertical-text">Comprehension</th>
+                <th class="vertical-text">Application</th>
+                <th class="vertical-text">Analysis</th>
+                <th class="vertical-text">Synthesis</th>
+                <th class="vertical-text">Evaluation</th>
             </tr>
         </thead>
-        <tbody id="scoreTable">
-            <!-- 6 ተማሪዎች -->
-            <script>
-                for(let i=1; i<=6; i++) {
-                    document.write(`
-                        <tr>
-                            <td>${i}</td>
-                            <td><input type="text" placeholder="ስም"></td>
-                            <td><input type="number" class="score" oninput="calculate()"></td>
-                            <td><input type="number" class="score" oninput="calculate()"></td>
-                            <td><input type="number" class="score" oninput="calculate()"></td>
-                            <td><input type="number" class="score" oninput="calculate()"></td>
-                            <td><input type="number" class="score" oninput="calculate()"></td>
-                            <td class="total">0</td>
-                        </tr>
-                    `);
-                }
-            </script>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td class="content-col" contenteditable="true">Unit 5 Cash Crops<br>&nbsp;&nbsp;5.1 Vocabulary</td>
+                <td contenteditable="true">2</td>
+                <td contenteditable="true">5</td>
+                <td contenteditable="true">5</td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true">25%</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td class="content-col" contenteditable="true">5.2 plural formation</td>
+                <td contenteditable="true">4</td>
+                <td contenteditable="true">4</td>
+                <td contenteditable="true">1</td>
+                <td contenteditable="true">3</td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true">20%</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td class="content-col" contenteditable="true">Unit 6 Cutting Trees<br>&nbsp;&nbsp;6.1 Speaking</td>
+                <td contenteditable="true">3</td>
+                <td contenteditable="true">3</td>
+                <td contenteditable="true">3</td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true">15%</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td class="content-col" contenteditable="true">6.2 Comparing and Contrasting</td>
+                <td contenteditable="true">3</td>
+                <td contenteditable="true">3</td>
+                <td contenteditable="true">1</td>
+                <td contenteditable="true">2</td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true">15%</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td class="content-col" contenteditable="true">Unit 7 The Simple Present Tense</td>
+                <td contenteditable="true">4</td>
+                <td contenteditable="true">5</td>
+                <td contenteditable="true">5</td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true">25%</td>
+            </tr>
+            <tr style="font-weight: bold;">
+                <td></td>
+                <td class="content-col">Total</td>
+                <td contenteditable="true">16</td>
+                <td contenteditable="true">20</td>
+                <td contenteditable="true">15</td>
+                <td contenteditable="true">5</td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true">100%</td>
+            </tr>
         </tbody>
     </table>
 
-    <div style="margin-top: 30px;">
-        <p><strong>1ኛ ዳኛ፡</strong> 
-            <select id="judge1">
-                <option>--- ምረጥ ---</option>
-                <option>መ/ር ዳዊት የማነ</option><option>መ/ር ደለለኝ አጥላው</option>
-                <option>መ/ርት መሰረት ፋንታ</option><option>መ/ር ባየልኝ አይተንፍሱ</option>
-            </select>
-        </p>
-        <p><strong>2ኛ ዳኛ፡</strong> 
-            <select id="judge2">
-                <option>--- ምረጥ ---</option>
-                <option>መ/ር ዳዊት የማነ</option><option>መ/ር ደለለኝ አጥላው</option>
-                <option>መ/ርት መሰረት ፋንታ</option>
-            </select>
-        </p>
-        <p><strong>ሰብሳቢ፡</strong> መ/ር ደለለኝ አጥላው | <strong>ፀሀፊ፡</strong> መ/ርት መሰረት ፋንታ</p>
-        <p><strong>ፊርማ፡</strong> _________________</p>
+    <div class="signature-section">
+        <div class="sig-box">
+            Teacher's name: <span contenteditable="true">Teferi Tadesse</span><br>
+            Signature: <span class="sig-line"></span><br>
+            Date: <span contenteditable="true">15/07/18 E.C</span>
+        </div>
+        <div class="sig-box">
+            Dept. head's name: <span contenteditable="true">_________________</span><br>
+            Signature: <span class="sig-line"></span><br>
+            Date: <span class="sig-line"></span>
+        </div>
+        <div class="sig-box">
+            Director's name: <span contenteditable="true">_________________</span><br>
+            Signature: <span class="sig-line"></span><br>
+            Date: <span class="sig-line"></span>
+        </div>
     </div>
 
-    <div class="btn-group">
-        <button class="save-btn" onclick="alert('ውጤቱ ተመዝግቧል!')">💾 ውጤቱን መዝግብ</button>
-        <button class="print-btn" onclick="window.print()">🖨️ ውጤቱን አትም</button>
+    <div class="print-container">
+        <button class="btn-print" onclick="window.print()">Print This Page</button>
     </div>
-</div>
-
-<script>
-    function calculate() {
-        let rows = document.querySelectorAll("#scoreTable tr");
-        rows.forEach(row => {
-            let scores = row.querySelectorAll(".score");
-            let total = 0;
-            scores.forEach(s => total += Number(s.value) || 0);
-            row.querySelector(".total").innerText = total;
-        });
-    }
-</script>
 
 </body>
 </html>
