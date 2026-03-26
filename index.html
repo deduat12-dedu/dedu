@@ -2,55 +2,66 @@
 <html lang="am">
 <head>
     <meta charset="UTF-8">
-    <title>TOS Builder - Fit to One Page</title>
-    <!-- PDF Library -->
+    <title>TOS Builder - Professional Edition</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f7f6; padding: 20px; }
+        /* ጠቅላላ ገጽታ */
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #e9ecef; padding: 20px; color: #000; }
         
-        /* Glassmorphism Design */
-        .glass { 
-            background: white; padding: 25px; border-radius: 12px; 
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1); 
-            max-width: 1100px; margin: auto; 
+        .container { 
+            background: white; padding: 30px; border-radius: 15px; 
+            box-shadow: 0 0 20px rgba(0,0,0,0.2); 
+            max-width: 1150px; margin: auto; 
         }
 
+        /* ቁልፎች */
         .btns { 
-            background: #1a3a5f; padding: 12px; border-radius: 8px; 
-            margin-bottom: 20px; display: flex; gap: 10px; justify-content: center;
+            background: #1a3a5f; padding: 15px; border-radius: 10px; 
+            margin-bottom: 20px; display: flex; gap: 12px; justify-content: center;
         }
-
-        button { padding: 10px 18px; cursor: pointer; border: none; border-radius: 6px; font-weight: bold; transition: 0.3s; }
+        button { padding: 10px 20px; cursor: pointer; border: none; border-radius: 6px; font-weight: bold; font-size: 14px; }
         .btn-pdf { background: #e74c3c; color: white; }
         .btn-lang { background: #8e44ad; color: white; }
         .btn-add { background: #27ae60; color: white; }
         .btn-print { background: #f1c40f; color: black; }
-        button:hover { opacity: 0.8; transform: translateY(-1px); }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; table-layout: fixed; }
-        th, td { border: 2px solid #1a3a5f; padding: 6px; text-align: center; font-size: 12px; word-wrap: break-word; }
-        th { background: #1a3a5f; color: white; }
+        /* ርዕስ እና ሎጎ */
+        .header-section { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-bottom: 4px solid #000; padding-bottom: 15px; }
         
-        .v-text { writing-mode: vertical-rl; transform: rotate(180deg); height: 100px; font-size: 11px; }
+        /* ክብ ሎጎ ማስቀመጫ */
+        .circle-logo { 
+            width: 100px; height: 100px; border: 3px solid #000; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; 
+            position: relative; overflow: hidden; background: #f8f9fa; cursor: pointer;
+        }
+        .circle-logo img { width: 100%; height: 100%; object-fit: cover; display: none; }
+        .circle-logo input { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
+        .circle-logo span { font-size: 11px; font-weight: bold; text-align: center; color: #333; }
 
-        .logo-box { width: 90px; height: 90px; border: 2px dashed #1a3a5f; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
-        .logo-box img { max-width: 100%; max-height: 100%; }
-        .logo-box input { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
+        /* ሰንጠረዥ - መስመሮቹ እንዲደምቁ ተደርጓል */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { 
+            border: 2.5px solid #000; /* ደማቅ ጥቁር መስመር */
+            padding: 8px; text-align: center; 
+            font-size: 13px; font-weight: bold; /* ጽሁፉ ደማቅ እንዲሆን */
+        }
+        th { background: #f2f2f2; color: #000; text-transform: uppercase; }
+        
+        .v-text { writing-mode: vertical-rl; transform: rotate(180deg); height: 110px; }
 
-        .sigs { display: flex; justify-content: space-between; margin-top: 30px; }
-        .sig-box { width: 30%; text-align: center; border-top: 2px solid #1a3a5f; padding-top: 5px; font-size: 13px; }
+        /* ፊርማ እና ቀን */
+        .sigs { display: flex; justify-content: space-between; margin-top: 40px; }
+        .sig-box { width: 30%; text-align: center; font-size: 14px; }
+        .sig-line { border-top: 3px solid #000; margin-top: 40px; margin-bottom: 5px; }
+        .date-input { margin-top: 10px; font-weight: bold; border-bottom: 1px solid #000; display: inline-block; min-width: 150px; outline: none; }
 
-        /* ማተሚያ ቅንብር (Print Setup to Fit One Page) */
+        /* ለህትመት */
         @media print {
-            @page { size: landscape; margin: 5mm; }
+            @page { size: landscape; margin: 10mm; }
             body { background: white; padding: 0; }
-            .btns { display: none !important; } /* ቁልፎቹ በህትመት ላይ አይወጡም */
-            .glass { 
-                box-shadow: none; border: none; width: 100%; max-width: 100%; padding: 0; margin: 0;
-            }
-            table { font-size: 10px; width: 100% !important; }
-            th, td { padding: 4px !important; }
-            .v-text { height: 80px; }
+            .btns { display: none !important; }
+            .container { box-shadow: none; border: none; width: 100%; padding: 0; }
+            th { background: #eee !important; -webkit-print-color-adjust: exact; }
         }
     </style>
 </head>
@@ -59,29 +70,31 @@
 <div class="btns">
     <button class="btn-lang" onclick="changeLang()">🌍 አማርኛ/EN</button>
     <button class="btn-add" onclick="addRow()">➕ Add Row</button>
-    <button class="btn-print" onclick="window.print()">🖨️ Print (በአንድ ገጽ)</button>
+    <button class="btn-print" onclick="window.print()">🖨️ Print (አትም)</button>
     <button class="btn-pdf" onclick="pdf()">📄 Save as PDF</button>
 </div>
 
-<div class="glass" id="area">
-    <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #1a3a5f; padding-bottom: 10px; margin-bottom: 10px;">
-        <div class="logo-box">
-            <span id="l-up" style="font-size: 10px; color: #1a3a5f;">Logo Here</span>
-            <input type="file" onchange="showL(this)">
-            <img id="imgL" src="" style="display:none">
+<div class="container" id="area">
+    <div class="header-section">
+        <!-- ክብ ሎጎ -->
+        <div class="circle-logo">
+            <span id="l-text">Add Logo<br>(ሎጎ)</span>
+            <input type="file" onchange="loadLogo(this)">
+            <img id="logoImg" src="">
         </div>
-        <div style="text-align: center;">
-            <h2 id="h-title" contenteditable="true" style="margin:0; font-size: 20px;">Table of Specification (TOS)</h2>
-            <p id="h-sub" contenteditable="true" style="margin:5px 0; font-weight: bold;">2018 E.C. Mid-Examination</p>
+        
+        <div style="text-align: center; flex-grow: 1;">
+            <h1 id="h-title" contenteditable="true" style="margin:0; font-size: 26px; font-weight: 900;">TABLE OF SPECIFICATION (TOS)</h1>
+            <h3 id="h-sub" contenteditable="true" style="margin:5px 0; font-weight: 800;">2018 E.C. ACADEMIC YEAR - MID EXAMINATION</h3>
         </div>
-        <div style="width: 90px;"></div>
+        <div style="width: 100px;"></div> <!-- ሚዛኑን ለመጠበቅ -->
     </div>
 
-    <table id="table">
+    <table id="mainTable">
         <thead>
             <tr>
-                <th rowspan="2" style="width: 30px;" id="h-no">No</th>
-                <th rowspan="2" style="width: 180px;" id="h-con">Contents</th>
+                <th rowspan="2" style="width: 40px;" id="h-no">No</th>
+                <th rowspan="2" style="width: 250px;" id="h-con">Contents / Units</th>
                 <th rowspan="2" class="v-text" id="h-per">Period</th>
                 <th rowspan="2" class="v-text" id="h-itm">Items</th>
                 <th colspan="6" id="h-obj">Instructional Objectives</th>
@@ -96,20 +109,35 @@
         <tbody id="tbody">
             <tr>
                 <td>1</td>
-                <td contenteditable="true" style="text-align:left">Unit Name...</td>
+                <td contenteditable="true" style="text-align:left">Example Unit Name...</td>
                 <td contenteditable="true" oninput="calc()">0</td><td contenteditable="true" oninput="calc()">0</td>
                 <td contenteditable="true" oninput="calc()">0</td><td contenteditable="true" oninput="calc()">0</td>
                 <td contenteditable="true" oninput="calc()">0</td><td contenteditable="true" oninput="calc()">0</td>
                 <td contenteditable="true" oninput="calc()">0</td><td contenteditable="true" oninput="calc()">0</td>
-                <td style="background:#eee; font-weight:bold">0</td>
+                <td style="background:#f9f9f9;">0</td>
             </tr>
         </tbody>
     </table>
 
     <div class="sigs">
-        <div class="sig-box"><b id="s1">Teacher</b><br><span contenteditable="true">Delelegn Atlaw</span></div>
-        <div class="sig-box"><b id="s2">Dept. Head</b><br><span contenteditable="true">________________</span></div>
-        <div class="sig-box"><b id="s3">Principal</b><br><span contenteditable="true">Amare Asefa</span></div>
+        <div class="sig-box">
+            <div class="sig-line"></div>
+            <b id="s1">Teacher</b><br>
+            <span contenteditable="true">Delelegn Atlaw</span><br>
+            <div class="date-input" contenteditable="true">Date: ___/___/2018 E.C</div>
+        </div>
+        <div class="sig-box">
+            <div class="sig-line"></div>
+            <b id="s2">Dept. Head</b><br>
+            <span contenteditable="true">________________</span><br>
+            <div class="date-input" contenteditable="true">Date: ___/___/2018 E.C</div>
+        </div>
+        <div class="sig-box">
+            <div class="sig-line"></div>
+            <b id="s3">Principal</b><br>
+            <span contenteditable="true">Amare Asefa</span><br>
+            <div class="date-input" contenteditable="true">Date: ___/___/2018 E.C</div>
+        </div>
     </div>
 </div>
 
@@ -118,7 +146,7 @@
     function changeLang() {
         isAm = !isAm;
         document.getElementById('h-no').innerText = isAm ? "ተ.ቁ" : "No";
-        document.getElementById('h-con').innerText = isAm ? "ይዘቶች" : "Contents";
+        document.getElementById('h-con').innerText = isAm ? "ይዘቶች" : "Contents / Units";
         document.getElementById('h-per').innerText = isAm ? "ክፍለ-ጊዜ" : "Period";
         document.getElementById('h-itm').innerText = isAm ? "ጥያቄ ብዛት" : "Items";
         document.getElementById('h-obj').innerText = isAm ? "የትምህርት ዓላማዎች" : "Instructional Objectives";
@@ -134,15 +162,16 @@
         document.getElementById('o6').innerText = isAm ? "ምዘና" : "Evaluation";
     }
 
-    function showL(i) {
-        if (i.files && i.files[0]) {
-            let r = new FileReader();
-            r.onload = e => { 
-                document.getElementById('imgL').src = e.target.result; 
-                document.getElementById('imgL').style.display='block'; 
-                document.getElementById('l-up').style.display='none'; 
+    function loadLogo(input) {
+        if (input.files && input.files[0]) {
+            let reader = new FileReader();
+            reader.onload = e => { 
+                let img = document.getElementById('logoImg');
+                img.src = e.target.result; 
+                img.style.display = 'block'; 
+                document.getElementById('l-text').style.display = 'none'; 
             };
-            r.readAsDataURL(i.files[0]);
+            reader.readAsDataURL(input.files[0]);
         }
     }
 
@@ -161,14 +190,14 @@
         r.innerHTML = `<td>${b.rows.length}</td><td contenteditable="true" style="text-align:left">New Unit</td>
             <td contenteditable="true" oninput="calc()">0</td><td contenteditable="true" oninput="calc()">0</td>
             ${'<td contenteditable="true" oninput="calc()">0</td>'.repeat(6)}
-            <td style="background:#eee; font-weight:bold">0</td>`;
+            <td style="background:#f9f9f9;">0</td>`;
     }
 
     function pdf() {
         const e = document.getElementById('area');
         const opt = {
             margin: 5,
-            filename: 'TOS_Report.pdf',
+            filename: 'TOS_Report_2018.pdf',
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: { scale: 2 },
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
