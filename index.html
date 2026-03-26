@@ -2,121 +2,129 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Professional TOS Builder - Final Version</title>
+    <title>Premium TOS Builder - Transparent Edition</title>
+    <!-- ለ PDF መቀየሪያ የሚያስፈልግ ላይብረሪ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        /* ገጽ እና አጠቃላይ ዲዛይን */
+        /* ዘመናዊ የጀርባ ቀለም (Animated Gradient) */
         body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            margin: 0; padding: 30px;
-            background: linear-gradient(135deg, #eef2f3 0%, #d5dce1 100%);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            margin: 0; padding: 40px 20px;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
             min-height: 100vh;
         }
 
-        .container { 
-            max-width: 1250px; margin: 0 auto; background: #ffffff; 
-            padding: 40px; border-radius: 15px; 
-            box-shadow: 0 12px 40px rgba(0,0,0,0.15); 
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        /* የሎጎ እና የርዕስ ክፍል */
+        /* ግልጽነት ያለው መያዣ (Glassmorphism Container) */
+        .container { 
+            max-width: 1200px; margin: 0 auto; 
+            background: rgba(255, 255, 255, 0.85); /* Transparent Background */
+            backdrop-filter: blur(10px); /* የበረዶ መልክ እንዲሰጠው */
+            padding: 50px; border-radius: 25px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
+            border: 1px solid rgba(255,255,255,0.3);
+            position: relative;
+        }
+
+        /* ርዕስ እና ሎጎ */
         .top-header {
             display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 25px; border-bottom: 4px solid #1a3a5f;
-            padding-bottom: 15px;
+            margin-bottom: 30px; border-bottom: 4px solid #1a3a5f; padding-bottom: 20px;
         }
 
         .logo-box {
-            width: 130px; height: 130px; border: 2px dashed #1a3a5f;
+            width: 120px; height: 120px; border: 3px dashed #1a3a5f;
             display: flex; align-items: center; justify-content: center;
-            position: relative; background: #f9f9f9; border-radius: 8px;
+            border-radius: 15px; background: rgba(255,255,255,0.5); overflow: hidden;
+            cursor: pointer; position: relative;
         }
         .logo-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        .logo-box input { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
-        .logo-text { font-size: 11px; color: #1a3a5f; text-align: center; font-weight: bold; }
+        .logo-box input { position: absolute; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
 
-        .header-text { flex-grow: 1; text-align: center; }
-        .header-text h2 { margin: 0; color: #1a3a5f; font-size: 26px; text-transform: uppercase; }
-        .header-text p { margin: 5px 0; font-weight: bold; font-size: 18px; color: #444; }
+        .header-text h2 { margin: 0; color: #1a3a5f; font-size: 28px; letter-spacing: 1px; }
+        .header-text p { font-size: 18px; font-weight: bold; color: #444; margin-top: 5px; }
 
-        /* ሰንጠረዥ እና መስመሮች */
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
-        th, td { 
-            border: 2.5px solid #1a3a5f; /* የደመቁ መስመሮች */
-            padding: 10px 5px; text-align: center; font-size: 14px; 
-        }
-        th { background-color: #1a3a5f; color: white; font-weight: bold; }
-        .vertical-text { writing-mode: vertical-rl; transform: rotate(180deg); height: 120px; }
-        .readonly-cell { background-color: #f1f4f8; font-weight: bold; color: #1a3a5f; }
-        .content-cell { text-align: left; padding-left: 10px; width: 22%; }
+        /* ሰንጠረዥ */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #fff; }
+        th, td { border: 2.5px solid #1a3a5f; padding: 12px 6px; text-align: center; font-size: 14px; }
+        th { background: #1a3a5f; color: white; text-transform: uppercase; }
+        .vertical-text { writing-mode: vertical-rl; transform: rotate(180deg); height: 130px; }
+        .readonly-cell { background: #f0f4f8; font-weight: bold; }
 
         /* መቆጣጠሪያዎች */
         .controls { 
-            display: flex; justify-content: space-between; margin-bottom: 20px; 
-            background: #1a3a5f; padding: 15px; border-radius: 10px; color: white;
+            display: flex; justify-content: space-between; margin-bottom: 25px; 
+            background: #1a3a5f; padding: 15px 25px; border-radius: 15px; color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
-        .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
         .btn-add { background: #27ae60; color: white; }
+        .btn-pdf { background: #e74c3c; color: white; }
         .btn-print { background: #f1c40f; color: #000; }
-        .btn:hover { opacity: 0.8; transform: translateY(-2px); }
+        .btn:hover { transform: scale(1.05); filter: brightness(1.1); }
 
-        /* የፊርማ ክፍል (አግድም) */
-        .signature-area {
-            display: flex; justify-content: space-between; margin-top: 50px;
-        }
+        /* ፊርማዎች */
+        .signature-area { display: flex; justify-content: space-between; margin-top: 60px; }
         .sig-box { width: 30%; text-align: center; }
-        .sig-line { border-top: 2.5px solid #1a3a5f; margin-top: 35px; width: 100%; }
-        .sig-name { font-weight: bold; font-size: 16px; margin-top: 5px; display: block; }
-        .sig-label { font-size: 13px; color: #1a3a5f; font-weight: bold; }
-        .editable-date { display: block; margin-top: 8px; font-style: italic; color: #333; outline: none; border-bottom: 1px dotted #999; }
+        .sig-line { border-top: 2.5px solid #1a3a5f; margin-top: 40px; }
+        .sig-name { font-weight: bold; font-size: 16px; margin-top: 8px; display: block; }
+        .editable-date { display: block; margin-top: 10px; font-style: italic; color: #555; outline: none; }
 
         @media print {
-            .controls, input[type="file"] { display: none !important; }
+            .controls, .logo-box input { display: none !important; }
             body { background: white; padding: 0; }
-            .container { box-shadow: none; width: 100%; padding: 0; border: none; }
-            th { background-color: #1a3a5f !important; color: white !important; -webkit-print-color-adjust: exact; }
-            .logo-box { border: none; }
+            .container { box-shadow: none; border: none; width: 100%; background: white; padding: 0; }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <!-- Controls -->
+<div class="container" id="tos-content">
+    <!-- መቆጣጠሪያዎች -->
     <div class="controls">
-        <div style="display: flex; gap: 15px; align-items: center;">
-            <button class="btn btn-add" onclick="addRow()">➕ Add New Row / ረድፍ ጨምር</button>
-            <span>Orientation:</span>
-            <select id="pageOrientation" style="padding: 8px; border-radius: 5px;">
-                <option value="landscape" selected>Landscape (አግድም)</option>
-                <option value="portrait">Portrait (ቁም)</option>
-            </select>
+        <div style="display: flex; gap: 15px;">
+            <button class="btn btn-add" onclick="addRow()">➕ Add Row</button>
+            <button class="btn btn-pdf" onclick="saveAsPDF()">📄 Save as PDF</button>
         </div>
-        <button class="btn btn-print" onclick="printTOS()">🖨️ Print Document / አትም</button>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <select id="pageOrientation" style="padding: 8px; border-radius: 5px;">
+                <option value="landscape" selected>Landscape</option>
+                <option value="portrait">Portrait</option>
+            </select>
+            <button class="btn btn-print" onclick="printTOS()">🖨️ Print</button>
+        </div>
     </div>
 
-    <!-- Header Section -->
+    <!-- ራስጌ -->
     <div class="top-header">
         <div class="logo-box">
-            <span class="logo-text">Upload School Logo<br>(ሎጎ እዚህ ይጫኑ)</span>
+            <span id="upload-text" style="font-size: 12px; text-align: center; padding: 5px;">Click to<br>Upload Logo</span>
             <input type="file" accept="image/*" onchange="previewLogo(this)">
             <img id="logoImg" src="" style="display:none;">
         </div>
-        <div class="header-text">
+        <div class="header-text" style="text-align: center; flex-grow: 1;">
             <h2 contenteditable="true">Table of Specification (TOS) Builder</h2>
             <p contenteditable="true">2018 E.C. Second Semester Mid-Examination</p>
         </div>
-        <div style="width: 130px;"></div> <!-- Balance Spacer -->
+        <div style="width: 120px;"></div>
     </div>
 
-    <!-- Table Section -->
+    <!-- ሰንጠረዥ -->
     <table id="tosTable">
         <thead>
             <tr>
                 <th rowspan="2" style="width: 40px;">No</th>
-                <th rowspan="2" id="thContent">Contents (ይዘቶች)</th>
+                <th rowspan="2" style="width: 250px;">Contents (ይዘቶች)</th>
                 <th rowspan="2" class="vertical-text">Period</th>
                 <th rowspan="2" class="vertical-text">Items</th>
-                <th colspan="6">Instructional Objectives (የትምህርት ዓላማዎች)</th>
+                <th colspan="6">Instructional Objectives</th>
                 <th rowspan="2" class="vertical-text">Total</th>
                 <th rowspan="2" class="vertical-text">Percent</th>
             </tr>
@@ -132,7 +140,7 @@
         <tbody id="tableBody">
             <tr>
                 <td>1</td>
-                <td contenteditable="true" class="content-cell">Unit Name / Topic Here</td>
+                <td contenteditable="true" style="text-align: left; padding-left: 10px;">Enter Topic Name...</td>
                 <td contenteditable="true" class="input-cell">0</td>
                 <td contenteditable="true" class="input-cell">0</td>
                 <td contenteditable="true" class="input-cell">0</td><td contenteditable="true" class="input-cell">0</td>
@@ -144,31 +152,31 @@
         </tbody>
         <tfoot>
             <tr style="background: #1a3a5f; color: white; font-weight: bold;">
-                <td colspan="2">GRAND TOTAL (ጠቅላላ ድምር)</td>
+                <td colspan="2">GRAND TOTAL</td>
                 <td id="t-period">0</td><td id="t-items">0</td>
                 <td id="t-1">0</td><td id="t-2">0</td><td id="t-3">0</td>
                 <td id="t-4">0</td><td id="t-5">0</td><td id="t-6">0</td>
-                <td id="t-grand">0</td><td id="t-percent">100%</td>
+                <td id="t-grand">0</td><td>100%</td>
             </tr>
         </tfoot>
     </table>
 
-    <!-- Signature Section -->
+    <!-- ፊርማ -->
     <div class="signature-area">
         <div class="sig-box">
-            <span class="sig-label">Teacher's Name (መምህር)</span>
+            <span style="font-weight: bold; color: #1a3a5f;">Teacher</span>
             <span class="sig-name" contenteditable="true">Delelegn Atlaw</span>
             <div class="sig-line"></div>
             <span class="editable-date" contenteditable="true">Date: ___/___/2018 E.C</span>
         </div>
         <div class="sig-box">
-            <span class="sig-label">Dept. Head (የክፍል ኃላፊ)</span>
+            <span style="font-weight: bold; color: #1a3a5f;">Dept. Head</span>
             <span class="sig-name" contenteditable="true">____________________</span>
             <div class="sig-line"></div>
             <span class="editable-date" contenteditable="true">Date: ___/___/2018 E.C</span>
         </div>
         <div class="sig-box">
-            <span class="sig-label">Principal (ርዕሰ መምህር)</span>
+            <span style="font-weight: bold; color: #1a3a5f;">Principal</span>
             <span class="sig-name" contenteditable="true">Amare Asefa</span>
             <div class="sig-line"></div>
             <span class="editable-date" contenteditable="true">Date: ___/___/2018 E.C</span>
@@ -177,7 +185,6 @@
 </div>
 
 <script>
-    // ሎጎ ቅድመ እይታ
     function previewLogo(input) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
@@ -185,46 +192,40 @@
                 const img = document.getElementById('logoImg');
                 img.src = e.target.result;
                 img.style.display = 'block';
-                document.querySelector('.logo-text').style.display = 'none';
+                document.getElementById('upload-text').style.display = 'none';
             };
             reader.readAsDataURL(input.files[0]);
         }
     }
 
-    // ስሌቶችን ማስላት
     function calculate() {
         const rows = document.querySelectorAll('#tableBody tr');
-        let totalPeriod = 0, totalItems = 0, totalObj = [0,0,0,0,0,0], grandSum = 0;
-
+        let tP = 0, tI = 0, tObj = [0,0,0,0,0,0], gSum = 0;
         rows.forEach(r => {
-            totalPeriod += parseFloat(r.cells[2].innerText) || 0;
-            totalItems += parseFloat(r.cells[3].innerText) || 0;
+            tP += parseFloat(r.cells[2].innerText) || 0;
+            tI += parseFloat(r.cells[3].innerText) || 0;
         });
-
         rows.forEach(r => {
-            let rowItems = parseFloat(r.cells[3].innerText) || 0;
-            let rowSum = 0;
+            let rI = parseFloat(r.cells[3].innerText) || 0;
+            let rS = 0;
             for(let i=0; i<6; i++) {
-                let val = parseFloat(r.cells[4+i].innerText) || 0;
-                rowSum += val; totalObj[i] += val;
+                let v = parseFloat(r.cells[4+i].innerText) || 0;
+                rS += v; tObj[i] += v;
             }
-            r.cells[10].innerText = rowSum;
-            r.cells[11].innerText = totalItems > 0 ? Math.round((rowItems/totalItems)*100) + '%' : '0%';
-            grandSum += rowSum;
+            r.cells[10].innerText = rS;
+            r.cells[11].innerText = tI > 0 ? Math.round((rI/tI)*100) + '%' : '0%';
+            gSum += rS;
         });
-
-        document.getElementById('t-period').innerText = totalPeriod;
-        document.getElementById('t-items').innerText = totalItems;
-        for(let i=0; i<6; i++) document.getElementById(`t-${i+1}`).innerText = totalObj[i];
-        document.getElementById('t-grand').innerText = grandSum;
+        document.getElementById('t-period').innerText = tP;
+        document.getElementById('t-items').innerText = tI;
+        for(let i=0; i<6; i++) document.getElementById(`t-${i+1}`).innerText = tObj[i];
+        document.getElementById('t-grand').innerText = gSum;
     }
 
-    // አዲስ ረድፍ መጨመር
     function addRow() {
         const tbody = document.getElementById('tableBody');
-        const count = tbody.rows.length + 1;
         const r = tbody.insertRow();
-        r.innerHTML = `<td>${count}</td><td contenteditable="true" class="content-cell">New Unit</td>
+        r.innerHTML = `<td>${tbody.rows.length}</td><td contenteditable="true" style="text-align: left; padding-left: 10px;">New Unit</td>
             <td contenteditable="true" class="input-cell">0</td><td contenteditable="true" class="input-cell">0</td>
             ${'<td contenteditable="true" class="input-cell">0</td>'.repeat(6)}
             <td class="readonly-cell">0</td><td class="readonly-cell">0%</td>`;
@@ -235,11 +236,27 @@
         document.querySelectorAll('.input-cell').forEach(c => c.oninput = calculate);
     }
 
-    // ማተም
+    // PDF የማስቀመጫ ፋንክሽን
+    function saveAsPDF() {
+        const element = document.getElementById('tos-content');
+        const orientation = document.getElementById('pageOrientation').value;
+        const opt = {
+            margin: 5,
+            filename: 'TOS_Report_2018.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: orientation }
+        };
+        // ፒዲኤፍ ሲወጣ ቁልፎቹ እንዳይታዩ ለጊዜው መደበቅ
+        document.querySelector('.controls').style.visibility = 'hidden';
+        html2pdf().set(opt).from(element).save().then(() => {
+            document.querySelector('.controls').style.visibility = 'visible';
+        });
+    }
+
     function printTOS() {
-        const orient = document.getElementById('pageOrientation').value;
         const style = document.createElement('style');
-        style.innerHTML = `@page { size: ${orient}; margin: 8mm; }`;
+        style.innerHTML = `@page { size: ${document.getElementById('pageOrientation').value}; margin: 5mm; }`;
         document.head.appendChild(style);
         window.print();
     }
