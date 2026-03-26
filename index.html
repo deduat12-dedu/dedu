@@ -1,40 +1,251 @@
-.signature-section {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 50px;
-            padding-top: 20px;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Professional TOS Builder - Final Version</title>
+    <style>
+        /* ገጽ እና አጠቃላይ ዲዛይን */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; padding: 30px;
+            background: linear-gradient(135deg, #eef2f3 0%, #d5dce1 100%);
+            min-height: 100vh;
         }
 
-        .sig-box {
-            width: 30%;
-            text-align: center;
+        .container { 
+            max-width: 1250px; margin: 0 auto; background: #ffffff; 
+            padding: 40px; border-radius: 15px; 
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15); 
         }
 
-        .label {
-            font-weight: bold;
-            color: #1a3a5f;
-            font-size: 14px;
+        /* የሎጎ እና የርዕስ ክፍል */
+        .top-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 25px; border-bottom: 4px solid #1a3a5f;
+            padding-bottom: 15px;
         }
 
-        .name-text {
-            display: inline-block;
-            margin-top: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            color: #222;
+        .logo-box {
+            width: 130px; height: 130px; border: 2px dashed #1a3a5f;
+            display: flex; align-items: center; justify-content: center;
+            position: relative; background: #f9f9f9; border-radius: 8px;
         }
+        .logo-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .logo-box input { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
+        .logo-text { font-size: 11px; color: #1a3a5f; text-align: center; font-weight: bold; }
 
-        .sig-line {
-            margin: 10px auto;
-            width: 80%;
-            border-bottom: 2px solid #1a3a5f;
-        }
+        .header-text { flex-grow: 1; text-align: center; }
+        .header-text h2 { margin: 0; color: #1a3a5f; font-size: 26px; text-transform: uppercase; }
+        .header-text p { margin: 5px 0; font-weight: bold; font-size: 18px; color: #444; }
 
-        .date {
-            font-size: 12px;
-            color: #666;
+        /* ሰንጠረዥ እና መስመሮች */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
+        th, td { 
+            border: 2.5px solid #1a3a5f; /* የደመቁ መስመሮች */
+            padding: 10px 5px; text-align: center; font-size: 14px; 
         }
+        th { background-color: #1a3a5f; color: white; font-weight: bold; }
+        .vertical-text { writing-mode: vertical-rl; transform: rotate(180deg); height: 120px; }
+        .readonly-cell { background-color: #f1f4f8; font-weight: bold; color: #1a3a5f; }
+        .content-cell { text-align: left; padding-left: 10px; width: 22%; }
+
+        /* መቆጣጠሪያዎች */
+        .controls { 
+            display: flex; justify-content: space-between; margin-bottom: 20px; 
+            background: #1a3a5f; padding: 15px; border-radius: 10px; color: white;
+        }
+        .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .btn-add { background: #27ae60; color: white; }
+        .btn-print { background: #f1c40f; color: #000; }
+        .btn:hover { opacity: 0.8; transform: translateY(-2px); }
+
+        /* የፊርማ ክፍል (አግድም) */
+        .signature-area {
+            display: flex; justify-content: space-between; margin-top: 50px;
+        }
+        .sig-box { width: 30%; text-align: center; }
+        .sig-line { border-top: 2.5px solid #1a3a5f; margin-top: 35px; width: 100%; }
+        .sig-name { font-weight: bold; font-size: 16px; margin-top: 5px; display: block; }
+        .sig-label { font-size: 13px; color: #1a3a5f; font-weight: bold; }
+        .editable-date { display: block; margin-top: 8px; font-style: italic; color: #333; outline: none; border-bottom: 1px dotted #999; }
 
         @media print {
-            .signature-section { margin-top: 80px; }
+            .controls, input[type="file"] { display: none !important; }
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; width: 100%; padding: 0; border: none; }
+            th { background-color: #1a3a5f !important; color: white !important; -webkit-print-color-adjust: exact; }
+            .logo-box { border: none; }
         }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Controls -->
+    <div class="controls">
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <button class="btn btn-add" onclick="addRow()">➕ Add New Row / ረድፍ ጨምር</button>
+            <span>Orientation:</span>
+            <select id="pageOrientation" style="padding: 8px; border-radius: 5px;">
+                <option value="landscape" selected>Landscape (አግድም)</option>
+                <option value="portrait">Portrait (ቁም)</option>
+            </select>
+        </div>
+        <button class="btn btn-print" onclick="printTOS()">🖨️ Print Document / አትም</button>
+    </div>
+
+    <!-- Header Section -->
+    <div class="top-header">
+        <div class="logo-box">
+            <span class="logo-text">Upload School Logo<br>(ሎጎ እዚህ ይጫኑ)</span>
+            <input type="file" accept="image/*" onchange="previewLogo(this)">
+            <img id="logoImg" src="" style="display:none;">
+        </div>
+        <div class="header-text">
+            <h2 contenteditable="true">Table of Specification (TOS) Builder</h2>
+            <p contenteditable="true">2018 E.C. Second Semester Mid-Examination</p>
+        </div>
+        <div style="width: 130px;"></div> <!-- Balance Spacer -->
+    </div>
+
+    <!-- Table Section -->
+    <table id="tosTable">
+        <thead>
+            <tr>
+                <th rowspan="2" style="width: 40px;">No</th>
+                <th rowspan="2" id="thContent">Contents (ይዘቶች)</th>
+                <th rowspan="2" class="vertical-text">Period</th>
+                <th rowspan="2" class="vertical-text">Items</th>
+                <th colspan="6">Instructional Objectives (የትምህርት ዓላማዎች)</th>
+                <th rowspan="2" class="vertical-text">Total</th>
+                <th rowspan="2" class="vertical-text">Percent</th>
+            </tr>
+            <tr>
+                <th class="vertical-text">Knowledge</th>
+                <th class="vertical-text">Comprehension</th>
+                <th class="vertical-text">Application</th>
+                <th class="vertical-text">Analysis</th>
+                <th class="vertical-text">Synthesis</th>
+                <th class="vertical-text">Evaluation</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            <tr>
+                <td>1</td>
+                <td contenteditable="true" class="content-cell">Unit Name / Topic Here</td>
+                <td contenteditable="true" class="input-cell">0</td>
+                <td contenteditable="true" class="input-cell">0</td>
+                <td contenteditable="true" class="input-cell">0</td><td contenteditable="true" class="input-cell">0</td>
+                <td contenteditable="true" class="input-cell">0</td><td contenteditable="true" class="input-cell">0</td>
+                <td contenteditable="true" class="input-cell">0</td><td contenteditable="true" class="input-cell">0</td>
+                <td class="readonly-cell">0</td>
+                <td class="readonly-cell">0%</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr style="background: #1a3a5f; color: white; font-weight: bold;">
+                <td colspan="2">GRAND TOTAL (ጠቅላላ ድምር)</td>
+                <td id="t-period">0</td><td id="t-items">0</td>
+                <td id="t-1">0</td><td id="t-2">0</td><td id="t-3">0</td>
+                <td id="t-4">0</td><td id="t-5">0</td><td id="t-6">0</td>
+                <td id="t-grand">0</td><td id="t-percent">100%</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <!-- Signature Section -->
+    <div class="signature-area">
+        <div class="sig-box">
+            <span class="sig-label">Teacher's Name (መምህር)</span>
+            <span class="sig-name" contenteditable="true">Delelegn Atlaw</span>
+            <div class="sig-line"></div>
+            <span class="editable-date" contenteditable="true">Date: ___/___/2018 E.C</span>
+        </div>
+        <div class="sig-box">
+            <span class="sig-label">Dept. Head (የክፍል ኃላፊ)</span>
+            <span class="sig-name" contenteditable="true">____________________</span>
+            <div class="sig-line"></div>
+            <span class="editable-date" contenteditable="true">Date: ___/___/2018 E.C</span>
+        </div>
+        <div class="sig-box">
+            <span class="sig-label">Principal (ርዕሰ መምህር)</span>
+            <span class="sig-name" contenteditable="true">Amare Asefa</span>
+            <div class="sig-line"></div>
+            <span class="editable-date" contenteditable="true">Date: ___/___/2018 E.C</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ሎጎ ቅድመ እይታ
+    function previewLogo(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('logoImg');
+                img.src = e.target.result;
+                img.style.display = 'block';
+                document.querySelector('.logo-text').style.display = 'none';
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // ስሌቶችን ማስላት
+    function calculate() {
+        const rows = document.querySelectorAll('#tableBody tr');
+        let totalPeriod = 0, totalItems = 0, totalObj = [0,0,0,0,0,0], grandSum = 0;
+
+        rows.forEach(r => {
+            totalPeriod += parseFloat(r.cells[2].innerText) || 0;
+            totalItems += parseFloat(r.cells[3].innerText) || 0;
+        });
+
+        rows.forEach(r => {
+            let rowItems = parseFloat(r.cells[3].innerText) || 0;
+            let rowSum = 0;
+            for(let i=0; i<6; i++) {
+                let val = parseFloat(r.cells[4+i].innerText) || 0;
+                rowSum += val; totalObj[i] += val;
+            }
+            r.cells[10].innerText = rowSum;
+            r.cells[11].innerText = totalItems > 0 ? Math.round((rowItems/totalItems)*100) + '%' : '0%';
+            grandSum += rowSum;
+        });
+
+        document.getElementById('t-period').innerText = totalPeriod;
+        document.getElementById('t-items').innerText = totalItems;
+        for(let i=0; i<6; i++) document.getElementById(`t-${i+1}`).innerText = totalObj[i];
+        document.getElementById('t-grand').innerText = grandSum;
+    }
+
+    // አዲስ ረድፍ መጨመር
+    function addRow() {
+        const tbody = document.getElementById('tableBody');
+        const count = tbody.rows.length + 1;
+        const r = tbody.insertRow();
+        r.innerHTML = `<td>${count}</td><td contenteditable="true" class="content-cell">New Unit</td>
+            <td contenteditable="true" class="input-cell">0</td><td contenteditable="true" class="input-cell">0</td>
+            ${'<td contenteditable="true" class="input-cell">0</td>'.repeat(6)}
+            <td class="readonly-cell">0</td><td class="readonly-cell">0%</td>`;
+        attachListeners();
+    }
+
+    function attachListeners() {
+        document.querySelectorAll('.input-cell').forEach(c => c.oninput = calculate);
+    }
+
+    // ማተም
+    function printTOS() {
+        const orient = document.getElementById('pageOrientation').value;
+        const style = document.createElement('style');
+        style.innerHTML = `@page { size: ${orient}; margin: 8mm; }`;
+        document.head.appendChild(style);
+        window.print();
+    }
+
+    attachListeners();
+</script>
+
+</body>
+</html>
