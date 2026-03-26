@@ -2,189 +2,225 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Table of Specification - Editable</title>
+    <title>Smart Table of Specification</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 40px; color: #333; }
-        .header-info { text-align: center; margin-bottom: 20px; }
-        .header-info h2 { text-decoration: underline; margin-bottom: 5px; }
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            margin: 40px; 
+            color: #222; 
+            background-color: #f8f9fa; 
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 40px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-radius: 8px;
+        }
+
+        .header-info { text-align: center; margin-bottom: 30px; }
+        .header-info h2 { 
+            text-decoration: underline; 
+            color: #1a3a5f; 
+            margin-bottom: 5px; 
+        }
         
-        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        th, td { border: 1px solid black; padding: 8px; text-align: center; font-size: 13px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 10px; table-layout: fixed; }
         
-        .content-col { text-align: left; width: 30%; }
+        th, td { 
+            border: 2px solid #1a3a5f; 
+            padding: 8px; 
+            text-align: center; 
+            font-size: 13px; 
+            overflow: hidden;
+        }
+        
+        th { background-color: #eef2f7; color: #1a3a5f; }
+        .content-col { text-align: left; width: 25%; font-weight: 500; }
+        .num-col { width: 45px; }
+        
         .vertical-text { 
             writing-mode: vertical-rl; 
             transform: rotate(180deg); 
             white-space: nowrap; 
-            padding: 10px 5px;
-            height: 100px;
+            padding: 15px 5px;
+            height: 110px;
+        }
+
+        /* Auto-calculated columns have a subtle light blue tint */
+        .readonly-cell { background-color: #f0f7ff; font-weight: bold; }
+        
+        .signature-section { 
+            display: flex; 
+            justify-content: space-between; 
+            margin-top: 50px; 
+            font-size: 14px; 
         }
         
-        .signature-section { display: flex; justify-content: space-between; margin-top: 50px; font-size: 14px; }
-        .sig-box { width: 30%; line-height: 2; }
-        .sig-line { border-bottom: 1px solid black; display: inline-block; width: 150px; }
+        .sig-box { width: 30%; line-height: 2.2; }
+        .sig-line { border-bottom: 2px solid #1a3a5f; display: inline-block; width: 160px; }
         
-        /* Interactive styles for editing */
-        [contenteditable="true"]:hover { background-color: #fafafa; outline: 1px dashed #ccc; }
-        [contenteditable="true"]:focus { background-color: #fff; outline: 2px solid #007bff; }
+        [contenteditable="true"]:focus { background-color: #fff; outline: 2px solid #ffc107; }
 
-        /* Print Button Styles */
-        .print-container { text-align: center; margin-top: 40px; }
-        .btn-print {
-            padding: 10px 25px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-        }
-        .btn-print:hover { background-color: #0056b3; }
+        .controls { text-align: center; margin-top: 30px; display: flex; justify-content: center; gap: 10px; }
+        
+        .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .btn-add { background-color: #28a745; color: white; }
+        .btn-print { background-color: #1a3a5f; color: white; }
 
-        /* Hide the button and UI elements when printing */
         @media print {
-            .print-container { display: none; }
-            body { margin: 20px; }
-            [contenteditable="true"]:hover { outline: none; }
+            .controls { display: none; }
+            body { background-color: white; margin: 0; }
+            .container { box-shadow: none; padding: 0; max-width: 100%; }
         }
     </style>
 </head>
 <body>
 
+<div class="container">
     <div class="header-info">
         <h2 contenteditable="true">2018 E.C Tayitu Bitul Academy Second Semester Grade Three English Mid Examination Table of Specification</h2>
     </div>
 
-    <table>
+    <table id="tosTable">
         <thead>
             <tr>
-                <th rowspan="2">No</th>
+                <th rowspan="2" style="width: 30px;">No</th>
                 <th rowspan="2">Contents</th>
-                <th rowspan="2" class="vertical-text">Period</th>
-                <th rowspan="2" class="vertical-text">Number of items</th>
+                <th rowspan="2" class="vertical-text num-col">Period</th>
+                <th rowspan="2" class="vertical-text num-col">Number of items</th>
                 <th colspan="6">Instructional Objectives</th>
-                <th rowspan="2" class="vertical-text">Total</th>
-                <th rowspan="2" class="vertical-text">Percent</th>
+                <th rowspan="2" class="vertical-text num-col">Total</th>
+                <th rowspan="2" class="vertical-text num-col">Percent</th>
             </tr>
             <tr>
-                <th class="vertical-text">Knowledge</th>
-                <th class="vertical-text">Comprehension</th>
-                <th class="vertical-text">Application</th>
-                <th class="vertical-text">Analysis</th>
-                <th class="vertical-text">Synthesis</th>
-                <th class="vertical-text">Evaluation</th>
+                <th class="vertical-text num-col">Knowledge</th>
+                <th class="vertical-text num-col">Comprehension</th>
+                <th class="vertical-text num-col">Application</th>
+                <th class="vertical-text num-col">Analysis</th>
+                <th class="vertical-text num-col">Synthesis</th>
+                <th class="vertical-text num-col">Evaluation</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="tableBody">
             <tr>
                 <td>1</td>
-                <td class="content-col" contenteditable="true">Unit 5 Cash Crops<br>&nbsp;&nbsp;5.1 Vocabulary</td>
-                <td contenteditable="true">2</td>
-                <td contenteditable="true">5</td>
-                <td contenteditable="true">5</td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true">25%</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td class="content-col" contenteditable="true">5.2 plural formation</td>
-                <td contenteditable="true">4</td>
-                <td contenteditable="true">4</td>
-                <td contenteditable="true">1</td>
-                <td contenteditable="true">3</td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true">20%</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td class="content-col" contenteditable="true">Unit 6 Cutting Trees<br>&nbsp;&nbsp;6.1 Speaking</td>
-                <td contenteditable="true">3</td>
-                <td contenteditable="true">3</td>
-                <td contenteditable="true">3</td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true">15%</td>
-            </tr>
-            <tr>
-                <td>4</td>
-                <td class="content-col" contenteditable="true">6.2 Comparing and Contrasting</td>
-                <td contenteditable="true">3</td>
-                <td contenteditable="true">3</td>
-                <td contenteditable="true">1</td>
-                <td contenteditable="true">2</td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true">15%</td>
-            </tr>
-            <tr>
-                <td>5</td>
-                <td class="content-col" contenteditable="true">Unit 7 The Simple Present Tense</td>
-                <td contenteditable="true">4</td>
-                <td contenteditable="true">5</td>
-                <td contenteditable="true">5</td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true">25%</td>
-            </tr>
-            <tr style="font-weight: bold;">
-                <td></td>
-                <td class="content-col">Total</td>
-                <td contenteditable="true">16</td>
-                <td contenteditable="true">20</td>
-                <td contenteditable="true">15</td>
-                <td contenteditable="true">5</td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true">100%</td>
+                <td class="content-col" contenteditable="true">Unit 5 Cash Crops</td>
+                <td class="input-cell" contenteditable="true"></td>
+                <td class="input-cell num-items" contenteditable="true"></td>
+                <td class="input-cell obj" contenteditable="true"></td>
+                <td class="input-cell obj" contenteditable="true"></td>
+                <td class="input-cell obj" contenteditable="true"></td>
+                <td class="input-cell obj" contenteditable="true"></td>
+                <td class="input-cell obj" contenteditable="true"></td>
+                <td class="input-cell obj" contenteditable="true"></td>
+                <td class="readonly-cell row-total">0</td>
+                <td class="readonly-cell row-percent">0%</td>
             </tr>
         </tbody>
+        <tfoot>
+            <tr style="font-weight: bold; background-color: #eef2f7;">
+                <td colspan="2">Total</td>
+                <td id="total-period">0</td>
+                <td id="total-items">0</td>
+                <td id="total-know">0</td>
+                <td id="total-comp">0</td>
+                <td id="total-app">0</td>
+                <td id="total-anal">0</td>
+                <td id="total-synth">0</td>
+                <td id="total-eval">0</td>
+                <td id="grand-total">0</td>
+                <td id="total-percent">100%</td>
+            </tr>
+        </tfoot>
     </table>
 
     <div class="signature-section">
-        <div class="sig-box">
-            Teacher's name: <span contenteditable="true">Teferi Tadesse</span><br>
-            Signature: <span class="sig-line"></span><br>
-            Date: <span contenteditable="true">15/07/18 E.C</span>
-        </div>
-        <div class="sig-box">
-            Dept. head's name: <span contenteditable="true">_________________</span><br>
-            Signature: <span class="sig-line"></span><br>
-            Date: <span class="sig-line"></span>
-        </div>
-        <div class="sig-box">
-            Director's name: <span contenteditable="true">_________________</span><br>
-            Signature: <span class="sig-line"></span><br>
-            Date: <span class="sig-line"></span>
-        </div>
+        <div class="sig-box">Teacher: <span contenteditable="true">Teferi Tadesse</span><br>Date: <span contenteditable="true">15/07/18 E.C</span></div>
+        <div class="sig-box">Dept. Head: <span class="sig-line"></span><br>Date: <span class="sig-line"></span></div>
+        <div class="sig-box">Director: <span class="sig-line"></span><br>Date: <span class="sig-line"></span></div>
     </div>
 
-    <div class="print-container">
-        <button class="btn-print" onclick="window.print()">Print This Page</button>
+    <div class="controls">
+        <button class="btn btn-add" onclick="addRow()">+ Add New Row</button>
+        <button class="btn btn-print" onclick="window.print()">Print This Page</button>
     </div>
+</div>
+
+<script>
+    function addRow() {
+        const tbody = document.getElementById('tableBody');
+        const rowCount = tbody.rows.length + 1;
+        const row = tbody.insertRow();
+        row.innerHTML = `
+            <td>${rowCount}</td>
+            <td class="content-col" contenteditable="true">New Unit</td>
+            <td class="input-cell" contenteditable="true"></td>
+            <td class="input-cell num-items" contenteditable="true"></td>
+            <td class="input-cell obj" contenteditable="true"></td>
+            <td class="input-cell obj" contenteditable="true"></td>
+            <td class="input-cell obj" contenteditable="true"></td>
+            <td class="input-cell obj" contenteditable="true"></td>
+            <td class="input-cell obj" contenteditable="true"></td>
+            <td class="input-cell obj" contenteditable="true"></td>
+            <td class="readonly-cell row-total">0</td>
+            <td class="readonly-cell row-percent">0%</td>
+        `;
+        attachListeners();
+    }
+
+    function calculate() {
+        let totalPeriod = 0, totalItems = 0, totalObj = [0,0,0,0,0,0], grandTotal = 0;
+        const rows = document.querySelectorAll('#tableBody tr');
+
+        // First pass: Calculate Column Totals to use for Percentages
+        rows.forEach(row => {
+            const items = parseFloat(row.cells[3].innerText) || 0;
+            totalItems += items;
+        });
+
+        // Second pass: Row calculations
+        rows.forEach(row => {
+            const period = parseFloat(row.cells[2].innerText) || 0;
+            const items = parseFloat(row.cells[3].innerText) || 0;
+            
+            let rowObjSum = 0;
+            for(let i=0; i<6; i++) {
+                let val = parseFloat(row.cells[4+i].innerText) || 0;
+                rowObjSum += val;
+                totalObj[i] += val;
+            }
+
+            totalPeriod += period;
+            grandTotal += rowObjSum;
+
+            // Update Row UI
+            row.cells[10].innerText = rowObjSum;
+            row.cells[11].innerText = totalItems > 0 ? ((items / totalItems) * 100).toFixed(0) + '%' : '0%';
+        });
+
+        // Update Footer UI
+        document.getElementById('total-period').innerText = totalPeriod;
+        document.getElementById('total-items').innerText = totalItems;
+        document.getElementById('total-know').innerText = totalObj[0];
+        document.getElementById('total-comp').innerText = totalObj[1];
+        document.getElementById('total-app').innerText = totalObj[2];
+        document.getElementById('total-anal').innerText = totalObj[3];
+        document.getElementById('total-synth').innerText = totalObj[4];
+        document.getElementById('total-eval').innerText = totalObj[5];
+        document.getElementById('grand-total').innerText = grandTotal;
+    }
+
+    function attachListeners() {
+        document.querySelectorAll('.input-cell').forEach(cell => {
+            cell.addEventListener('input', calculate);
+        });
+    }
+
+    attachListeners();
+</script>
 
 </body>
 </html>
