@@ -2,159 +2,198 @@
 <html lang="am">
 <head>
     <meta charset="UTF-8">
-    <title>TOS - Glassmorphism & Animated Edition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional TOS - Ultimate Glass Edition</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        /* 1. Animated Background - በዝግታ የሚቀያየር የጀርባ ቀለም */
+        /* 1. Animated Gradient Background */
         body { 
-            margin: 0; padding: 20px; 
+            margin: 0; padding: 15px; 
             font-family: 'Nyala', 'Abyssinica SIL', sans-serif;
-            background: linear-gradient(-45deg, #4facfe, #00f2fe, #f093fb, #f5576c);
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
             background-size: 400% 400%;
-            animation: moveBG 10s ease infinite;
+            animation: gradientBG 15s ease infinite;
             min-height: 100vh;
             display: flex; flex-direction: column; align-items: center;
         }
 
-        @keyframes moveBG {
+        @keyframes gradientBG {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
 
-        /* 2. Glassmorphism Appearance - ግልጽነት እና Blur Effect */
+        /* 2. Glassmorphism Container (Transparency + Blur) */
         .glass-container { 
-            width: 95%; max-width: 1100px;
-            background: rgba(255, 255, 255, 0.4); /* የገጹ ነጭ ቀለም ግልጽነት (Transparent) */
-            backdrop-filter: blur(15px); /* የጀርባው ቀለም እንዲፈዝ የሚያደርግ (Blur) */
-            -webkit-backdrop-filter: blur(15px);
-            padding: 30px; border-radius: 20px; 
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            margin-top: 20px;
+            width: 95%; max-width: 1150px; margin: auto;
+            background: rgba(255, 255, 255, 0.45); /* Transparent white */
+            backdrop-filter: blur(18px); /* Blur effect */
+            -webkit-backdrop-filter: blur(18px);
+            padding: 25px; border-radius: 20px; 
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            overflow-x: auto;
+            transition: all 0.4s ease;
         }
 
-        /* የቁልፎች ማስቀመጫ */
-        .controls { 
-            background: rgba(0, 0, 0, 0.5); padding: 15px; border-radius: 12px; 
-            margin-bottom: 10px; display: flex; gap: 10px; backdrop-filter: blur(5px);
+        .portrait-mode { max-width: 850px; }
+
+        /* Buttons Container */
+        .btns-top { 
+            background: rgba(0, 0, 0, 0.6); padding: 12px; border-radius: 12px; 
+            margin-bottom: 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+            backdrop-filter: blur(10px);
         }
 
-        button { padding: 10px 15px; cursor: pointer; border: none; border-radius: 5px; font-weight: bold; color: white; }
-        .btn-add { background: #27ae60; } .btn-rem { background: #e67e22; }
-        .btn-pdf { background: #e74c3c; } .btn-lang { background: #8e44ad; }
+        button { padding: 10px 18px; cursor: pointer; border: none; border-radius: 8px; font-weight: bold; font-size: 13px; transition: 0.3s; color: white; }
+        .btn-add { background: #2ecc71; }
+        .btn-rem { background: #e67e22; }
+        .btn-orient { background: #34495e; }
+        .btn-pdf { background: #e74c3c; }
+        .btn-lang { background: #9b59b6; }
         .btn-print { background: #f1c40f; color: black; }
 
-        /* Header Section */
-        .header { display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #000; padding-bottom: 15px; margin-bottom: 20px; }
-        .logo-circle { width: 80px; height: 80px; border: 2px solid #000; border-radius: 50%; overflow: hidden; background: white; display: flex; align-items: center; justify-content: center; position: relative; }
-        .logo-square { width: 80px; height: 80px; border: 2px solid #000; border-radius: 5px; overflow: hidden; background: white; display: flex; align-items: center; justify-content: center; position: relative; }
+        /* Header Layout */
+        .header-section { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-bottom: 3.5px solid #000; padding-bottom: 15px; }
+        
+        .left-logo { width: 85px; height: 85px; border: 3px solid #000; border-radius: 50%; background: white; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .right-logo { width: 85px; height: 85px; border: 3px solid #000; border-radius: 8px; background: white; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        
         input[type="file"] { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
         .logo-img { width: 100%; height: 100%; object-fit: cover; display: none; }
 
-        /* Table */
-        table { width: 100%; border-collapse: collapse; background: rgba(255, 255, 255, 0.8); }
-        th, td { border: 2px solid #000; padding: 8px; text-align: center; font-weight: bold; }
-        th { background: rgba(0,0,0,0.1); }
-        .v-text { writing-mode: vertical-rl; transform: rotate(180deg); height: 90px; }
+        /* Table Design */
+        table { width: 100%; border-collapse: collapse; background: rgba(255, 255, 255, 0.85); min-width: 900px; }
+        th, td { border: 3px solid #000; padding: 10px; text-align: center; font-weight: bold; color: #000; }
+        th { background: rgba(0, 0, 0, 0.08); }
         
-        [contenteditable="true"]:focus { background: yellow; outline: none; }
+        [contenteditable="true"] { outline: none; }
+        [contenteditable="true"]:focus { background: rgba(255, 255, 0, 0.3); border-radius: 4px; }
 
-        /* Signatures */
-        .sigs { display: flex; justify-content: space-between; margin-top: 40px; }
-        .sig-box { width: 30%; text-align: center; }
-        .sig-line { border-top: 2px solid #000; margin-top: 40px; }
+        .v-text { writing-mode: vertical-rl; transform: rotate(180deg); height: 110px; }
+
+        /* Footer Signatures */
+        .sigs { display: flex; justify-content: space-between; margin-top: 40px; flex-wrap: wrap; gap: 20px; }
+        .sig-box { flex: 1; min-width: 220px; text-align: center; }
+        .sig-line { border-top: 3px solid #000; margin-top: 45px; margin-bottom: 5px; }
 
         @media print {
-            body { background: white; }
-            .controls { display: none; }
-            .glass-container { background: white; box-shadow: none; border: none; backdrop-filter: none; }
+            body { background: white !important; padding: 0; }
+            .btns-top { display: none !important; }
+            .glass-container { background: white !important; box-shadow: none; border: none; width: 100%; padding: 0; backdrop-filter: none; }
+            table { background: white !important; }
         }
     </style>
 </head>
 <body>
 
-<div class="controls">
+<div class="btns-top">
     <button class="btn-lang" onclick="changeLang()">🌍 አማርኛ/EN</button>
     <button class="btn-add" onclick="addRow()">➕ Unit ጨምር</button>
     <button class="btn-rem" onclick="removeRow()">➖ Unit ቀንስ</button>
+    <button class="btn-orient" onclick="toggleOrientation()">🔄 Portrait/Landscape</button>
     <button class="btn-print" onclick="window.print()">🖨️ Print</button>
     <button class="btn-pdf" onclick="pdf()">📄 Export PDF</button>
 </div>
 
-<div class="glass-container" id="tos-area">
-    <div class="header">
-        <div class="logo-circle">
-            <span style="font-size: 10px;">ክብ ሎጎ</span>
-            <input type="file" onchange="loadImg(this, 'l-img')">
+<div class="glass-container" id="main-content">
+    <div class="header-section">
+        <div class="left-logo">
+            <span style="font-size: 10px; font-weight: bold;">ክብ ሎጎ</span>
+            <input type="file" onchange="showImg(this, 'l-img')">
             <img id="l-img" class="logo-img">
         </div>
-        <div style="text-align: center;">
-            <h2 contenteditable="true" style="margin:0;">TABLE OF SPECIFICATION (TOS)</h2>
-            <h4 contenteditable="true" style="margin:5px 0;">2018 E.C. - MID EXAMINATION</h4>
+        
+        <div style="text-align: center; flex-grow: 1;">
+            <h2 id="h-title" contenteditable="true" style="margin:0; font-size: 26px; font-weight: 900;">TABLE OF SPECIFICATION (TOS)</h2>
+            <h4 id="h-sub" contenteditable="true" style="margin:5px 0; font-weight: 800;">2018 E.C. - MID EXAMINATION</h4>
         </div>
-        <div class="logo-square">
-            <span style="font-size: 10px;">አራት ማዕዘን</span>
-            <input type="file" onchange="loadImg(this, 'r-img')">
+
+        <div class="right-logo">
+            <span style="font-size: 10px; font-weight: bold;">አራት ማዕዘን</span>
+            <input type="file" onchange="showImg(this, 'r-img')">
             <img id="r-img" class="logo-img">
         </div>
     </div>
 
-    <table>
+    <table id="tos-table">
         <thead>
             <tr>
                 <th rowspan="2" id="h-no">No</th>
-                <th rowspan="2" id="h-con" style="width: 250px;">Contents / Units</th>
+                <th rowspan="2" style="width: 280px;" id="h-con">Contents / Units (ይዘቶች)</th>
                 <th rowspan="2" class="v-text" id="h-per">Period</th>
                 <th rowspan="2" class="v-text" id="h-itm">Items</th>
-                <th colspan="6" id="h-obj">Instructional Objectives</th>
+                <th colspan="6" id="h-obj">Learning Objectives</th>
                 <th rowspan="2" class="v-text" id="h-tot">Total</th>
             </tr>
             <tr>
-                <th class="v-text">Knowledge</th><th class="v-text">Comprehension</th>
-                <th class="v-text">Application</th><th class="v-text">Analysis</th>
-                <th class="v-text">Synthesis</th><th class="v-text">Evaluation</th>
+                <th class="v-text" id="o1">Knowledge</th><th class="v-text" id="o2">Comprehension</th>
+                <th class="v-text" id="o3">Application</th><th class="v-text" id="o4">Analysis</th>
+                <th class="v-text" id="o5">Synthesis</th><th class="v-text" id="o6">Evaluation</th>
             </tr>
         </thead>
         <tbody id="tbody">
             <tr>
-                <td>1</td><td contenteditable="true"></td>
+                <td>1</td>
+                <td contenteditable="true" style="text-align:left"></td>
                 <td contenteditable="true" oninput="calc()">0</td><td contenteditable="true" oninput="calc()">0</td>
                 <td contenteditable="true" oninput="calc()">0</td><td contenteditable="true" oninput="calc()">0</td>
                 <td contenteditable="true" oninput="calc()">0</td><td contenteditable="true" oninput="calc()">0</td>
                 <td contenteditable="true" oninput="calc()">0</td><td contenteditable="true" oninput="calc()">0</td>
-                <td style="background:#eee">0</td>
+                <td style="background:rgba(0,0,0,0.05)">0</td>
             </tr>
         </tbody>
     </table>
 
     <div class="sigs">
-        <div class="sig-box"><div class="sig-line"></div><b>Subject Teacher</b></div>
-        <div class="sig-box"><div class="sig-line"></div><b>Dept. Head</b></div>
-        <div class="sig-box"><div class="sig-line"></div><b>Principal</b></div>
+        <div class="sig-box"><div class="sig-line"></div><b id="s1">Subject Teacher</b><br><span contenteditable="true">Delelegn Atlaw</span><br><div contenteditable="true" style="font-size:12px; margin-top:5px;">Date: ___/___/2018 E.C</div></div>
+        <div class="sig-box"><div class="sig-line"></div><b id="s2">Dept. Head</b><br><span contenteditable="true">________________</span><br><div contenteditable="true" style="font-size:12px; margin-top:5px;">Date: ___/___/2018 E.C</div></div>
+        <div class="sig-box"><div class="sig-line"></div><b id="s3">Principal</b><br><span contenteditable="true">Amare Asefa</span><br><div contenteditable="true" style="font-size:12px; margin-top:5px;">Date: ___/___/2018 E.C</div></div>
     </div>
 </div>
 
 <script>
+    let isAm = false;
+    let isLandscape = true;
+
+    function toggleOrientation() {
+        const c = document.querySelector('.glass-container');
+        isLandscape = !isLandscape;
+        isLandscape ? c.classList.remove('portrait-mode') : c.classList.add('portrait-mode');
+        alert(isLandscape ? "Landscape Mode (አግድም)" : "Portrait Mode (ቁም)");
+    }
+
     function addRow() {
         let b = document.getElementById('tbody');
         let r = b.insertRow();
-        r.innerHTML = `<td>${b.rows.length}</td><td contenteditable="true"></td>
+        r.innerHTML = `<td>${b.rows.length}</td><td contenteditable="true" style="text-align:left"></td>
             <td contenteditable="true" oninput="calc()">0</td><td contenteditable="true" oninput="calc()">0</td>
-            ${'<td contenteditable="true" oninput="calc()">0</td>'.repeat(6)}<td style="background:#eee">0</td>`;
+            ${'<td contenteditable="true" oninput="calc()">0</td>'.repeat(6)}
+            <td style="background:rgba(0,0,0,0.05)">0</td>`;
     }
-    function removeRow() { 
-        let b = document.getElementById('tbody'); 
-        if(b.rows.length > 1) b.deleteRow(-1); 
+
+    function removeRow() {
+        let b = document.getElementById('tbody');
+        if(b.rows.length > 1) b.deleteRow(-1);
     }
-    function calc() {
-        document.querySelectorAll('#tbody tr').forEach(r => {
-            let s = 0;
-            for(let i=4; i<=9; i++) s += Number(r.cells[i].innerText) || 0;
-            r.cells[10].innerText = s;
-        });
+
+    function changeLang() {
+        isAm = !isAm;
+        document.getElementById('h-no').innerText = isAm ? "ተ.ቁ" : "No";
+        document.getElementById('h-con').innerText = isAm ? "ይዘቶች / ክፍሎች" : "Contents / Units";
+        document.getElementById('h-per').innerText = isAm ? "ክፍለ-ጊዜ" : "Period";
+        document.getElementById('h-itm').innerText = isAm ? "ጥያቄ ብዛት" : "Items";
+        document.getElementById('h-obj').innerText = isAm ? "የትምህርት ዓላማዎች" : "Learning Objectives";
+        document.getElementById('h-tot').innerText = isAm ? "ድምር" : "Total";
+        document.getElementById('s1').innerText = isAm ? "የክፍሉ መምህር" : "Subject Teacher";
+        document.getElementById('s2').innerText = isAm ? "የክፍል ኃላፊ" : "Dept. Head";
+        document.getElementById('s3').innerText = isAm ? "ርዕሰ መምህር" : "Principal";
+        const amObjs = ["ዕውቀት", "ግንዛቤ", "ተግባር", "ትንተና", "ውህደት", "ምዘና"];
+        const enObjs = ["Knowledge", "Comprehension", "Application", "Analysis", "Synthesis", "Evaluation"];
+        for(let i=1; i<=6; i++) document.getElementById('o'+i).innerText = isAm ? amObjs[i-1] : enObjs[i-1];
     }
-    function loadImg(input, id) {
+
+    function showImg(input, id) {
         if (input.files && input.files[0]) {
             let r = new FileReader();
             r.onload = e => { 
@@ -165,9 +204,21 @@
             r.readAsDataURL(input.files[0]);
         }
     }
+
+    function calc() {
+        document.querySelectorAll('#tbody tr').forEach(r => {
+            let s = 0;
+            for(let i=4; i<=9; i++) s += Number(r.cells[i].innerText) || 0;
+            r.cells[10].innerText = s;
+        });
+    }
+
     function pdf() {
-        html2pdf().from(document.getElementById('tos-area')).set({
-            margin: 5, filename: 'TOS.pdf', jsPDF: { orientation: 'landscape' }
+        const e = document.getElementById('main-content');
+        html2pdf().from(e).set({
+            margin: 5, filename: 'TOS_Report.pdf',
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: isLandscape ? 'landscape' : 'portrait' }
         }).save();
     }
 </script>
