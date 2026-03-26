@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional TOS - Corrected Amharic</title>
+    <title>Professional TOS - Amharic Typing Fixed</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         body { 
@@ -26,7 +26,7 @@
             overflow-x: auto;
             transition: all 0.4s ease;
         }
-        .is-portrait { max-width: 800px; }
+        .is-portrait { max-width: 850px; }
 
         .btns-top { 
             background: rgba(0, 0, 0, 0.8); padding: 12px; border-radius: 12px; 
@@ -81,9 +81,9 @@
     <table id="tos-table">
         <thead>
             <tr>
-                <th rowspan="2" id="h-no">No</th><th rowspan="2" style="width: 280px;" id="h-con">Contents / Units</th>
-                <th rowspan="2" class="v-text" id="h-per">Period</th><th rowspan="2" class="v-text" id="h-itm">Items</th>
-                <th colspan="6" id="h-obj">Learning Objectives</th><th rowspan="2" class="v-text">Total</th>
+                <th rowspan="2">No</th><th rowspan="2" style="width: 280px;">Contents / Units</th>
+                <th rowspan="2" class="v-text">Period</th><th rowspan="2" class="v-text">Items</th>
+                <th colspan="6">Learning Objectives</th><th rowspan="2" class="v-text">Total</th>
             </tr>
             <tr>
                 <th class="v-text">Knowledge</th><th class="v-text">Comprehension</th><th class="v-text">Application</th><th class="v-text">Analysis</th><th class="v-text">Synthesis</th><th class="v-text">Evaluation</th>
@@ -104,22 +104,22 @@
 
     <div class="sigs-footer">
         <div class="sig-box">
-            <b id="s1">Subject Teacher</b>
-            <div id="txt-n1" style="font-size: 13px; margin-top:10px;">Name:</div>
+            <b>Subject Teacher</b>
+            <div style="font-size: 13px; margin-top:10px;">Name:</div>
             <div class="name-box" contenteditable="true"></div>
             <div class="sig-line"></div>
             <span contenteditable="true" style="font-size: 13px;">Date: ___/___/2018</span>
         </div>
         <div class="sig-box">
-            <b id="s2">Dept. Head</b>
-            <div id="txt-n2" style="font-size: 13px; margin-top:10px;">Name:</div>
+            <b>Dept. Head</b>
+            <div style="font-size: 13px; margin-top:10px;">Name:</div>
             <div class="name-box" contenteditable="true"></div>
             <div class="sig-line"></div>
             <span contenteditable="true" style="font-size: 13px;">Date: ___/___/2018</span>
         </div>
         <div class="sig-box">
-            <b id="s3">Principal</b>
-            <div id="txt-n3" style="font-size: 13px; margin-top:10px;">Name:</div>
+            <b>Principal</b>
+            <div style="font-size: 13px; margin-top:10px;">Name:</div>
             <div class="name-box" contenteditable="true"></div>
             <div class="sig-line"></div>
             <span contenteditable="true" style="font-size: 13px;">Date: ___/___/2018</span>
@@ -130,53 +130,35 @@
 <script>
     let amActive = false;
     let isLandscape = true;
-    let lastKey = "";
+    let lastChar = "";
 
-    // ተሻሽሎ የቀረበ የአማርኛ መጻፊያ ሎጅክ (ከአናባቢዎች ጋር የሚጣመር)
     const amTable = {
-        'h': ['ሀ', 'ሁ', 'ሂ', 'ሃ', 'ሄ', 'ህ', 'ሆ'],
-        'l': ['ለ', 'ሉ', 'ሊ', 'ላ', 'ሌ', 'ል', 'ሎ'],
-        'm': ['መ', 'ሙ', 'ሚ', 'ማ', 'ሜ', 'ም', 'ሞ'],
-        'r': ['ረ', 'ሩ', 'ሪ', 'ራ', 'ሬ', 'ር', 'ሮ'],
-        's': ['ሰ', 'ሱ', 'ሲ', 'ሳ', 'ሴ', 'ስ', 'ሶ'],
-        'q': ['ቀ', 'ቁ', 'ቂ', 'ቃ', 'ቄ', 'ቅ', 'ቆ'],
-        'b': ['በ', 'ቡ', 'ቢ', 'ባ', 'ቤ', 'ብ', 'ቦ'],
-        't': ['ተ', 'ቱ', 'ቲ', 'ታ', 'ቴ', 'ት', 'ቶ'],
-        'n': ['ነ', 'ኑ', 'ኒ', 'ና', 'ኔ', 'ን', 'ኖ'],
-        'k': ['ከ', 'ኩ', 'ኪ', 'ካ', 'ኬ', 'ክ', 'ኮ'],
-        'w': ['ወ', 'ዉ', 'ዊ', 'ዋ', 'ዌ', 'ው', 'ዎ'],
-        'z': ['ዘ', 'ዙ', 'ዚ', 'ዛ', 'ዜ', 'ዝ', 'ዞ'],
-        'y': ['የ', 'ዩ', 'ዪ', 'ያ', 'ዬ', 'ይ', 'ዮ'],
-        'd': ['ደ', 'ዱ', 'ዲ', 'ዳ', 'ዴ', 'ድ', 'ዶ'],
-        'j': ['ጀ', 'ጁ', 'ጂ', 'ጃ', 'ጄ', 'ጅ', 'ጆ'],
-        'g': ['ገ', 'ጉ', 'ጊ', 'ጋ', 'ጌ', 'ግ', 'ጎ'],
-        'p': ['ፐ', 'ፑ', 'ፒ', 'ፓ', 'ፔ', 'ፕ', 'ፖ']
+        'h':['ሀ','ሁ','ሂ','ሃ','ሄ','ህ','ሆ'],'l':['ለ','ሉ','ሊ','ላ','ሌ','ል','ሎ'],'m':['መ','ሙ','ሚ','ማ','ሜ','ም','ሞ'],'r':['ረ','ሩ','ሪ','ራ','ሬ','ር','ሮ'],'s':['ሰ','ሱ','ሲ','ሳ','ሴ','ስ','ሶ'],'q':['ቀ','ቁ','ቂ','ቃ','ቄ','ቅ','ቆ'],'b':['በ','ቡ','ቢ','ባ','ቤ','ብ','ቦ'],'t':['ተ','ቱ','ቲ','ታ','ቴ','ት','ቶ'],'n':['ነ','ኑ','ኒ','ና','ኔ','ን','ኖ'],'k':['ከ','ኩ','ኪ','ካ','ኬ','ክ','ኮ'],'w':['ወ','ዉ','ዊ','ዋ','ዌ','ው','ዎ'],'z':['ዘ','ዙ','ዚ','ዛ','ዜ','ዝ','ዞ'],'y':['የ','ዩ','ዪ','ያ','ዬ','ይ','ዮ'],'d':['ደ','ዱ','ዲ','ዳ','ዴ','ድ','ዶ'],'j':['ጀ','ጁ','ጂ','ጃ','ጄ','ጅ','ጆ'],'g':['ገ','ጉ','ጊ','ጋ','ጌ','ግ','ጎ'],'p':['ፐ','ፑ','ፒ','ፓ','ፔ','ፕ','ፖ'],'c':['ቸ','ቹ','ቺ','ቻ','ቼ','ች','ቾ']
     };
-    const vowels = {'u': 1, 'i': 2, 'a': 3, 'e': 4, 'o': 6};
+    const vowels = {'u':1,'i':2,'a':3,'e':4,'y':5,'o':6};
 
     document.addEventListener('keydown', function(e) {
         if (!amActive || !e.target.isContentEditable) return;
         let key = e.key.toLowerCase();
 
-        if (vowels[key] !== undefined && amTable[lastKey]) {
+        if (vowels[key] !== undefined && lastChar && amTable[lastChar]) {
             e.preventDefault();
-            document.execCommand('deleteBackward', false, null);
-            document.execCommand('insertText', false, amTable[lastKey][vowels[key]]);
-            lastKey = ""; 
+            document.execCommand('deleteBackward');
+            document.execCommand('insertText', false, amTable[lastChar][vowels[key]]);
+            lastChar = "";
         } else if (amTable[key]) {
             e.preventDefault();
-            document.execCommand('insertText', false, amTable[key][5]); // መጀመሪያ ሳድስ (ምሳሌ፡ 'ስ') ይጽፋል
-            lastKey = key;
+            document.execCommand('insertText', false, amTable[key][0]);
+            lastChar = key;
         } else {
-            lastKey = "";
+            lastChar = "";
         }
     });
 
     function toggleKB() {
         amActive = !amActive;
-        const b = document.getElementById('kbBtn');
-        b.innerText = amActive ? "⌨️ Amharic Type: ON" : "⌨️ Amharic Type: OFF";
-        b.style.background = amActive ? "#ff5722" : "#00bcd4";
+        document.getElementById('kbBtn').innerText = amActive ? "⌨️ Amharic Type: ON" : "⌨️ Amharic Type: OFF";
+        document.getElementById('kbBtn').style.background = amActive ? "#ff5722" : "#00bcd4";
     }
 
     function toggleOrient() {
@@ -189,9 +171,6 @@
         const h2 = document.getElementById('txt-main-title');
         const isAM = h2.innerText.includes("TABLE");
         h2.innerText = isAM ? "የፈተና ይዘት ማውጫ (TOS)" : "TABLE OF SPECIFICATION (TOS)";
-        document.getElementById('s1').innerText = isAM ? "የክፍሉ መምህር" : "Subject Teacher";
-        document.getElementById('s2').innerText = isAM ? "የክፍል ኃላፊ" : "Dept. Head";
-        document.getElementById('s3').innerText = isAM ? "ርዕሰ መምህር" : "Principal";
     }
 
     function addRow() {
@@ -200,6 +179,7 @@
         r.innerHTML = `<td>${b.rows.length}</td><td contenteditable="true"></td><td contenteditable="true" oninput="calc()">0</td><td contenteditable="true" oninput="calc()">0</td>${'<td contenteditable="true" oninput="calc()">0</td>'.repeat(6)}<td>0</td>`;
     }
     function removeRow() { let b = document.getElementById('tbody'); if(b.rows.length > 1) b.deleteRow(-1); calc(); }
+    
     function calc() {
         let rows = document.querySelectorAll('#tbody tr'), grand = 0;
         rows.forEach(r => {
@@ -209,6 +189,7 @@
         });
         document.getElementById('t-grand').innerText = grand;
     }
+
     function showImg(input, id) { if (input.files && input.files[0]) { let r = new FileReader(); r.onload = e => { let m = document.getElementById(id); m.src = e.target.result; m.style.display = 'block'; input.parentElement.querySelector('span').style.display = 'none'; }; r.readAsDataURL(input.files[0]); } }
     function pdf() { html2pdf().from(document.getElementById('main-content')).set({ margin: 5, filename: 'TOS.pdf', jsPDF: { orientation: isLandscape ? 'landscape' : 'portrait' } }).save(); }
 </script>
