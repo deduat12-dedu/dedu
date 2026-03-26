@@ -126,24 +126,24 @@
     <div class="sigs-footer">
         <div class="sig-box">
             <b id="f-teacher">Subject Teacher</b>
-            <div style="font-size: 13px; margin-top:10px;" id="f-name1">ስም፦</div>
+            <div style="font-size: 13px; margin-top:10px;" id="f-name1">Name:</div>
             <div class="name-box" contenteditable="true">Delelegn Atlaw</div>
             <div class="sig-line"></div>
-            <span contenteditable="true" style="font-size: 13px;" id="f-date1">ቀን: ___/___/2018</span>
+            <span id="f-date1" contenteditable="true" style="font-size: 13px;">Date: ___/___/2018</span>
         </div>
         <div class="sig-box">
             <b id="f-dept">Dept. Head</b>
-            <div style="font-size: 13px; margin-top:10px;" id="f-name2">ስም፦</div>
+            <div style="font-size: 13px; margin-top:10px;" id="f-name2">Name:</div>
             <div class="name-box" contenteditable="true"></div>
             <div class="sig-line"></div>
-            <span contenteditable="true" style="font-size: 13px;" id="f-date2">ቀን: ___/___/2018</span>
+            <span id="f-date2" contenteditable="true" style="font-size: 13px;">Date: ___/___/2018</span>
         </div>
         <div class="sig-box">
             <b id="f-princ">Principal</b>
-            <div style="font-size: 13px; margin-top:10px;" id="f-name3">ስም፦</div>
+            <div style="font-size: 13px; margin-top:10px;" id="f-name3">Name:</div>
             <div class="name-box" contenteditable="true"></div>
             <div class="sig-line"></div>
-            <span contenteditable="true" style="font-size: 13px;" id="f-date3">ቀን: ___/___/2018</span>
+            <span id="f-date3" contenteditable="true" style="font-size: 13px;">Date: ___/___/2018</span>
         </div>
     </div>
 
@@ -211,6 +211,14 @@
             document.getElementById('f-dept').innerText = "የክፍል ኃላፊ";
             document.getElementById('f-princ').innerText = "ርዕሰ መምህር";
             
+            // Fix: Change "Name:" and "Date:" labels to Amharic
+            document.getElementById('f-name1').innerText = "ስም፦";
+            document.getElementById('f-name2').innerText = "ስም፦";
+            document.getElementById('f-name3').innerText = "ስም፦";
+            document.getElementById('f-date1').innerText = "ቀን: ___/___/2018";
+            document.getElementById('f-date2').innerText = "ቀን: ___/___/2018";
+            document.getElementById('f-date3').innerText = "ቀን: ___/___/2018";
+
             const amWords = ["ዕውቀት", "መረዳት", "መተግበር", "መተንተን", "ማቀናጀት", "መገምገም"];
             for(let i=0; i<subHeaders.length; i++) subHeaders[i].innerText = amWords[i];
             currentLang = "AM";
@@ -228,14 +236,19 @@
             document.getElementById('f-teacher').innerText = "Subject Teacher";
             document.getElementById('f-dept').innerText = "Dept. Head";
             document.getElementById('f-princ').innerText = "Principal";
+            
+            // Fix: Change "ስም፦" and "ቀን:" labels back to English
+            document.getElementById('f-name1').innerText = "Name:";
+            document.getElementById('f-name2').innerText = "Name:";
+            document.getElementById('f-name3').innerText = "Name:";
+            document.getElementById('f-date1').innerText = "Date: ___/___/2018";
+            document.getElementById('f-date2').innerText = "Date: ___/___/2018";
+            document.getElementById('f-date3').innerText = "Date: ___/___/2018";
 
             const enWords = ["Knowledge", "Comprehension", "Application", "Analysis", "Synthesis", "Evaluation"];
             for(let i=0; i<subHeaders.length; i++) subHeaders[i].innerText = enWords[i];
             currentLang = "EN";
         }
-        document.getElementById('f-name1').innerText = "ስም፦";
-        document.getElementById('f-name2').innerText = "ስም፦";
-        document.getElementById('f-name3').innerText = "ስም፦";
     }
 
     function addRow() {
