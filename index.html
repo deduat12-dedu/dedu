@@ -24,7 +24,6 @@
             box-shadow: 0 10px 40px rgba(0,0,0,0.25);
             border: 1px solid rgba(255, 255, 255, 0.3);
             overflow-x: auto;
-            transition: all 0.4s ease;
         }
         .is-portrait { max-width: 850px; }
 
@@ -41,7 +40,7 @@
 
         table { width: 100%; border-collapse: collapse; background: rgba(255, 255, 255, 0.95); min-width: 950px; }
         th, td { border: 2.5px solid #000; padding: 10px; text-align: center; font-weight: bold; color: #000; }
-        .v-text { writing-mode: vertical-rl; transform: rotate(180deg); height: 110px; }
+        .v-text { writing-mode: vertical-rl; transform: rotate(180deg); height: 110px; white-space: nowrap; }
         .total-row { background: rgba(0, 0, 0, 0.1); }
 
         .sigs-footer { display: flex; justify-content: space-between; margin-top: 50px; gap: 20px; }
@@ -53,8 +52,13 @@
 
         @media print { 
             .btns-top { display: none; } 
-            .glass-container { background: white; box-shadow: none; border: none; width: 100%; max-width: 100%; padding: 0; margin: 0; transform: scale(0.98); transform-origin: top left; }
-            body { background: white; padding: 0; }
+            body { background: white; padding: 0; margin: 0; }
+            .glass-container { 
+                background: white; box-shadow: none; border: none; 
+                width: 100% !important; max-width: 100% !important; 
+                padding: 10px; margin: 0;
+                transform: scale(0.85); transform-origin: top center;
+            }
         }
     </style>
 </head>
@@ -191,4 +195,80 @@
             document.getElementById('h-tot').innerText = "ድምር";
             document.getElementById('h-grand').innerText = "አጠቃላይ ድምር";
             document.getElementById('f-teacher').innerText = "የክፍሉ መምህር";
-            document
+            document.getElementById('f-dept').innerText = "የክፍል ኃላፊ";
+            document.getElementById('f-princ').innerText = "ርዕሰ መምህር";
+            document.getElementById('f-name1').innerText = "ስም:";
+            document.getElementById('f-name2').innerText = "ስም:";
+            document.getElementById('f-name3').innerText = "ስም:";
+            document.getElementById('f-date1').innerText = "ቀን: ___/___/2018";
+            document.getElementById('f-date2').innerText = "ቀን: ___/___/2018";
+            document.getElementById('f-date3').innerText = "ቀን: ___/___/2018";
+            
+            const amSubs = ["ዕውቀት", "መረዳት", "መተግበር", "መተንተን", "ማቀናጀት", "መገምገም"];
+            for(let i=0; i<subs.length; i++) subs[i].innerText = amSubs[i];
+            currentLang = "AM";
+        } else {
+            h2.innerText = "TABLE OF SPECIFICATION (TOS)";
+            document.getElementById('txt-exam').innerText = "2018 E.C. - MID EXAMINATION";
+            document.getElementById('h-no').innerText = "No";
+            document.getElementById('h-unit').innerText = "Contents / Units";
+            document.getElementById('h-per').innerText = "Period";
+            document.getElementById('h-itm').innerText = "Items";
+            document.getElementById('h-obj').innerText = "Learning Objectives";
+            document.getElementById('h-tot').innerText = "Total";
+            document.getElementById('h-grand').innerText = "GRAND TOTAL";
+            document.getElementById('f-teacher').innerText = "Subject Teacher";
+            document.getElementById('f-dept').innerText = "Dept. Head";
+            document.getElementById('f-princ').innerText = "Principal";
+            document.getElementById('f-name1').innerText = "Name:";
+            document.getElementById('f-name2').innerText = "Name:";
+            document.getElementById('f-name3').innerText = "Name:";
+            document.getElementById('f-date1').innerText = "Date: ___/___/2018";
+            document.getElementById('f-date2').innerText = "Date: ___/___/2018";
+            document.getElementById('f-date3').innerText = "Date: ___/___/2018";
+
+            const enSubs = ["Knowledge", "Comprehension", "Application", "Analysis", "Synthesis", "Evaluation"];
+            for(let i=0; i<subs.length; i++) subs[i].innerText = enSubs[i];
+            currentLang = "EN";
+        }
+    }
+
+    function addRow() {
+        let b = document.getElementById('tbody');
+        let r = b.insertRow();
+        let idx = b.rows.length;
+        r.innerHTML = `<td>${idx}</td><td contenteditable="true" style="text-align:left"></td><td contenteditable="true" oninput="calc()">0</td><td contenteditable="true" oninput="calc()">0</td><td contenteditable="true" oninput="calc()">0</td><td contenteditable="true" oninput="calc()">0</td><td contenteditable="true" oninput="calc()">0</td><td contenteditable="true" oninput="calc()">0</td><td contenteditable="true" oninput="calc()">0</td><td contenteditable="true" oninput="calc()">0</td><td>0</td>`;
+    }
+    
+    function removeRow() { let b = document.getElementById('tbody'); if(b.rows.length > 1) b.deleteRow(-1); calc(); }
+    
+    function calc() {
+        let rows = document.querySelectorAll('#tbody tr'), grand = 0, tPer = 0, tItm = 0;
+        rows.forEach(r => {
+            let rs = 0;
+            tPer += Number(r.cells[2].innerText) || 0;
+            tItm += Number(r.cells[3].innerText) || 0;
+            for(let i=4; i<=9; i++) rs += Number(r.cells[i].innerText) || 0;
+            r.cells[10].innerText = rs; grand += rs;
+        });
+        document.getElementById('t-per').innerText = tPer;
+        document.getElementById('t-itm').innerText = tItm;
+        document.getElementById('t-grand').innerText = grand;
+    }
+
+    function showImg(input, id) { if (input.files && input.files[0]) { let r = new FileReader(); r.onload = e => { let m = document.getElementById(id); m.src = e.target.result; m.style.display = 'block'; input.parentElement.querySelector('span').style.display = 'none'; }; r.readAsDataURL(input.files[0]); } }
+    
+    function pdf() { 
+        const element = document.getElementById('main-content');
+        const opt = {
+            margin: 5,
+            filename: 'TOS_Report.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: isLandscape ? 'landscape' : 'portrait' }
+        };
+        html2pdf().set(opt).from(element).save();
+    }
+</script>
+</body>
+</html>
