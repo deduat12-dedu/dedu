@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional TOS - Final Edition</title>
+    <title>Ultimate TOS - With Amharic Input</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         /* 1. Animated Gradient Background */
         body { 
             margin: 0; padding: 15px; 
-            /* Power Ge'ez እና ሌሎች አማርኛ ፎንቶችን በደንብ እንዲያነብ */
-            font-family: 'Nyala', 'Abyssinica SIL', 'WashRa', 'Noto Sans Ethiopic', sans-serif;
+            font-family: 'Nyala', 'Abyssinica SIL', 'Noto Sans Ethiopic', sans-serif;
             background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
@@ -26,7 +25,7 @@
         /* 2. Glassmorphism Design */
         .glass-container { 
             width: 95%; max-width: 1150px; margin: 20px auto;
-            background: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.45);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             padding: 30px; border-radius: 20px; 
@@ -39,14 +38,16 @@
 
         .btns-top { 
             background: rgba(0, 0, 0, 0.7); padding: 12px; border-radius: 12px; 
-            display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+            display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;
             backdrop-filter: blur(10px); position: sticky; top: 10px; z-index: 1000;
         }
 
-        button { padding: 10px 18px; cursor: pointer; border: none; border-radius: 8px; font-weight: bold; font-size: 13px; color: white; transition: 0.3s; }
+        button { padding: 10px 15px; cursor: pointer; border: none; border-radius: 8px; font-weight: bold; font-size: 13px; color: white; transition: 0.3s; }
         .btn-add { background: #2ecc71; } .btn-rem { background: #e67e22; }
         .btn-orient { background: #34495e; } .btn-pdf { background: #e74c3c; }
         .btn-lang { background: #9b59b6; } .btn-print { background: #f1c40f; color: black; }
+        /* አዲሱ የኪቦርድ ቁልፍ */
+        .btn-kb { background: #00bcd4; } 
 
         /* Header Layout */
         .header-section { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-bottom: 3.5px solid #000; padding-bottom: 15px; }
@@ -56,15 +57,12 @@
         .logo-img { width: 100%; height: 100%; object-fit: cover; display: none; }
 
         /* Table Design */
-        table { width: 100%; border-collapse: collapse; background: rgba(255, 255, 255, 0.85); min-width: 900px; }
+        table { width: 100%; border-collapse: collapse; background: rgba(255, 255, 255, 0.9); min-width: 900px; }
         th, td { border: 2.5px solid #000; padding: 10px; text-align: center; font-weight: bold; color: #000; }
         th { background: rgba(0, 0, 0, 0.1); }
         .v-text { writing-mode: vertical-rl; transform: rotate(180deg); height: 110px; }
-        
-        /* ድምር የሚቀመጥበት ረድፍ ልዩ ቀለም */
         .total-row { background: rgba(0, 0, 0, 0.15); }
-        
-        [contenteditable="true"]:focus { background: rgba(255, 255, 0, 0.3); outline: none; }
+        [contenteditable="true"]:focus { background: rgba(255, 255, 0, 0.3); outline: none; border: 1px dashed blue; }
 
         /* Footer Signatures */
         .sigs-footer { display: flex; justify-content: space-between; margin-top: 50px; flex-wrap: wrap; gap: 30px; }
@@ -81,6 +79,7 @@
 <body>
 
 <div class="btns-top">
+    <button class="btn-kb" onclick="toggleKB()">⌨️ Amharic Type: OFF</button>
     <button class="btn-lang" onclick="changeLang()">🌍 አማርኛ/EN</button>
     <button class="btn-add" onclick="addRow()">➕ Unit ጨምር</button>
     <button class="btn-rem" onclick="removeRow()">➖ Unit ቀንስ</button>
@@ -127,11 +126,11 @@
         </tbody>
         <tfoot>
             <tr class="total-row">
-                <td colspan="2" id="h-grand">GRAND TOTAL (ጠቅላላ ድምር)</td>
+                <td colspan="2" id="h-grand" style="text-align: right; padding-right: 20px;">GRAND TOTAL (ጠቅላላ ድምር)</td>
                 <td id="t-per">0</td><td id="t-itm">0</td>
                 <td id="t-o1">0</td><td id="t-o2">0</td><td id="t-o3">0</td>
                 <td id="t-o4">0</td><td id="t-o5">0</td><td id="t-o6">0</td>
-                <td id="t-grand" style="background: #ccc;">0</td>
+                <td id="t-grand" style="background: #bbb;">0</td>
             </tr>
         </tfoot>
     </table>
@@ -144,7 +143,17 @@
 </div>
 
 <script>
-    let isAm = false; let isLandscape = true;
+    let isAm = false; 
+    let isLandscape = true;
+    let amHaricInput = false;
+
+    // ኪቦርድ ለማብራት
+    function toggleKB() {
+        amHaricInput = !amHaricInput;
+        const btn = document.querySelector('.btn-kb');
+        btn.innerText = amHaricInput ? "⌨️ Amharic Type: ON" : "⌨️ Amharic Type: OFF";
+        btn.style.background = amHaricInput ? "#ff5722" : "#00bcd4";
+    }
 
     function addRow() {
         let b = document.getElementById('tbody');
@@ -164,25 +173,19 @@
 
     function calc() {
         let rows = document.querySelectorAll('#tbody tr');
-        let colTotals = Array(9).fill(0); // Period, Items, and 6 Objectives + Grand Total
-
+        let colTotals = Array(9).fill(0);
         rows.forEach(r => {
             let rowSum = 0;
-            // Objectives sum (columns 4 to 9)
             for(let i=4; i<=9; i++) {
                 let val = Number(r.cells[i].innerText) || 0;
                 rowSum += val;
-                colTotals[i-2] += val; // Map to colTotals array
+                colTotals[i-2] += val;
             }
             r.cells[10].innerText = rowSum;
-            colTotals[8] += rowSum; // Grand vertical total
-            
-            // Sum Periods (col 2) and Items (col 3)
+            colTotals[8] += rowSum;
             colTotals[0] += Number(r.cells[2].innerText) || 0;
             colTotals[1] += Number(r.cells[3].innerText) || 0;
         });
-
-        // Update Footer UI
         document.getElementById('t-per').innerText = colTotals[0];
         document.getElementById('t-itm').innerText = colTotals[1];
         for(let i=1; i<=6; i++) document.getElementById('t-o'+i).innerText = colTotals[i+1];
@@ -193,7 +196,6 @@
         const c = document.querySelector('.glass-container');
         isLandscape = !isLandscape;
         isLandscape ? c.classList.remove('portrait-mode') : c.classList.add('portrait-mode');
-        alert(isLandscape ? "Landscape Mode" : "Portrait Mode");
     }
 
     function changeLang() {
