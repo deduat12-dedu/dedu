@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ጣይቱ ብጡል አካዳሚ - TOS Generator</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/evidenceprime/html-docx-js@master/dist/html-docx.js"></script>
     <style>
         body { 
-            margin: 0; padding: 15px; 
+            margin: 0; padding: 10px; 
             font-family: 'Nyala', 'Abyssinica SIL', sans-serif;
             background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
             background-size: 400% 400%;
@@ -17,45 +18,48 @@
         @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
         .glass-container { 
-            width: 98%; max-width: 1300px; margin: 10px auto;
+            width: 99%; max-width: 1350px; margin: 5px auto;
             background: rgba(255, 255, 255, 0.45);
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            padding: 20px; border-radius: 20px; 
+            padding: 15px; border-radius: 15px; 
             box-shadow: 0 10px 40px rgba(0,0,0,0.25);
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
-        .is-portrait { max-width: 900px; }
+        .is-portrait { max-width: 850px; }
 
         .btns-top { 
-            background: rgba(0, 0, 0, 0.8); padding: 12px; border-radius: 12px; 
+            background: rgba(0, 0, 0, 0.8); padding: 10px; border-radius: 10px; 
             display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;
-            backdrop-filter: blur(10px); position: sticky; top: 10px; z-index: 1000;
+            backdrop-filter: blur(10px); position: sticky; top: 5px; z-index: 1000;
         }
-        button { padding: 10px 15px; cursor: pointer; border: none; border-radius: 8px; font-weight: bold; color: white; transition: 0.3s; }
+        button { padding: 8px 12px; cursor: pointer; border: none; border-radius: 8px; font-weight: bold; color: white; transition: 0.3s; font-size: 13px; }
         .btn-kb { background: #00bcd4; } .btn-lang { background: #9b59b6; }
         .btn-add { background: #2ecc71; } .btn-rem { background: #e67e22; }
         .btn-pdf { background: #e74c3c; } .btn-print { background: #f1c40f; color: black; }
         .btn-orient { background: #34495e; }
+        .btn-word { background: #2b579a; } /* Word color */
 
-        table { width: 100%; border-collapse: collapse; background: rgba(255, 255, 255, 0.95); font-size: 14px; }
-        th, td { border: 2px solid #000; padding: 6px 4px; text-align: center; font-weight: bold; color: #000; }
-        .v-text { writing-mode: vertical-rl; transform: rotate(180deg); height: 100px; white-space: nowrap; font-size: 12px; }
+        table { width: 100%; border-collapse: collapse; background: rgba(255, 255, 255, 0.95); font-size: 12px; }
+        th, td { border: 1.5px solid #000; padding: 4px 2px; text-align: center; font-weight: bold; color: #000; }
+        .v-text { writing-mode: vertical-rl; transform: rotate(180deg); height: 80px; white-space: nowrap; font-size: 11px; }
         
-        .sigs-footer { display: flex; justify-content: space-between; margin-top: 30px; gap: 15px; }
+        .sigs-footer { display: flex; justify-content: space-between; margin-top: 20px; gap: 10px; }
         .sig-box { flex: 1; text-align: center; }
-        .name-box { border: 1.5px solid #000; padding: 8px; margin: 5px auto; width: 90%; background: white; min-height: 18px; text-align: left; font-size: 13px; }
-        .sig-line { border-top: 2px solid #000; margin-top: 5px; margin-bottom: 5px; width: 90%; margin-left: auto; margin-right: auto; }
+        .name-box { border: 1.2px solid #000; padding: 5px; margin: 3px auto; width: 90%; background: white; min-height: 15px; text-align: left; font-size: 12px; }
+        .sig-line { border-top: 1.5px solid #000; margin-top: 4px; margin-bottom: 4px; width: 90%; margin-left: auto; margin-right: auto; }
 
-        .copyright-text { text-align: center; margin-top: 30px; font-size: 12px; font-weight: bold; color: #000; border-top: 1px solid #000; padding-top: 10px; }
+        .copyright-text { text-align: center; margin-top: 20px; font-size: 11px; font-weight: bold; color: #000; border-top: 1px solid #000; padding-top: 5px; }
 
         @media print { 
             .btns-top { display: none !important; } 
-            body { background: white; padding: 0; }
+            body { background: white; padding: 0; margin: 0; }
             .glass-container { 
                 background: white; box-shadow: none; border: none; 
                 width: 100% !important; max-width: 100% !important; 
                 padding: 0; margin: 0;
+                transform: scale(0.95); transform-origin: top center;
             }
+            @page { margin: 0.5cm; }
         }
     </style>
 </head>
@@ -68,21 +72,22 @@
     <button class="btn-add" onclick="addRow()">➕ Unit ጨምር</button>
     <button class="btn-rem" onclick="removeRow()">➖ Unit ቀንስ</button>
     <button class="btn-pdf" onclick="pdf()">📄 Export PDF</button>
+    <button class="btn-word" onclick="saveWord()">💾 Save to Word</button>
     <button class="btn-print" onclick="window.print()">🖨️ Print</button>
 </div>
 
 <div class="glass-container" id="main-content">
-    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; border-bottom: 3px solid #000; padding-bottom: 10px;">
-        <div style="width: 75px; height: 75px; border: 2.5px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; background: #fff;">
-            <span style="font-size:10px">LOGO</span><input type="file" style="position:absolute; opacity:0; width:100%; height:100%;" onchange="showImg(this, 'l-img')"><img id="l-img" style="width:100%; height:100%; object-fit:cover; display:none; border-radius:50%;">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; border-bottom: 2px solid #000; padding-bottom: 5px;">
+        <div style="width: 60px; height: 60px; border: 2px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; background: #fff;">
+            <span style="font-size:9px">LOGO</span><input type="file" style="position:absolute; opacity:0; width:100%; height:100%;" onchange="showImg(this, 'l-img')"><img id="l-img" style="width:100%; height:100%; object-fit:cover; display:none; border-radius:50%;">
         </div>
         <div style="text-align: center;">
-            <h1 id="txt-school-name" contenteditable="true" style="margin:0; font-size: 24px;">TAYITU BTUL ACADEMY</h1>
-            <h2 id="txt-main-title" contenteditable="true" style="margin:3px 0; font-size: 18px;">TABLE OF SPECIFICATION (TOS)</h2>
-            <h4 id="txt-exam" contenteditable="true" style="margin:3px 0; font-size: 14px;">2018 E.C. - MID EXAMINATION</h4>
+            <h1 id="txt-school-name" contenteditable="true" style="margin:0; font-size: 20px;">TAYITU BTUL ACADEMY</h1>
+            <h2 id="txt-main-title" contenteditable="true" style="margin:2px 0; font-size: 16px;">TABLE OF SPECIFICATION (TOS)</h2>
+            <h4 id="txt-exam" contenteditable="true" style="margin:2px 0; font-size: 12px;">2018 E.C. - MID EXAMINATION</h4>
         </div>
-        <div style="width: 75px; height: 75px; border: 2.5px solid #000; border-radius: 8px; display: flex; align-items: center; justify-content: center; position: relative; background: #fff;">
-            <span style="font-size:10px">LOGO</span><input type="file" style="position:absolute; opacity:0; width:100%; height:100%;" onchange="showImg(this, 'r-img')"><img id="r-img" style="width:100%; height:100%; object-fit:cover; display:none;">
+        <div style="width: 60px; height: 60px; border: 2px solid #000; border-radius: 8px; display: flex; align-items: center; justify-content: center; position: relative; background: #fff;">
+            <span style="font-size:9px">LOGO</span><input type="file" style="position:absolute; opacity:0; width:100%; height:100%;" onchange="showImg(this, 'r-img')"><img id="r-img" style="width:100%; height:100%; object-fit:cover; display:none;">
         </div>
     </div>
 
@@ -90,7 +95,7 @@
         <thead>
             <tr>
                 <th rowspan="2" id="h-no">No</th>
-                <th rowspan="2" style="width: 250px;" id="h-unit">Contents / Units</th>
+                <th rowspan="2" style="width: 220px;" id="h-unit">Contents / Units</th>
                 <th rowspan="2" class="v-text" id="h-per">Period</th>
                 <th rowspan="2" class="v-text" id="h-itm">Items</th>
                 <th colspan="6" id="h-obj">Learning Objectives</th>
@@ -112,7 +117,7 @@
         </tbody>
         <tfoot>
             <tr style="background: rgba(0, 0, 0, 0.05);">
-                <td colspan="2" style="text-align: right; padding-right:15px;" id="h-grand">GRAND TOTAL</td>
+                <td colspan="2" style="text-align: right; padding-right:10px;" id="h-grand">GRAND TOTAL</td>
                 <td id="t-per">0</td><td id="t-itm">0</td>
                 <td id="t-col1">0</td><td id="t-col2">0</td><td id="t-col3">0</td><td id="t-col4">0</td><td id="t-col5">0</td><td id="t-col6">0</td>
                 <td id="t-grand">0</td>
@@ -122,25 +127,25 @@
 
     <div class="sigs-footer">
         <div class="sig-box">
-            <b id="f-teacher">Subject Teacher</b>
-            <div id="label-name1" style="font-size: 12px; margin-top:8px;">Name:</div>
+            <b id="f-teacher" style="font-size:13px">Subject Teacher</b>
+            <div id="label-name1" style="font-size: 11px; margin-top:5px;">Name:</div>
             <div class="name-box" contenteditable="true">Delelegn Atlaw</div>
             <div class="sig-line"></div>
-            <span id="label-date1" contenteditable="true" style="font-size: 12px;">Date: ___/___/2018</span>
+            <span id="label-date1" contenteditable="true" style="font-size: 11px;">Date: ___/___/2018</span>
         </div>
         <div class="sig-box">
-            <b id="f-dept">Dept. Head</b>
-            <div id="label-name2" style="font-size: 12px; margin-top:8px;">Name:</div>
+            <b id="f-dept" style="font-size:13px">Dept. Head</b>
+            <div id="label-name2" style="font-size: 11px; margin-top:5px;">Name:</div>
             <div class="name-box" contenteditable="true"></div>
             <div class="sig-line"></div>
-            <span id="label-date2" contenteditable="true" style="font-size: 12px;">Date: ___/___/2018</span>
+            <span id="label-date2" contenteditable="true" style="font-size: 11px;">Date: ___/___/2018</span>
         </div>
         <div class="sig-box">
-            <b id="f-princ">Principal</b>
-            <div id="label-name3" style="font-size: 12px; margin-top:8px;">Name:</div>
+            <b id="f-princ" style="font-size:13px">Principal</b>
+            <div id="label-name3" style="font-size: 11px; margin-top:5px;">Name:</div>
             <div class="name-box" contenteditable="true"></div>
             <div class="sig-line"></div>
-            <span id="label-date3" contenteditable="true" style="font-size: 12px;">Date: ___/___/2018</span>
+            <span id="label-date3" contenteditable="true" style="font-size: 11px;">Date: ___/___/2018</span>
         </div>
     </div>
 
@@ -191,13 +196,23 @@
     function pdf() {
         const element = document.getElementById('main-content');
         const opt = {
-            margin: [5, 5, 5, 5],
+            margin: [2, 2, 2, 2],
             filename: 'TOS_Report_2026.pdf',
             image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, useCORS: true, logging: false },
+            html2canvas: { scale: 2.5, useCORS: true, logging: false },
             jsPDF: { unit: 'mm', format: 'a4', orientation: isLandscape ? 'landscape' : 'portrait' }
         };
         html2pdf().set(opt).from(element).save();
+    }
+
+    // New function to Save as Word Document
+    function saveWord() {
+        const content = document.getElementById('main-content').innerHTML;
+        const converted = htmlDocx.asBlob('<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body>' + content + '</body></html>', {orientation: isLandscape ? 'landscape' : 'portrait'});
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(converted);
+        link.download = 'TOS_Report_2026.docx';
+        link.click();
     }
 
     function changeLang() {
