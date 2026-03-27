@@ -39,38 +39,32 @@
 
         table { width: 100%; border-collapse: collapse; background: rgba(255, 255, 255, 0.95); font-size: 14px; }
         th, td { border: 2px solid #000; padding: 6px 4px; text-align: center; font-weight: bold; color: #000; }
-        #tbody tr:hover { background-color: rgba(35, 166, 213, 0.1); }
-        [contenteditable="true"]:focus { outline: 2px solid #23a6d5; background: #fff; }
-
-        /* ጽሁፉ በ PDF ላይ እንዳይገለበጥ እዚህ ጋር ተስተካክሏል */
+        
+        /* እዚህ ጋር ነው የተስተካከለው፡ ጽሁፉ እንዳይገለበጥ Normal እንዲሆን ተደርጓል */
         .v-text { 
-            writing-mode: horizontal-tb; 
-            transform: none; 
-            height: auto; 
-            white-space: normal; 
-            font-size: 11px;
-            padding: 5px 2px;
+            writing-mode: horizontal-tb !important; 
+            transform: none !important; 
+            height: auto !important; 
+            padding: 10px 2px !important;
+            font-size: 12px !important;
+            display: table-cell;
+            vertical-align: middle;
         }
 
+        #tbody tr:hover { background-color: rgba(35, 166, 213, 0.1); }
+        [contenteditable="true"]:focus { outline: 2px solid #23a6d5; background: #fff; }
         .total-row { background: rgba(0, 0, 0, 0.05); }
 
         .sigs-footer { display: flex; justify-content: space-between; margin-top: 30px; gap: 15px; }
         .sig-box { flex: 1; text-align: center; }
         .name-box { border: 1.5px solid #000; padding: 8px; margin: 5px auto; width: 90%; background: white; min-height: 18px; text-align: left; font-size: 13px; }
         .sig-line { border-top: 2px solid #000; margin-top: 5px; margin-bottom: 5px; width: 90%; margin-left: auto; margin-right: auto; }
-
         .dev-credit { text-align: center; margin-top: 20px; font-size: 12px; font-weight: bold; border-top: 1px dashed #000; padding-top: 10px; color: #000; }
 
         @media print { 
-            @page { size: auto; margin: 5mm; }
             .btns-top { display: none; } 
-            body { background: white; padding: 0; margin: 0; }
-            .glass-container { 
-                background: white; box-shadow: none; border: none; 
-                width: 100% !important; max-width: 100% !important; 
-                padding: 0; margin: 0;
-                transform: scale(0.9); transform-origin: top center;
-            }
+            body { background: white; padding: 0; }
+            .glass-container { background: white; box-shadow: none; border: none; width: 100% !important; max-width: 100% !important; }
         }
     </style>
 </head>
@@ -168,105 +162,34 @@
             <span id="label-date3" contenteditable="true" style="font-size: 12px;">Date: ___/___/2018</span>
         </div>
     </div>
-
     <div class="dev-credit">Developer: Delelegn Atlaw</div>
 </div>
 
 <script>
-    let amActive = false;
-    let isLandscape = true;
-    let lastKey = "";
-    let currentLang = "EN";
+    // Logic for Calculation (as you provided)
+    function calc() {
+        let rows = document.querySelectorAll('#tbody tr');
+        let gPer = 0, gItm = 0, gGrand = 0;
+        let colTotals = [0, 0, 0, 0, 0, 0];
 
-    const amTable = {
-        'h':['ሀ','ሁ','ሂ','ሃ','ሄ','ህ','ሆ'],'l':['ለ','ሉ','ሊ','ላ','ሌ','ል','ሎ'],'m':['መ','ሙ','ሚ','ማ','ሜ','ም','ሞ'],'r':['ረ','ሩ','ሪ','ራ','ሬ','ር','ሮ'],'s':['ሰ','ሱ','ሲ','ሳ','ሴ','ስ','ሶ'],'q':['ቀ','ቁ','ቂ','ቃ','ቄ','ቅ','ቆ'],'b':['በ','ቡ','ቢ','ባ','ቤ','ብ','ቦ'],'t':['ተ','ቱ','ቲ','ታ','ቴ','ት','ቶ'],'n':['ነ','ኑ','ኒ','ና','ኔ','ን','ኖ'],'k':['ከ','ኩ','ኪ','ካ','ኬ','ክ','ኮ'],'w':['ወ','ዉ','ዊ','ዋ','ዌ','ው','ዎ'],'z':['ዘ','ዙ','ዚ','ዛ','ዜ','ዝ','ዞ'],'y':['የ','ዩ','ዪ','ያ','ዬ','ይ','ዮ'],'d':['ደ','ዱ','ዲ','ዳ','ዴ','ድ','ዶ'],'j':['ጀ','ጁ','ጂ','ጃ','ጄ','ጅ','ጆ'],'g':['ገ','ጉ','ጊ','ጋ','ጌ','ግ','ጎ'],'p':['ፐ','ፑ','ፒ','ፓ','ፔ','ፕ','ፖ'],'v':['ቨ','ቩ','ቪ','ቫ','ቬ','ቭ','ቮ']
-    };
-    const vowels = {'u':1,'i':2,'a':3,'e':4,'y':5,'o':6};
+        rows.forEach((r, idx) => {
+            r.cells[0].innerText = idx + 1;
+            let pVal = parseFloat(r.cells[2].innerText) || 0;
+            let iVal = parseFloat(r.cells[3].innerText) || 0;
+            gPer += pVal; gItm += iVal;
+            let rowSum = 0;
+            for(let i = 4; i <= 9; i++) {
+                let val = parseFloat(r.cells[i].innerText) || 0;
+                rowSum += val; colTotals[i-4] += val;
+            }
+            r.cells[10].innerText = rowSum;
+            gGrand += rowSum;
+        });
 
-    document.addEventListener('keypress', function(e) {
-        if (!amActive || !e.target.isContentEditable) return;
-        let key = e.key.toLowerCase();
-        if (vowels[key] !== undefined && lastKey && amTable[lastKey]) {
-            e.preventDefault();
-            document.execCommand('deleteBackward', false, null);
-            document.execCommand('insertText', false, amTable[lastKey][vowels[key]]);
-            lastKey = ""; 
-        } 
-        else if (amTable[key]) {
-            e.preventDefault();
-            document.execCommand('insertText', false, amTable[key][0]);
-            lastKey = key;
-        } else { lastKey = ""; }
-    });
-
-    function toggleKB() {
-        amActive = !amActive;
-        const btn = document.getElementById('kbBtn');
-        btn.innerText = amActive ? "⌨️ Amharic Type: ON" : "⌨️ Amharic Type: OFF";
-        btn.style.background = amActive ? "#ff5722" : "#00bcd4";
-    }
-
-    function toggleOrient() {
-        const c = document.getElementById('main-content');
-        isLandscape = !isLandscape;
-        isLandscape ? c.classList.remove('is-portrait') : c.classList.add('is-portrait');
-    }
-
-    function changeLang() {
-        const schoolName = document.getElementById('txt-school-name');
-        const h2 = document.getElementById('txt-main-title');
-        const exam = document.getElementById('txt-exam');
-        const subHeaders = document.getElementById('sub-headers').children;
-        
-        if (currentLang === "EN") {
-            schoolName.innerText = "ጣይቱ ብጡል አካዳሚ";
-            h2.innerText = "የፈተና ይዘት ማውጫ (TOS)";
-            exam.innerText = "2018 ዓ.ም - የግማሽ ሴሚስተር ፈተና";
-            document.getElementById('h-no').innerText = "ተ.ቁ";
-            document.getElementById('h-unit').innerText = "ይዘቶች / ምዕራፎች";
-            document.getElementById('h-per').innerText = "ክፍለ ጊዜ";
-            document.getElementById('h-itm').innerText = "ብዛት";
-            document.getElementById('h-obj').innerText = "የመማር ግቦች";
-            document.getElementById('h-tot').innerText = "ድምር";
-            document.getElementById('h-grand').innerText = "አጠቃላይ ድምር";
-            document.getElementById('f-teacher').innerText = "የክፍሉ መምህር";
-            document.getElementById('f-dept').innerText = "የክፍል ኃላፊ";
-            document.getElementById('f-princ').innerText = "ርዕሰ መምህር";
-            document.getElementById('label-name1').innerText = "ስም፦";
-            document.getElementById('label-name2').innerText = "ስም፦";
-            document.getElementById('label-name3').innerText = "ስም፦";
-            document.getElementById('label-date1').innerText = "ቀን: ___/___/2018";
-            document.getElementById('label-date2').innerText = "ቀን: ___/___/2018";
-            document.getElementById('label-date3').innerText = "ቀን: ___/___/2018";
-
-            const amWords = ["ዕውቀት", "መረዳት", "መተግበር", "መተንተን", "ማቀናጀት", "መገምገም"];
-            for(let i=0; i<subHeaders.length; i++) subHeaders[i].innerText = amWords[i];
-            currentLang = "AM";
-        } else {
-            schoolName.innerText = "TAYITU BTUL ACADEMY";
-            h2.innerText = "TABLE OF SPECIFICATION (TOS)";
-            exam.innerText = "2018 E.C. - MID EXAMINATION";
-            document.getElementById('h-no').innerText = "No";
-            document.getElementById('h-unit').innerText = "Contents / Units";
-            document.getElementById('h-per').innerText = "Period";
-            document.getElementById('h-itm').innerText = "Items";
-            document.getElementById('h-obj').innerText = "Learning Objectives";
-            document.getElementById('h-tot').innerText = "Total";
-            document.getElementById('h-grand').innerText = "GRAND TOTAL";
-            document.getElementById('f-teacher').innerText = "Subject Teacher";
-            document.getElementById('f-dept').innerText = "Dept. Head";
-            document.getElementById('f-princ').innerText = "Principal";
-            document.getElementById('label-name1').innerText = "Name:";
-            document.getElementById('label-name2').innerText = "Name:";
-            document.getElementById('label-name3').innerText = "Name:";
-            document.getElementById('label-date1').innerText = "Date: ___/___/2018";
-            document.getElementById('label-date2').innerText = "Date: ___/___/2018";
-            document.getElementById('label-date3').innerText = "Date: ___/___/2018";
-
-            const enWords = ["Knowledge", "Comprehension", "Application", "Analysis", "Synthesis", "Evaluation"];
-            for(let i=0; i<subHeaders.length; i++) subHeaders[i].innerText = enWords[i];
-            currentLang = "EN";
-        }
+        document.getElementById('t-per').innerText = gPer;
+        document.getElementById('t-itm').innerText = gItm;
+        for(let j = 0; j < 6; j++) { document.getElementById('t-col' + (j+1)).innerText = colTotals[j]; }
+        document.getElementById('t-grand').innerText = gGrand;
     }
 
     function addRow() {
@@ -292,50 +215,39 @@
         calc();
     }
 
-    function calc() {
-        let rows = document.querySelectorAll('#tbody tr');
-        let gPer = 0, gItm = 0, gGrand = 0;
-        let colTotals = [0, 0, 0, 0, 0, 0];
+    // Amharic Typing & PDF Logic
+    let amActive = false;
+    let isLandscape = true;
+    let lastKey = "";
+    const amTable = {'h':['ሀ','ሁ','ሂ','ሃ','ሄ','ህ','ሆ'],'l':['ለ','ሉ','ሊ','ላ','ሌ','ል','ሎ'],'m':['መ','ሙ','ሚ','ማ','ሜ','ም','ሞ'],'r':['ረ','ሩ','ሪ','ራ','ሬ','ር','ሮ'],'s':['ሰ','ሱ','ሲ','ሳ','ሴ','ስ','ሶ'],'q':['ቀ','ቁ','ቂ','ቃ','ቄ','ቅ','ቆ'],'b':['በ','ቡ','ቢ','ባ','ቤ','ብ','ቦ'],'t':['ተ','ቱ','ቲ','ታ','ቴ','ት','ቶ'],'n':['ነ','ኑ','ኒ','ና','ኔ','ን','ኖ'],'k':['ከ','ኩ','ኪ','ካ','ኬ','ክ','ኮ'],'w':['ወ','ዉ','ዊ','ዋ','ዌ','ው','ዎ'],'z':['ዘ','ዙ','ዚ','ዛ','ዜ','ዝ','ዞ'],'y':['የ','ዩ','ዪ','ያ','ዬ','ይ','ዮ'],'d':['ደ','ዱ','ዲ','ዳ','ዴ','ድ','ዶ'],'j':['ጀ','ጁ','ጂ','ጃ','ጄ','ጅ','ጆ'],'g':['ገ','ጉ','ጊ','ጋ','ጌ','ግ','ጎ'],'p':['ፐ','ፑ','ፒ','ፓ','ፔ','ፕ','ፖ'],'v':['ቨ','ቩ','ቪ','ቫ','ቬ','ቭ','ቮ']};
+    const vowels = {'u':1,'i':2,'a':3,'e':4,'y':5,'o':6};
 
-        rows.forEach((r, idx) => {
-            r.cells[0].innerText = idx + 1;
-            let pVal = parseFloat(r.cells[2].innerText) || 0;
-            let iVal = parseFloat(r.cells[3].innerText) || 0;
-            gPer += pVal;
-            gItm += iVal;
+    document.addEventListener('keypress', function(e) {
+        if (!amActive || !e.target.isContentEditable) return;
+        let key = e.key.toLowerCase();
+        if (vowels[key] !== undefined && lastKey && amTable[lastKey]) {
+            e.preventDefault(); document.execCommand('deleteBackward');
+            document.execCommand('insertText', false, amTable[lastKey][vowels[key]]);
+            lastKey = ""; 
+        } else if (amTable[key]) {
+            e.preventDefault(); document.execCommand('insertText', false, amTable[key][0]);
+            lastKey = key;
+        } else { lastKey = ""; }
+    });
 
-            let rowSum = 0;
-            for(let i = 4; i <= 9; i++) {
-                let val = parseFloat(r.cells[i].innerText) || 0;
-                rowSum += val;
-                colTotals[i-4] += val;
-            }
-            r.cells[10].innerText = rowSum;
-            gGrand += rowSum;
-        });
-
-        document.getElementById('t-per').innerText = gPer;
-        document.getElementById('t-itm').innerText = gItm;
-        for(let j = 0; j < 6; j++) {
-            document.getElementById('t-col' + (j+1)).innerText = colTotals[j];
-        }
-        document.getElementById('t-grand').innerText = gGrand;
-    }
-
-    function showImg(input, id) { if (input.files && input.files[0]) { let r = new FileReader(); r.onload = e => { let m = document.getElementById(id); m.src = e.target.result; m.style.display = 'block'; input.parentElement.querySelector('span').style.display = 'none'; }; r.readAsDataURL(input.files[0]); } }
+    function toggleKB() { amActive = !amActive; document.getElementById('kbBtn').innerText = amActive ? "⌨️ Amharic Type: ON" : "⌨️ Amharic Type: OFF"; }
+    function toggleOrient() { isLandscape = !isLandscape; document.getElementById('main-content').classList.toggle('is-portrait'); }
+    function showImg(input, id) { if (input.files && input.files[0]) { let r = new FileReader(); r.onload = e => { document.getElementById(id).src = e.target.result; document.getElementById(id).style.display = 'block'; }; r.readAsDataURL(input.files[0]); } }
 
     function pdf() { 
         const element = document.getElementById('main-content');
         const opt = {
-            margin: 5,
-            filename: 'TOS.pdf',
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 3, useCORS: true, letterRendering: true },
+            margin: 5, filename: 'TOS.pdf', image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 3, useCORS: true },
             jsPDF: { unit: 'mm', format: 'a4', orientation: isLandscape ? 'landscape' : 'portrait' }
         };
         html2pdf().from(element).set(opt).save();
     }
-
     window.onload = calc;
 </script>
 </body>
